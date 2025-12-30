@@ -1,9 +1,0 @@
-g++ mainServer.cpp server.cpp packet.cpp -lcrypto -o server
-g++ mainClient.cpp client.cpp packet.cpp -lcrypto -o client
-
-
-./server 8080
-./client 127.0.0.1 8080
-
-
-
