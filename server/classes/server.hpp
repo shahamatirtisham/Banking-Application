@@ -1,22 +1,31 @@
-#include "server.hpp"
-#include "packet.hpp"
-#include <cstring>
-//#include <iostream>
-//#include <sys/file.h>
+#pragma once
+#include "../../shared/classes/packet.hpp"
+#include <iostream>
 #include <unistd.h>
 //#include <sys/types.h>
 //#include <sys/socket.h>
 #include <netinet/in.h>
-
-
-
 using namespace std;
+
+class Server
+{
+private:    
+    int port;
+    int listenSock;
+    void setupSocket();
+    void acceptLoop();
+    void handleClient(int clientSock);
+
+public:
+    Server(int port);
+    void run();
+};
 
 Server::Server(int port) : port(port), listenSock(-1) {};
 
 void Server::setupSocket()
 {
-    printf("Server running.\n");
+    cout << "Server running.\n";
 
     struct sockaddr_in server_address, client_address;
     socklen_t client_len;

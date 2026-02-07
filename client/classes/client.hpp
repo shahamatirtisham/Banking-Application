@@ -1,18 +1,31 @@
-#include "client.hpp"
-#include "packet.hpp"
-
+#pragma once
+#include "../../shared/classes/packet.hpp"
 #include <iostream>
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <time.h>
-#include <openssl/sha.h>
+//#include <string.h>
+//#include <strings.h>
+//#include <stdlib.h>
+//#include <ctype.h>
+//#include <time.h>
+//#include <openssl/sha.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+
+#include <iostream>
+
+class Client
+{
+private:
+    std::string host;
+    int sockfd;
+    int port;
+    void createSocket();
+public:
+    Client(std::string host, int port);
+    void connectServer();
+};
 
 Client::Client(string host, int port)
 {
@@ -57,25 +70,9 @@ void Client::connectServer()
     else
     {
         cout << "Connect success\n";
-        commWithServer();
     }
 
 
 }
 
-void Client::commWithServer()
-{
-    cout << "Comming with server\n";
-    while(true)
-    {
-        Packet packet(sockfd, "", "", "");
-        packet.packetRead();
-        cout << packet.getSeg1() << endl;
-        string seg;
-        cin >> seg;
-        cin.ignore();
-        packet.packetFill(seg.c_str(), "", "");
-        packet.packetWrite();
-        
-    }
-}
+
