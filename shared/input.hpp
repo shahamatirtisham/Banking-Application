@@ -239,7 +239,7 @@ bool checkValidPassword(const string& password)
     
     return true;
 }
-void acceptUsername()
+string acceptUsername()
 {
     while(1)
     {
@@ -249,13 +249,22 @@ void acceptUsername()
         getline(cin, username);
         if(checkValidUsername(username) == true)
         {
-            this->username = username;
-            break;
+            return username;
         }    
         
     }  
 }
-void acceptPassword()
+string acceptPassword()
 {
-
+    while(1)
+    {
+        string password; 
+        cout << "Enter password: ";
+        cin.ignore();
+        getline(cin, password);
+        if(checkValidPassword(password) == true)
+        {
+            return password;
+        }    
+    }  
 }
