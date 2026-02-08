@@ -1,4 +1,4 @@
-/home/tawfiq/Desktop/codes/oop/socket-banking/build/CMakeFiles/server.dir
-/home/tawfiq/Desktop/codes/oop/socket-banking/build/CMakeFiles/client.dir
-/home/tawfiq/Desktop/codes/oop/socket-banking/build/CMakeFiles/edit_cache.dir
-/home/tawfiq/Desktop/codes/oop/socket-banking/build/CMakeFiles/rebuild_cache.dir
+/home/tawfiq/Banking-Application/build/CMakeFiles/server.dir
+/home/tawfiq/Banking-Application/build/CMakeFiles/client.dir
+/home/tawfiq/Banking-Application/build/CMakeFiles/edit_cache.dir
+/home/tawfiq/Banking-Application/build/CMakeFiles/rebuild_cache.dir

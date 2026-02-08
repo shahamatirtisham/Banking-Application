@@ -1,10 +1,7 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/server.dir/link.d"
   "CMakeFiles/server.dir/server/main.cpp.o"
   "CMakeFiles/server.dir/server/main.cpp.o.d"
-  "CMakeFiles/server.dir/server/socket/server.cpp.o"
-  "CMakeFiles/server.dir/server/socket/server.cpp.o.d"
-  "CMakeFiles/server.dir/shared/packet.cpp.o"
-  "CMakeFiles/server.dir/shared/packet.cpp.o.d"
   "server"
   "server.pdb"
 )

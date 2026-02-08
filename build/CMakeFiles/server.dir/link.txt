@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/server.dir/server/main.cpp.o CMakeFiles/server.dir/server/socket/server.cpp.o CMakeFiles/server.dir/shared/packet.cpp.o -o server 
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/server.dir/link.d CMakeFiles/server.dir/server/main.cpp.o -o server

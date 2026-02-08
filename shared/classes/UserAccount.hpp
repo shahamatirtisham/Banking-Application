@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include <cctype>
 #include <ctime>
-#include "Date.cpp"
-#include "Account.cpp"
+#include "Date.hpp"
+#include "Account.hpp"
 #include "clearScreen.hpp"
 using namespace std;
 

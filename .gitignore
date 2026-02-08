@@ -1,4 +1,5 @@
 build/
+.vscode/
 *.o
 *.out
 CMakeCache.txt

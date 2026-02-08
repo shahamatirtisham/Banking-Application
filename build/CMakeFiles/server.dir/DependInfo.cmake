@@ -8,9 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/tawfiq/Desktop/codes/oop/socket-banking/server/main.cpp" "CMakeFiles/server.dir/server/main.cpp.o" "gcc" "CMakeFiles/server.dir/server/main.cpp.o.d"
-  "/home/tawfiq/Desktop/codes/oop/socket-banking/server/socket/server.cpp" "CMakeFiles/server.dir/server/socket/server.cpp.o" "gcc" "CMakeFiles/server.dir/server/socket/server.cpp.o.d"
-  "/home/tawfiq/Desktop/codes/oop/socket-banking/shared/packet.cpp" "CMakeFiles/server.dir/shared/packet.cpp.o" "gcc" "CMakeFiles/server.dir/shared/packet.cpp.o.d"
+  "/home/tawfiq/Banking-Application/server/main.cpp" "CMakeFiles/server.dir/server/main.cpp.o" "gcc" "CMakeFiles/server.dir/server/main.cpp.o.d"
+  "" "server" "gcc" "CMakeFiles/server.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

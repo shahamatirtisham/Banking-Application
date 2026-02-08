@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---- SERVER executable ----
 add_executable(server
     server/main.cpp
-    server/socket/server.cpp
-    shared/packet.cpp
 )
 
 target_include_directories(server PRIVATE
@@ -19,8 +17,6 @@ target_include_directories(server PRIVATE
 # ---- CLIENT executable ----
 add_executable(client
     client/main.cpp
-    client/socket/client.cpp
-    shared/packet.cpp
 )
 
 target_include_directories(client PRIVATE
