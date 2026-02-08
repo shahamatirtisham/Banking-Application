@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
-#include <cctype>
+// #include <cctype>
 #include <ctime>
 #include "Date.hpp"
+#include "input.hpp"
 #include "Account.hpp"
 #include "clearScreen.hpp"
 using namespace std;
@@ -16,186 +17,88 @@ private:
     string favAni;
 
 public:
-    UserAccount() : Account()
+    UserAccount(string name, string username, string password, Date DOB, double balance, string favAni) 
+        : Account(name, username, password)
     {
-        setDOB();
-        setBalance(0);
-        generateAccountNo();
-        setFavAni();
+        setDOB(DOB);
+        setBalance(balance);
+        setAccountNo();
+        setFavAni(favAni);
     }
-    void setDOB();
+    void setDOB(Date DOB);
     void setBalance(float balance);
-    void generateAccountNo();
-    void setFavAni();
-    Date getDOB();
-    double getBalance();
-    string getAccountNo();
-    string getFavAni(); 
-    void printAccountInfo(bool printAsterik);
+    void setAccountNo();
+    void setFavAni(string favAni);
+    Date getDOB() const;
+    double getBalance() const;
+    string getAccountNo() const;
+    string getFavAni() const; 
+    void printAccountInfo(bool printAsterik) const;
 
 };
-bool checkValidDOB(const string& dob)
+
+
+void UserAccount::setDOB(Date DOB)
 {
-    if(dob.empty())
-            return false;
-        
-        if(dob.size() != 10)
-        {
-            clearScreen(); 
-            printf("Invalid format.\n");
-            return false;
-        }
-        if(dob[2] != '-' || dob[5] != '-')
-        {
-            clearScreen(); 
-
-            printf("Invalid format.\n");
-            return false;
-        }
-
-        for(int i = 0; i < 10; i++)
-        {
-
-            if(dob[i] - '\0' == '\t' || dob[i] - '\0' == '\n' || dob[i] - '\0' == '\0' || dob[i] - '\0' == '\b')
-            {
-                clearScreen(); 
-                printf("Date of birth cannot contain control characters.\n");
-                return false;
-            }            
-        }
-
-        int birth_date = 0, birth_month = 0, birth_year = 0;
-        int age;
-
-        int multiplier = 10;
-        for(int i = 0; i <= 1; i++)
-        {
-            birth_date += (dob[i] - '0') * multiplier;
-            multiplier /= 10;
-        }
-
-        multiplier = 10;
-        for(int i = 3; i <= 4; i++)
-        {
-            birth_month += (dob[i] - '0') * multiplier;
-            multiplier /= 10;
-        }
-        
-        multiplier = 1000;
-        for(int i = 6; i <= 9; i++)
-        {
-            birth_year += (dob[i] - '0') * multiplier;
-            multiplier /= 10;
-        }
-
-        Date DOB(birth_date, birth_month, birth_year);
-
-        if(DOB.check_valid_date() == false)
-        {
-            clearScreen(); 
-            printf("Invalid date/month.\n");
-            return false;
-        }
-        else if (DOB.getAge() < 18)
-        {
-            clearScreen();
-            cout << "You must be over 18 years old\n";
-            return false;
-        }
-             
-    
-    return true;
-}
-
-void UserAccount::setDOB()
-{
-    string str_dob;
-    while(1)
-    {
-        cout << "Set date of birth (DD-MM-YYYY): ";
-        cin.ignore();
-        getline(cin, str_dob);
-
-        if(checkValidDOB(str_dob) == false)
-        {
-            clearScreen(); 
-            printf("Invalid date/month.\n");
-            continue;
-        }    
-        else
-        {
-            break;
-        }           
-    }    
-    Date DOB = stringToDate(str_dob);
-    if (DOB.getAge() < 18)
-    {
-        clearScreen();
-        cout << "You must be over 18 years old\n";
-        UserAccount::setDOB();
-    } 
-    else
-    {
-        this->DOB = DOB;
-    }   
-    
+       this->DOB = DOB;
 }    
 
 void UserAccount::setBalance(float balance=0)
 {
-    this->balance = balance;
+    if(balance >= 0)
+        this->balance = balance;
 }    
+void UserAccount::setAccountNo()
+{
+    this->accountNo = generateAccountNo();
+}
 bool checkUniqueAccountNo(const string& account_no)
 {
     // input dbms code
     return true;
 }
-void UserAccount::generateAccountNo()
-{
-    LABEL01:
-    string accountNo = "";
-    srand(time(NULL));
-    
-    for(int i = 0; i < 13; i++)
-    {
-        int random_no = rand() % 10;
-        accountNo += random_no + '0';
-    }
-    accountNo[13] = '\0';
-
-    if(checkUniqueAccountNo(accountNo) == false)
-        goto LABEL01;
-
-}    
-void UserAccount::setFavAni()
+string generateAccountNo()
 {
     while(1)
     {
-        string favAni;
-        cin.ignore();
-        getline(cin, favAni);
-        if(favAni != "")
-        break;
+        string accountNo = "";
+        srand(time(NULL));
+        
+        for(int i = 0; i < 13; i++)
+        {
+            int random_no = rand() % 10;
+            accountNo += random_no + '0';
+        }
+        accountNo[13] = '\0';
+    
+        if(checkUniqueAccountNo(accountNo) == 1)
+        {
+            return accountNo;
+        }
     }
+
+}    
+void UserAccount::setFavAni(string favAni)
+{
     this->favAni = favAni;
 }  
-Date UserAccount::getDOB()
+Date UserAccount::getDOB() const
 {
     return DOB;
 }
-double UserAccount::getBalance()
+double UserAccount::getBalance() const
 {
     return balance;
 }
-string UserAccount::getAccountNo()
+string UserAccount::getAccountNo() const
 {
     return accountNo;
 }
-string UserAccount::getFavAni()
+string UserAccount::getFavAni() const
 {
     return favAni;
 }
-void UserAccount::printAccountInfo(bool printAsterik=0)
+void UserAccount::printAccountInfo(bool printAsterik=0) const
 {
     cout << "Name: " << name << endl;
     if(printAsterik)
