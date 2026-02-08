@@ -86,18 +86,130 @@ CMakeFiles/server.dir/server/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/server/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/server/main.cpp -o CMakeFiles/server.dir/server/main.cpp.s
 
+CMakeFiles/server.dir/server/classes/server.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/server/classes/server.cpp.o: /home/tawfiq/Banking-Application/server/classes/server.cpp
+CMakeFiles/server.dir/server/classes/server.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/server.dir/server/classes/server.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/server/classes/server.cpp.o -MF CMakeFiles/server.dir/server/classes/server.cpp.o.d -o CMakeFiles/server.dir/server/classes/server.cpp.o -c /home/tawfiq/Banking-Application/server/classes/server.cpp
+
+CMakeFiles/server.dir/server/classes/server.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/server/classes/server.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/server/classes/server.cpp > CMakeFiles/server.dir/server/classes/server.cpp.i
+
+CMakeFiles/server.dir/server/classes/server.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/server/classes/server.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/server/classes/server.cpp -o CMakeFiles/server.dir/server/classes/server.cpp.s
+
+CMakeFiles/server.dir/shared/hash.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared/hash.cpp
+CMakeFiles/server.dir/shared/hash.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/server.dir/shared/hash.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/hash.cpp.o -MF CMakeFiles/server.dir/shared/hash.cpp.o.d -o CMakeFiles/server.dir/shared/hash.cpp.o -c /home/tawfiq/Banking-Application/shared/hash.cpp
+
+CMakeFiles/server.dir/shared/hash.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/hash.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/hash.cpp > CMakeFiles/server.dir/shared/hash.cpp.i
+
+CMakeFiles/server.dir/shared/hash.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/hash.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/hash.cpp -o CMakeFiles/server.dir/shared/hash.cpp.s
+
+CMakeFiles/server.dir/shared/input.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/shared/input.cpp
+CMakeFiles/server.dir/shared/input.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/server.dir/shared/input.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/input.cpp.o -MF CMakeFiles/server.dir/shared/input.cpp.o.d -o CMakeFiles/server.dir/shared/input.cpp.o -c /home/tawfiq/Banking-Application/shared/input.cpp
+
+CMakeFiles/server.dir/shared/input.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/input.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/input.cpp > CMakeFiles/server.dir/shared/input.cpp.i
+
+CMakeFiles/server.dir/shared/input.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/input.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/input.cpp -o CMakeFiles/server.dir/shared/input.cpp.s
+
+CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o: /home/tawfiq/Banking-Application/shared/classes/UserAccount.cpp
+CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o -MF CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o.d -o CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o -c /home/tawfiq/Banking-Application/shared/classes/UserAccount.cpp
+
+CMakeFiles/server.dir/shared/classes/UserAccount.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/classes/UserAccount.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/classes/UserAccount.cpp > CMakeFiles/server.dir/shared/classes/UserAccount.cpp.i
+
+CMakeFiles/server.dir/shared/classes/UserAccount.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/classes/UserAccount.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/classes/UserAccount.cpp -o CMakeFiles/server.dir/shared/classes/UserAccount.cpp.s
+
+CMakeFiles/server.dir/shared/classes/Packet.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/classes/Packet.cpp.o: /home/tawfiq/Banking-Application/shared/classes/Packet.cpp
+CMakeFiles/server.dir/shared/classes/Packet.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/server.dir/shared/classes/Packet.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/classes/Packet.cpp.o -MF CMakeFiles/server.dir/shared/classes/Packet.cpp.o.d -o CMakeFiles/server.dir/shared/classes/Packet.cpp.o -c /home/tawfiq/Banking-Application/shared/classes/Packet.cpp
+
+CMakeFiles/server.dir/shared/classes/Packet.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/classes/Packet.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/classes/Packet.cpp > CMakeFiles/server.dir/shared/classes/Packet.cpp.i
+
+CMakeFiles/server.dir/shared/classes/Packet.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/classes/Packet.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/classes/Packet.cpp -o CMakeFiles/server.dir/shared/classes/Packet.cpp.s
+
+CMakeFiles/server.dir/shared/classes/Account.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/classes/Account.cpp.o: /home/tawfiq/Banking-Application/shared/classes/Account.cpp
+CMakeFiles/server.dir/shared/classes/Account.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/server.dir/shared/classes/Account.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/classes/Account.cpp.o -MF CMakeFiles/server.dir/shared/classes/Account.cpp.o.d -o CMakeFiles/server.dir/shared/classes/Account.cpp.o -c /home/tawfiq/Banking-Application/shared/classes/Account.cpp
+
+CMakeFiles/server.dir/shared/classes/Account.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/classes/Account.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/classes/Account.cpp > CMakeFiles/server.dir/shared/classes/Account.cpp.i
+
+CMakeFiles/server.dir/shared/classes/Account.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/classes/Account.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/classes/Account.cpp -o CMakeFiles/server.dir/shared/classes/Account.cpp.s
+
+CMakeFiles/server.dir/shared/classes/Date.cpp.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/shared/classes/Date.cpp.o: /home/tawfiq/Banking-Application/shared/classes/Date.cpp
+CMakeFiles/server.dir/shared/classes/Date.cpp.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/server.dir/shared/classes/Date.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/server.dir/shared/classes/Date.cpp.o -MF CMakeFiles/server.dir/shared/classes/Date.cpp.o.d -o CMakeFiles/server.dir/shared/classes/Date.cpp.o -c /home/tawfiq/Banking-Application/shared/classes/Date.cpp
+
+CMakeFiles/server.dir/shared/classes/Date.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/server.dir/shared/classes/Date.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tawfiq/Banking-Application/shared/classes/Date.cpp > CMakeFiles/server.dir/shared/classes/Date.cpp.i
+
+CMakeFiles/server.dir/shared/classes/Date.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/server.dir/shared/classes/Date.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tawfiq/Banking-Application/shared/classes/Date.cpp -o CMakeFiles/server.dir/shared/classes/Date.cpp.s
+
 # Object files for target server
 server_OBJECTS = \
-"CMakeFiles/server.dir/server/main.cpp.o"
+"CMakeFiles/server.dir/server/main.cpp.o" \
+"CMakeFiles/server.dir/server/classes/server.cpp.o" \
+"CMakeFiles/server.dir/shared/hash.cpp.o" \
+"CMakeFiles/server.dir/shared/input.cpp.o" \
+"CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o" \
+"CMakeFiles/server.dir/shared/classes/Packet.cpp.o" \
+"CMakeFiles/server.dir/shared/classes/Account.cpp.o" \
+"CMakeFiles/server.dir/shared/classes/Date.cpp.o"
 
 # External object files for target server
 server_EXTERNAL_OBJECTS =
 
 server: CMakeFiles/server.dir/server/main.cpp.o
+server: CMakeFiles/server.dir/server/classes/server.cpp.o
+server: CMakeFiles/server.dir/shared/hash.cpp.o
+server: CMakeFiles/server.dir/shared/input.cpp.o
+server: CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o
+server: CMakeFiles/server.dir/shared/classes/Packet.cpp.o
+server: CMakeFiles/server.dir/shared/classes/Account.cpp.o
+server: CMakeFiles/server.dir/shared/classes/Date.cpp.o
 server: CMakeFiles/server.dir/build.make
 server: CMakeFiles/server.dir/compiler_depend.ts
 server: CMakeFiles/server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tawfiq/Banking-Application/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

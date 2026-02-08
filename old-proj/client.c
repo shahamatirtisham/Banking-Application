@@ -96,38 +96,40 @@ int main(int argc, char *argv[])
     int sockfd, port_number, n;
     struct sockaddr_in server_address;
     struct hostent *server;        //stores information about the given host, ie, host name and ipv4 address
-
+    
     if(argc < 3)
     {
         fprintf(stderr, "Usage %s hostname port\n", argv[0]);
         exit(1);
     }
-
+    
     port_number = atoi(argv[2]);
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0)
     {
         error("Error opening socket.");
     }
-
+    
     server = gethostbyname(argv[1]);    //IP address of the server
     if(server == NULL)
     {
         fprintf(stderr, "Error! No such host.");
         exit(1);
     }
-
+    
     bzero((char *) &server_address, sizeof(server_address));
     server_address.sin_family = AF_INET;
-    bcopy((char *) server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length);
+    memcpy(&server_address.sin_addr.s_addr, server->h_addr_list[0], server->h_length);
     server_address.sin_port = htons(port_number);
+    
 
     if(connect(sockfd, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
     {
         error("Connection failed.");
     }
-
-
+    printf("HI4\n");
+    
+    
     main_menu(sockfd);
 
 

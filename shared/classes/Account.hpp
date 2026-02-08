@@ -1,6 +1,4 @@
 #include <iostream>
-#include <cctype>
-#include "clearScreen.hpp"
 using namespace std;
 
 class Account
@@ -11,46 +9,14 @@ protected:
     string password;
     
 public:
-    Account(string name, string username, string password)
-    {
-        setName(name);
-        setUsername(username);
-        setPassword(password);   
-    }
+    Account(string name, string username, string password);
     void setName(string name);
     void setUsername(string username);
     void setPassword(string password);
     string getUsername() const;
     string getPassword() const;
     string getName() const;
-    virtual void printAccountInfo() = 0;
+    virtual void printAccountInfo(bool printAsterisk) const = 0;
 };    
 
-
-
-void Account::setName(string name)
-{
-    this->name = name;
-} 
-void Account::setUsername(string username)
-{
-    this->username = username;
-}    
-void Account::setPassword(string password)
-{
-      this->password = password;
-}  
-
-string Account::getName() const
-{
-    return name;
-}
-string Account::getUsername() const
-{
-    return username;
-}
-string Account::getPassword() const
-{
-    return password;
-}
 

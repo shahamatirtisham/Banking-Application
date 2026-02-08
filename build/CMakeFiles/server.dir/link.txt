@@ -1,1 +1,1 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/server.dir/link.d CMakeFiles/server.dir/server/main.cpp.o -o server
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/server.dir/link.d CMakeFiles/server.dir/server/main.cpp.o CMakeFiles/server.dir/server/classes/server.cpp.o CMakeFiles/server.dir/shared/hash.cpp.o CMakeFiles/server.dir/shared/input.cpp.o CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o CMakeFiles/server.dir/shared/classes/Packet.cpp.o CMakeFiles/server.dir/shared/classes/Account.cpp.o CMakeFiles/server.dir/shared/classes/Date.cpp.o -o server  -lcrypto

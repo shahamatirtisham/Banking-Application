@@ -1,5 +1,6 @@
-#include "classes/client.hpp"
 #include <iostream>
+#include "screens/pre-login.hpp"
+#include "classes/client.hpp"
 
 using namespace std;
 
@@ -15,7 +16,16 @@ int main(int argc, char *argv[])
     int port = atoi(argv[2]);
 
     Client client(serverIP, port);
-    client.connectServer();
+    if(client.connectServer() == false)
+    {
+        cout << "connection failed\n";
+        exit(0);
+    }
+
+    screens_init(client.getSockfd());
+    mainMenu();
+
+
 
     return 0;
 }

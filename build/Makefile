@@ -142,6 +142,30 @@ client/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
 .PHONY : client/fast
 
+client/classes/client.o: client/classes/client.cpp.o
+.PHONY : client/classes/client.o
+
+# target to build an object file
+client/classes/client.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/classes/client.cpp.o
+.PHONY : client/classes/client.cpp.o
+
+client/classes/client.i: client/classes/client.cpp.i
+.PHONY : client/classes/client.i
+
+# target to preprocess a source file
+client/classes/client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/classes/client.cpp.i
+.PHONY : client/classes/client.cpp.i
+
+client/classes/client.s: client/classes/client.cpp.s
+.PHONY : client/classes/client.s
+
+# target to generate assembly for a file
+client/classes/client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/classes/client.cpp.s
+.PHONY : client/classes/client.cpp.s
+
 client/main.o: client/main.cpp.o
 .PHONY : client/main.o
 
@@ -165,6 +189,54 @@ client/main.s: client/main.cpp.s
 client/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/main.cpp.s
 .PHONY : client/main.cpp.s
+
+client/screens/pre-login.o: client/screens/pre-login.cpp.o
+.PHONY : client/screens/pre-login.o
+
+# target to build an object file
+client/screens/pre-login.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/screens/pre-login.cpp.o
+.PHONY : client/screens/pre-login.cpp.o
+
+client/screens/pre-login.i: client/screens/pre-login.cpp.i
+.PHONY : client/screens/pre-login.i
+
+# target to preprocess a source file
+client/screens/pre-login.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/screens/pre-login.cpp.i
+.PHONY : client/screens/pre-login.cpp.i
+
+client/screens/pre-login.s: client/screens/pre-login.cpp.s
+.PHONY : client/screens/pre-login.s
+
+# target to generate assembly for a file
+client/screens/pre-login.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/screens/pre-login.cpp.s
+.PHONY : client/screens/pre-login.cpp.s
+
+server/classes/server.o: server/classes/server.cpp.o
+.PHONY : server/classes/server.o
+
+# target to build an object file
+server/classes/server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.o
+.PHONY : server/classes/server.cpp.o
+
+server/classes/server.i: server/classes/server.cpp.i
+.PHONY : server/classes/server.i
+
+# target to preprocess a source file
+server/classes/server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.i
+.PHONY : server/classes/server.cpp.i
+
+server/classes/server.s: server/classes/server.cpp.s
+.PHONY : server/classes/server.s
+
+# target to generate assembly for a file
+server/classes/server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.s
+.PHONY : server/classes/server.cpp.s
 
 server/main.o: server/main.cpp.o
 .PHONY : server/main.o
@@ -190,6 +262,168 @@ server/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/main.cpp.s
 .PHONY : server/main.cpp.s
 
+shared/classes/Account.o: shared/classes/Account.cpp.o
+.PHONY : shared/classes/Account.o
+
+# target to build an object file
+shared/classes/Account.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Account.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Account.cpp.o
+.PHONY : shared/classes/Account.cpp.o
+
+shared/classes/Account.i: shared/classes/Account.cpp.i
+.PHONY : shared/classes/Account.i
+
+# target to preprocess a source file
+shared/classes/Account.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Account.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Account.cpp.i
+.PHONY : shared/classes/Account.cpp.i
+
+shared/classes/Account.s: shared/classes/Account.cpp.s
+.PHONY : shared/classes/Account.s
+
+# target to generate assembly for a file
+shared/classes/Account.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Account.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Account.cpp.s
+.PHONY : shared/classes/Account.cpp.s
+
+shared/classes/Date.o: shared/classes/Date.cpp.o
+.PHONY : shared/classes/Date.o
+
+# target to build an object file
+shared/classes/Date.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Date.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Date.cpp.o
+.PHONY : shared/classes/Date.cpp.o
+
+shared/classes/Date.i: shared/classes/Date.cpp.i
+.PHONY : shared/classes/Date.i
+
+# target to preprocess a source file
+shared/classes/Date.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Date.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Date.cpp.i
+.PHONY : shared/classes/Date.cpp.i
+
+shared/classes/Date.s: shared/classes/Date.cpp.s
+.PHONY : shared/classes/Date.s
+
+# target to generate assembly for a file
+shared/classes/Date.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Date.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Date.cpp.s
+.PHONY : shared/classes/Date.cpp.s
+
+shared/classes/Packet.o: shared/classes/Packet.cpp.o
+.PHONY : shared/classes/Packet.o
+
+# target to build an object file
+shared/classes/Packet.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Packet.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Packet.cpp.o
+.PHONY : shared/classes/Packet.cpp.o
+
+shared/classes/Packet.i: shared/classes/Packet.cpp.i
+.PHONY : shared/classes/Packet.i
+
+# target to preprocess a source file
+shared/classes/Packet.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Packet.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Packet.cpp.i
+.PHONY : shared/classes/Packet.cpp.i
+
+shared/classes/Packet.s: shared/classes/Packet.cpp.s
+.PHONY : shared/classes/Packet.s
+
+# target to generate assembly for a file
+shared/classes/Packet.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Packet.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Packet.cpp.s
+.PHONY : shared/classes/Packet.cpp.s
+
+shared/classes/UserAccount.o: shared/classes/UserAccount.cpp.o
+.PHONY : shared/classes/UserAccount.o
+
+# target to build an object file
+shared/classes/UserAccount.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/UserAccount.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/UserAccount.cpp.o
+.PHONY : shared/classes/UserAccount.cpp.o
+
+shared/classes/UserAccount.i: shared/classes/UserAccount.cpp.i
+.PHONY : shared/classes/UserAccount.i
+
+# target to preprocess a source file
+shared/classes/UserAccount.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/UserAccount.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/UserAccount.cpp.i
+.PHONY : shared/classes/UserAccount.cpp.i
+
+shared/classes/UserAccount.s: shared/classes/UserAccount.cpp.s
+.PHONY : shared/classes/UserAccount.s
+
+# target to generate assembly for a file
+shared/classes/UserAccount.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/UserAccount.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/UserAccount.cpp.s
+.PHONY : shared/classes/UserAccount.cpp.s
+
+shared/hash.o: shared/hash.cpp.o
+.PHONY : shared/hash.o
+
+# target to build an object file
+shared/hash.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/hash.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/hash.cpp.o
+.PHONY : shared/hash.cpp.o
+
+shared/hash.i: shared/hash.cpp.i
+.PHONY : shared/hash.i
+
+# target to preprocess a source file
+shared/hash.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/hash.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/hash.cpp.i
+.PHONY : shared/hash.cpp.i
+
+shared/hash.s: shared/hash.cpp.s
+.PHONY : shared/hash.s
+
+# target to generate assembly for a file
+shared/hash.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/hash.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/hash.cpp.s
+.PHONY : shared/hash.cpp.s
+
+shared/input.o: shared/input.cpp.o
+.PHONY : shared/input.o
+
+# target to build an object file
+shared/input.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/input.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/input.cpp.o
+.PHONY : shared/input.cpp.o
+
+shared/input.i: shared/input.cpp.i
+.PHONY : shared/input.i
+
+# target to preprocess a source file
+shared/input.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/input.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/input.cpp.i
+.PHONY : shared/input.cpp.i
+
+shared/input.s: shared/input.cpp.s
+.PHONY : shared/input.s
+
+# target to generate assembly for a file
+shared/input.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/input.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/input.cpp.s
+.PHONY : shared/input.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -200,12 +434,39 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... client"
 	@echo "... server"
+	@echo "... client/classes/client.o"
+	@echo "... client/classes/client.i"
+	@echo "... client/classes/client.s"
 	@echo "... client/main.o"
 	@echo "... client/main.i"
 	@echo "... client/main.s"
+	@echo "... client/screens/pre-login.o"
+	@echo "... client/screens/pre-login.i"
+	@echo "... client/screens/pre-login.s"
+	@echo "... server/classes/server.o"
+	@echo "... server/classes/server.i"
+	@echo "... server/classes/server.s"
 	@echo "... server/main.o"
 	@echo "... server/main.i"
 	@echo "... server/main.s"
+	@echo "... shared/classes/Account.o"
+	@echo "... shared/classes/Account.i"
+	@echo "... shared/classes/Account.s"
+	@echo "... shared/classes/Date.o"
+	@echo "... shared/classes/Date.i"
+	@echo "... shared/classes/Date.s"
+	@echo "... shared/classes/Packet.o"
+	@echo "... shared/classes/Packet.i"
+	@echo "... shared/classes/Packet.s"
+	@echo "... shared/classes/UserAccount.o"
+	@echo "... shared/classes/UserAccount.i"
+	@echo "... shared/classes/UserAccount.s"
+	@echo "... shared/hash.o"
+	@echo "... shared/hash.i"
+	@echo "... shared/hash.s"
+	@echo "... shared/input.o"
+	@echo "... shared/input.i"
+	@echo "... shared/input.s"
 .PHONY : help
 
 
