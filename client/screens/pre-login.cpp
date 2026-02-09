@@ -38,15 +38,12 @@ void mainMenu()
 
     while(1)
     {
-        int choice;
-        char command[21];
-
         cout << "1. Login as existing user.\n"
                "2. Signup as new user.\n"
                "3. Register as an admin.\n"
                "4. Login as admin.\n"
-               "Please select your desired option (1-3): ";
-        cin >> choice;
+               "Please select your desired option (1-4): ";
+        int choice = readInt();
 
         switch(choice)
         {
@@ -78,8 +75,6 @@ static void preloginScreens::user::login()
 }
 static void preloginScreens::user::signup()
 {
-    string command;
-    bool response;
     string name, username, password, favAni;
     Date DOB;
 
@@ -90,7 +85,7 @@ static void preloginScreens::user::signup()
     favAni = acceptFavAni();
 
     UserAccount user(name, username, password, DOB, 0, favAni);
-    user.printAccountInfo();
+    user.printAccountInfo(0);
     Packet packet(sockfd, name, username, password, DOB, 0, "", favAni);
     packet.write();
 

@@ -1,76 +1,173 @@
-#include "input.hpp"
-// #include "classes/Date.hpp"
+#include "../input.hpp"
+#include "../classes/Date.hpp"
 #include <iostream>
 #include <cstdlib>
-#include "hash.hpp"
 using namespace std;
 
 
-int readInt()
+
+
+
+
+
+
+
+
+
+
+Date::Date(int d, int m, int y)
 {
-    while (true)
-    {
-        std::string line;
-        std::getline(std::cin, line);
-
-        try
-        {
-            size_t pos;
-            int value = std::stoi(line, &pos);
-
-            // ensure whole line was a number
-            if (pos == line.size())
-                return value;
-        }
-        catch (...)
-        {
-            // fall through
-        }
-
-        std::cout << "Invalid integer, try again: ";
-    }
+    setDate(d);
+    setMonth(m);
+    setYear(y);
+    
 }
-double readDouble()
+Date::Date()
 {
-    while (true)
+    setDate(15);
+    setMonth(1);
+    setYear(2004);
+}
+
+void Date::setDate(int date)
+{        
+        this->date = date;
+}
+void Date::setMonth(int month)
+{
+    this->month = month;
+}
+void Date::setYear(int year)
+{
+    this->year = year;
+}
+int Date::getDate() const
+{
+    return date;
+}
+int Date::Date::getMonth() const
+{
+    return month;
+}
+int Date::getYear() const
+{
+    return year;
+}
+bool check_valid_date(const Date& _date)
+{
+    int date = _date.getDate();
+    int month = _date.getMonth();
+    int year = _date.getYear();
+
+    int max_date;
+
+    bool leap_year = false;
+
+    if((year % 400) == 0)
+        leap_year = true;
+    if((year % 4) == 0 && (year % 100) != 0)
+        leap_year = true;
+
+    switch (month)
     {
-        std::string line;
-        std::getline(std::cin, line);
+        case  4: 
+        case  6:
+        case  9:
+        case 11: max_date = 30;
+                 break;
 
-        try
-        {
-            size_t pos;
-            double value = std::stoi(line, &pos);
+        case  2: max_date = 28;
+                 break;
 
-            // ensure whole line was a number
-            if (pos == line.size())
-                return value;
-        }
-        catch (...)
-        {
-            // fall through
-        }
-
-        std::cout << "Invalid integer, try again: ";
+        default: max_date = 31;
     }
+
+    if(leap_year && month == 2)
+        max_date = 29;
+
+    if(date <= 0 || date > max_date)
+        return false;
+
+    if(month <= 0 || month > 12)
+        return false;
+
+    return true;  
+}
+int Date::getAge() const
+{
+    int age;
+    time_t now;
+    struct tm *current;
+    time(&now); 
+    current = localtime(&now);
+
+    int current_year = current->tm_year + 1900;
+    int current_month = current->tm_mon + 1;
+    int current_day =current->tm_mday;
+
+
+    if(current_month < month)
+    {
+        age = current_year - year - 1;
+    }
+    else if(current_month == month && current_day <= date)
+    {
+        age = current_year - year - 1;
+    }
+    else
+    {
+        age = current_year - year;
+    }
+
+    return year;    
+}
+void Date::display() const
+{
+    cout << date << "-" << month << "-" << year;
+}
+Date stringToDate(const string &str_date)
+{
+    int birth_date = 0, birth_month = 0, birth_year = 0;
+    int multiplier = 10;
+    for (int i = 0; i <= 1; i++)
+    {
+        birth_date += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    multiplier = 10;
+    for (int i = 3; i <= 4; i++)
+    {
+        birth_month += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    multiplier = 1000;
+    for (int i = 6; i <= 9; i++)
+    {
+        birth_year += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    return Date(birth_date, birth_month, birth_year);
 }
 
 bool checkValidDOB(const string& dob)
 {
     if(dob.empty())
-            return false;
+    {
+        cout << "Field cannot be empty\n";
+        return false;
+    }
         
         if(dob.size() != 10)
         {
-            clearScreen(); 
-            cout << "Invalid format. Size /= 10. Size: " << dob.size() << endl;
+             
+            cout << "Invalid format. Size /= 10\n";
             return false;
         }
         if(dob[2] != '-' || dob[5] != '-')
         {
-            clearScreen(); 
+             
 
-            cout << "Invalid format.\n";
+            printf("Invalid format. Dashes not at appropriate positions\n");
             return false;
         }
 
@@ -79,8 +176,8 @@ bool checkValidDOB(const string& dob)
 
             if(dob[i] - '\0' == '\t' || dob[i] - '\0' == '\n' || dob[i] - '\0' == '\0' || dob[i] - '\0' == '\b')
             {
-                clearScreen(); 
-                cout << "Date of birth cannot contain control characters.\n";
+                 
+                printf("Date of birth cannot contain control characters.\n");
                 return false;
             }            
         }
@@ -113,13 +210,13 @@ bool checkValidDOB(const string& dob)
 
         if(check_valid_date(DOB) == false)
         {
-            clearScreen(); 
-            cout << "Invalid date/month.\n";
+             
+            printf("Invalid date/month.\n");
             return false;
         }
         else if (DOB.getAge() < 18)
         {
-            clearScreen();
+            
             cout << "You must be over 18 years old\n";
             return false;
         }
@@ -127,6 +224,9 @@ bool checkValidDOB(const string& dob)
     
     return true;
 }
+
+
+
 Date acceptDOB()
 {
     string str_dob;
@@ -134,11 +234,18 @@ Date acceptDOB()
     {
         cout << "Set date of birth (DD-MM-YYYY): ";
         getline(cin, str_dob);
-        //cin.ignore();
+        cout << str_dob.size() << endl;
+
+        for(int i = 0; i < str_dob.size(); i++)
+        {
+            cout << str_dob[i] << " ";
+        }
+        cout << endl;
 
         if(checkValidDOB(str_dob) == false)
         {
-            cout << "Invalid date/month.\n";
+             
+            printf("Invalid date/month.\n");
             continue;
         }    
         else
@@ -149,7 +256,7 @@ Date acceptDOB()
     Date DOB = stringToDate(str_dob);
     if (DOB.getAge() < 18)
     {
-        clearScreen();
+        
         cout << "You must be over 18 years old\n";
         acceptDOB();
     } 
@@ -162,7 +269,7 @@ double acceptBalance()
     double balance;
     while(1)
     {
-        balance = readDouble();
+        cin >> balance;
         if(balance >= 0)
         {
             break;
@@ -175,9 +282,8 @@ string acceptFavAni()
     string favAni;
     while(1)
     {
-        cout << "Enter favorite animal: ";
+        cin.ignore();
         getline(cin, favAni);
-        //cin.ignore();
         if(favAni.size() > 30)
         {
             cout << "Animal name cannot be greater than 30 characters\n";
@@ -194,9 +300,8 @@ string acceptName()
     string name;
     while(1)
     {
-        cout << "Enter name: ";
+        cin.ignore();
         getline(cin, name);
-        //cin.ignore();
         if(name.size() > 30)
         {
             cout << "Name cannot be overe 30 characters long\n";
@@ -215,7 +320,7 @@ bool checkValidUsername(const string& username)
 
         if(username.find_first_of(" ") != string::npos)
         {
-            clearScreen();
+            
             cout << "Username cannot contain spaces\n";
             return false;
         }
@@ -224,13 +329,13 @@ bool checkValidUsername(const string& username)
 
         if(isdigit(username[0]))
         {
-            clearScreen(); 
+             
             cout << "Username cannot start with a digit.\n";
             return false;
         }
         else if(username.size() > 20)
         {
-            clearScreen(); 
+             
             cout << "Username cannot be over 20 characters.\n";
             return false;
         }
@@ -239,14 +344,14 @@ bool checkValidUsername(const string& username)
         {
             if(!isdigit(username[i]) && !isalpha(username[i]))
             {
-                clearScreen(); 
-                cout << "Username cannot contain special characters or spaces.\n";
+                 
+                printf("Username cannot contain special characters or spaces.\n");
                 return false;
             } 
             else if(isupper(username[i])) 
             {
-                clearScreen(); 
-                cout << "Username cannot contain uppercase characters.\n";
+                 
+                printf("Username cannot contain uppercase characters.\n");
                 return false;
             }       
         }
@@ -264,21 +369,21 @@ bool checkValidPassword(const string& password)
         
         if(password.size() > 20)
         {
-            //clearScreen(); 
-            cout << "Password cannot be over 20 characters.\n";
+             
+            printf("Password cannot be over 20 characters.\n");
             return false;
         }
         if(password.size() < 7)
         {
-            //clearScreen(); 
-            cout << "Password needs to be atleast 8 characters long.\n";
+             
+            printf("Password needs to be atleast 8 characters long.\n");
             return false;
         }
 
         if(password[0] == ' ' || password[password.size() - 1] == ' ')
         {
-            clearScreen(); 
-            cout << "Password cannot contain spaces in the beginning or end.\n";
+             
+            printf("Password cannot contain spaces in the beginning or end.\n");
             return false;
         }
 
@@ -287,8 +392,8 @@ bool checkValidPassword(const string& password)
            password.find_first_of("\b") != string::npos ||
            password.find_first_of("\0") != string::npos)
         {
-            clearScreen(); 
-            cout << "Password cannot contain control characters.\n";
+             
+            printf("Password cannot contain control characters.\n");
             return false;       
         }
     
@@ -300,8 +405,8 @@ string acceptUsername()
     while(1)
     {
         cout << "Enter username: ";
+        cin.ignore();
         getline(cin, username);
-        //cin.ignore();
         if(checkValidUsername(username) == true)
         { 
             break;
@@ -317,9 +422,8 @@ string acceptPassword()
     while(1)
     {
         cout << "Enter password: ";
-
+        cin.ignore();
         getline(cin, password);
-        //cin.ignore();
         if(checkValidPassword(password) == true)
         {
             break;
@@ -330,4 +434,22 @@ string acceptPassword()
 void clearScreen()
 {
     system("clear");
+}
+
+int main()
+{
+    string str3, str4;
+    cin.ignore();
+    getline(cin, str3);
+    cin.ignore();
+    getline(cin, str4);
+    string str1;
+    cin >> str1;
+    string str2;
+    cin >> str2;
+
+    cout << "str1: "<< str1 << "\nstr2: "<< str2 << "\nstr3: "<< str3 << "\nstr4: "<< str4;
+
+
+    return 0;
 }

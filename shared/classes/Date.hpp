@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 class Date
 {
@@ -7,16 +8,21 @@ private:
     int date;
     int month;
     int year;
+
 public:
     Date(int d, int m, int y);
     Date();
+
     void setDate(int d);
     void setMonth(int m);
     void setYear(int y);
+
     int getDate() const;
     int getMonth() const;
     int getYear() const;
-    bool check_valid_date() const;
     int getAge() const;
     void display() const;
 };
+
+Date stringToDate(const std::string& str_date);
+bool check_valid_date(const Date& _date);

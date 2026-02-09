@@ -1282,8 +1282,11 @@ CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared
   /usr/include/bits/floatn-common.h \
   /usr/include/bits/floatn.h \
   /usr/include/bits/libc-header-start.h \
+  /usr/include/bits/local_lim.h \
   /usr/include/bits/locale.h \
   /usr/include/bits/long-double.h \
+  /usr/include/bits/posix1_lim.h \
+  /usr/include/bits/posix2_lim.h \
   /usr/include/bits/pthread_stack_min-dynamic.h \
   /usr/include/bits/pthreadtypes-arch.h \
   /usr/include/bits/pthreadtypes.h \
@@ -1329,11 +1332,13 @@ CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared
   /usr/include/bits/types/wint_t.h \
   /usr/include/bits/typesizes.h \
   /usr/include/bits/uintn-identity.h \
+  /usr/include/bits/uio_lim.h \
   /usr/include/bits/waitflags.h \
   /usr/include/bits/waitstatus.h \
   /usr/include/bits/wchar.h \
   /usr/include/bits/wctype-wchar.h \
   /usr/include/bits/wordsize.h \
+  /usr/include/bits/xopen_lim.h \
   /usr/include/c++/15.2.1/backward/binders.h \
   /usr/include/c++/15.2.1/bit \
   /usr/include/c++/15.2.1/bits/alloc_traits.h \
@@ -1427,6 +1432,7 @@ CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared
   /usr/include/c++/15.2.1/pstl/pstl_config.h \
   /usr/include/c++/15.2.1/sstream \
   /usr/include/c++/15.2.1/stdexcept \
+  /usr/include/c++/15.2.1/stdlib.h \
   /usr/include/c++/15.2.1/streambuf \
   /usr/include/c++/15.2.1/string \
   /usr/include/c++/15.2.1/string_view \
@@ -1455,18 +1461,43 @@ CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/libintl.h \
+  /usr/include/limits.h \
   /usr/include/linux/errno.h \
+  /usr/include/linux/limits.h \
   /usr/include/linux/posix_types.h \
   /usr/include/linux/sched/types.h \
   /usr/include/linux/stddef.h \
   /usr/include/linux/types.h \
   /usr/include/locale.h \
+  /usr/include/openssl/asn1.h \
+  /usr/include/openssl/asn1err.h \
+  /usr/include/openssl/bio.h \
+  /usr/include/openssl/bioerr.h \
+  /usr/include/openssl/bn.h \
+  /usr/include/openssl/bnerr.h \
   /usr/include/openssl/configuration.h \
+  /usr/include/openssl/core.h \
+  /usr/include/openssl/core_dispatch.h \
+  /usr/include/openssl/crypto.h \
+  /usr/include/openssl/cryptoerr.h \
+  /usr/include/openssl/cryptoerr_legacy.h \
   /usr/include/openssl/e_os2.h \
+  /usr/include/openssl/err.h \
+  /usr/include/openssl/evp.h \
+  /usr/include/openssl/evperr.h \
+  /usr/include/openssl/indicator.h \
+  /usr/include/openssl/lhash.h \
   /usr/include/openssl/macros.h \
+  /usr/include/openssl/obj_mac.h \
+  /usr/include/openssl/objects.h \
+  /usr/include/openssl/objectserr.h \
   /usr/include/openssl/opensslconf.h \
   /usr/include/openssl/opensslv.h \
-  /usr/include/openssl/sha.h \
+  /usr/include/openssl/params.h \
+  /usr/include/openssl/safestack.h \
+  /usr/include/openssl/stack.h \
+  /usr/include/openssl/symhacks.h \
+  /usr/include/openssl/types.h \
   /usr/include/pthread.h \
   /usr/include/sched.h \
   /usr/include/stdc-predef.h \
@@ -1480,9 +1511,11 @@ CMakeFiles/server.dir/shared/hash.cpp.o: /home/tawfiq/Banking-Application/shared
   /usr/include/time.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/limits.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdarg.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/syslimits.h
 
 CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/shared/input.cpp \
   /home/tawfiq/Banking-Application/shared/classes/Date.hpp \
@@ -1518,8 +1551,6 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/bits/select.h \
   /usr/include/bits/setjmp.h \
   /usr/include/bits/stdint-intn.h \
-  /usr/include/bits/stdint-least.h \
-  /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/stdio_lim.h \
   /usr/include/bits/stdlib-float.h \
   /usr/include/bits/struct_mutex.h \
@@ -1571,7 +1602,6 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/bits/basic_string.tcc \
   /usr/include/c++/15.2.1/bits/char_traits.h \
   /usr/include/c++/15.2.1/bits/charconv.h \
-  /usr/include/c++/15.2.1/bits/codecvt.h \
   /usr/include/c++/15.2.1/bits/concept_check.h \
   /usr/include/c++/15.2.1/bits/cpp_type_traits.h \
   /usr/include/c++/15.2.1/bits/cxxabi_forced.h \
@@ -1587,11 +1617,8 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/bits/istream.tcc \
   /usr/include/c++/15.2.1/bits/locale_classes.h \
   /usr/include/c++/15.2.1/bits/locale_classes.tcc \
-  /usr/include/c++/15.2.1/bits/locale_conv.h \
   /usr/include/c++/15.2.1/bits/locale_facets.h \
   /usr/include/c++/15.2.1/bits/locale_facets.tcc \
-  /usr/include/c++/15.2.1/bits/locale_facets_nonio.h \
-  /usr/include/c++/15.2.1/bits/locale_facets_nonio.tcc \
   /usr/include/c++/15.2.1/bits/localefwd.h \
   /usr/include/c++/15.2.1/bits/memory_resource.h \
   /usr/include/c++/15.2.1/bits/memoryfwd.h \
@@ -1604,11 +1631,9 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/bits/postypes.h \
   /usr/include/c++/15.2.1/bits/predefined_ops.h \
   /usr/include/c++/15.2.1/bits/ptr_traits.h \
-  /usr/include/c++/15.2.1/bits/quoted_string.h \
   /usr/include/c++/15.2.1/bits/range_access.h \
   /usr/include/c++/15.2.1/bits/refwrap.h \
   /usr/include/c++/15.2.1/bits/requires_hosted.h \
-  /usr/include/c++/15.2.1/bits/sstream.tcc \
   /usr/include/c++/15.2.1/bits/std_abs.h \
   /usr/include/c++/15.2.1/bits/stl_algobase.h \
   /usr/include/c++/15.2.1/bits/stl_construct.h \
@@ -1632,7 +1657,6 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/cstddef \
   /usr/include/c++/15.2.1/cstdio \
   /usr/include/c++/15.2.1/cstdlib \
-  /usr/include/c++/15.2.1/ctime \
   /usr/include/c++/15.2.1/cwchar \
   /usr/include/c++/15.2.1/cwctype \
   /usr/include/c++/15.2.1/debug/assertions.h \
@@ -1644,16 +1668,13 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/ext/string_conversions.h \
   /usr/include/c++/15.2.1/ext/type_traits.h \
   /usr/include/c++/15.2.1/initializer_list \
-  /usr/include/c++/15.2.1/iomanip \
   /usr/include/c++/15.2.1/ios \
   /usr/include/c++/15.2.1/iosfwd \
   /usr/include/c++/15.2.1/iostream \
   /usr/include/c++/15.2.1/istream \
-  /usr/include/c++/15.2.1/locale \
   /usr/include/c++/15.2.1/new \
   /usr/include/c++/15.2.1/ostream \
   /usr/include/c++/15.2.1/pstl/pstl_config.h \
-  /usr/include/c++/15.2.1/sstream \
   /usr/include/c++/15.2.1/stdexcept \
   /usr/include/c++/15.2.1/streambuf \
   /usr/include/c++/15.2.1/string \
@@ -1672,9 +1693,7 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/error_constants.h \
   /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/gthr-default.h \
   /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/gthr.h \
-  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/messages_members.h \
   /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/os_defines.h \
-  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/time_members.h \
   /usr/include/ctype.h \
   /usr/include/endian.h \
   /usr/include/errno.h \
@@ -1682,23 +1701,15 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/features.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
-  /usr/include/libintl.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/posix_types.h \
   /usr/include/linux/sched/types.h \
   /usr/include/linux/stddef.h \
   /usr/include/linux/types.h \
   /usr/include/locale.h \
-  /usr/include/openssl/configuration.h \
-  /usr/include/openssl/e_os2.h \
-  /usr/include/openssl/macros.h \
-  /usr/include/openssl/opensslconf.h \
-  /usr/include/openssl/opensslv.h \
-  /usr/include/openssl/sha.h \
   /usr/include/pthread.h \
   /usr/include/sched.h \
   /usr/include/stdc-predef.h \
-  /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
   /usr/include/sys/cdefs.h \
@@ -1709,8 +1720,7 @@ CMakeFiles/server.dir/shared/input.cpp.o: /home/tawfiq/Banking-Application/share
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdarg.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h
 
 server: /usr/lib/Scrt1.o \
   /usr/lib/crti.o \
@@ -1773,9 +1783,45 @@ CMakeFiles/server.dir/shared/classes/Account.cpp.o:
 
 /home/tawfiq/Banking-Application/shared/input.cpp:
 
+/usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/syslimits.h:
+
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h:
 
-/usr/include/openssl/sha.h:
+/usr/include/openssl/types.h:
+
+/usr/include/openssl/symhacks.h:
+
+/usr/include/openssl/stack.h:
+
+/usr/include/openssl/safestack.h:
+
+/usr/include/openssl/params.h:
+
+/usr/include/openssl/opensslv.h:
+
+/usr/include/openssl/objectserr.h:
+
+/usr/include/openssl/indicator.h:
+
+/usr/include/openssl/e_os2.h:
+
+/usr/include/openssl/crypto.h:
+
+/usr/include/openssl/core_dispatch.h:
+
+/usr/include/openssl/configuration.h:
+
+/usr/include/openssl/bnerr.h:
+
+/usr/include/openssl/bio.h:
+
+/usr/include/openssl/asn1err.h:
+
+/usr/include/openssl/asn1.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/limits.h:
 
 /usr/include/c++/15.2.1/bits/ostream_insert.h:
 
@@ -1811,15 +1857,21 @@ CMakeFiles/server.dir/shared/classes/Account.cpp.o:
 
 /usr/include/c++/15.2.1/ext/string_conversions.h:
 
-/usr/include/c++/15.2.1/bits/exception.h:
-
 /usr/include/c++/15.2.1/bits/cxxabi_init_exception.h:
+
+/usr/include/openssl/macros.h:
+
+/usr/include/c++/15.2.1/bits/cxxabi_forced.h:
 
 /usr/include/c++/15.2.1/bits/concept_check.h:
 
 /usr/include/c++/15.2.1/bits/basic_ios.tcc:
 
+/usr/include/openssl/evp.h:
+
 /usr/include/c++/15.2.1/cerrno:
+
+/usr/include/bits/posix2_lim.h:
 
 /usr/include/c++/15.2.1/bits/hash_bytes.h:
 
@@ -1865,6 +1917,8 @@ CMakeFiles/server.dir/shared/classes/Account.cpp.o:
 
 /usr/lib/libcrypto.so:
 
+/usr/include/openssl/bioerr.h:
+
 /usr/include/asm-generic/sockios.h:
 
 /usr/include/bits/types/mbstate_t.h:
@@ -1889,6 +1943,8 @@ CMakeFiles/server.dir/shared/classes/Account.cpp.o:
 
 /usr/include/bits/errno.h:
 
+/usr/include/openssl/err.h:
+
 /usr/include/bits/atomic_wide_counter.h:
 
 /usr/include/bits/posix_opt.h:
@@ -1899,9 +1955,17 @@ CMakeFiles/server.dir/shared/classes/Account.cpp.o:
 
 /usr/include/c++/15.2.1/bits/basic_string.tcc:
 
+/usr/include/openssl/cryptoerr.h:
+
 /usr/include/bits/uintn-identity.h:
 
 /usr/include/c++/15.2.1/bits/locale_facets_nonio.h:
+
+/usr/include/c++/15.2.1/stdlib.h:
+
+/usr/include/libintl.h:
+
+/usr/include/bits/endianness.h:
 
 /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/atomic_word.h:
 
@@ -1933,11 +1997,15 @@ CMakeFiles/server.dir/server/classes/server.cpp.o:
 
 /usr/include/bits/types/struct_FILE.h:
 
+/usr/include/openssl/cryptoerr_legacy.h:
+
 /usr/include/asm/types.h:
 
 /usr/include/c++/15.2.1/bit:
 
 /usr/include/c++/15.2.1/bits/basic_ios.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/limits.h:
 
 /usr/include/bits/floatn-common.h:
 
@@ -1967,8 +2035,6 @@ CMakeFiles/server.dir/server/classes/server.cpp.o:
 
 /usr/include/stdc-predef.h:
 
-/usr/include/openssl/opensslv.h:
-
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h:
 
 /usr/include/asm-generic/int-ll64.h:
@@ -1989,6 +2055,8 @@ CMakeFiles/server.dir/server/classes/server.cpp.o:
 
 /usr/include/c++/15.2.1/bits/stringfwd.h:
 
+/usr/include/openssl/evperr.h:
+
 /usr/include/asm/sockios.h:
 
 /usr/include/bits/pthread_stack_min-dynamic.h:
@@ -1996,6 +2064,8 @@ CMakeFiles/server.dir/server/classes/server.cpp.o:
 /usr/include/c++/15.2.1/pstl/pstl_config.h:
 
 /usr/include/bits/floatn.h:
+
+/usr/include/openssl/lhash.h:
 
 /usr/include/c++/15.2.1/bits/ios_base.h:
 
@@ -2020,6 +2090,8 @@ CMakeFiles/server.dir/server/classes/server.cpp.o:
 /usr/include/bits/thread-shared-types.h:
 
 /usr/include/c++/15.2.1/debug/debug.h:
+
+/usr/include/openssl/bn.h:
 
 /usr/include/c++/15.2.1/type_traits:
 
@@ -2097,6 +2169,8 @@ CMakeFiles/server.dir/server/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/postypes.h:
 
+/usr/include/bits/xopen_lim.h:
+
 /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++allocator.h:
 
 /usr/include/c++/15.2.1/bits/range_access.h:
@@ -2106,6 +2180,12 @@ CMakeFiles/server.dir/server/main.cpp.o:
 /usr/include/bits/cpu-set.h:
 
 /usr/include/c++/15.2.1/bits/streambuf.tcc:
+
+/usr/include/openssl/opensslconf.h:
+
+/usr/include/linux/types.h:
+
+/usr/include/c++/15.2.1/bits/std_abs.h:
 
 /usr/include/gnu/stubs-64.h:
 
@@ -2134,6 +2214,8 @@ CMakeFiles/server.dir/server/main.cpp.o:
 /usr/include/c++/15.2.1/clocale:
 
 /usr/include/c++/15.2.1/concepts:
+
+/usr/include/bits/posix1_lim.h:
 
 /usr/include/wchar.h:
 
@@ -2178,6 +2260,8 @@ CMakeFiles/server.dir/server/main.cpp.o:
 /usr/include/bits/long-double.h:
 
 /home/tawfiq/Banking-Application/shared/input.hpp:
+
+/usr/include/bits/local_lim.h:
 
 CMakeFiles/server.dir/shared/input.cpp.o:
 
@@ -2255,17 +2339,19 @@ CMakeFiles/server.dir/shared/input.cpp.o:
 
 /usr/include/sys/select.h:
 
+/usr/include/openssl/obj_mac.h:
+
 /usr/include/sys/single_threaded.h:
-
-/usr/include/c++/15.2.1/bits/cxxabi_forced.h:
-
-/usr/include/openssl/macros.h:
 
 /usr/include/unistd.h:
 
 /home/tawfiq/Banking-Application/shared/hash.hpp:
 
+/usr/include/openssl/objects.h:
+
 /home/tawfiq/Banking-Application/server/main.cpp:
+
+/usr/include/openssl/core.h:
 
 /home/tawfiq/Banking-Application/shared/classes/Account.hpp:
 
@@ -2281,11 +2367,13 @@ CMakeFiles/server.dir/shared/hash.cpp.o:
 
 /usr/include/string.h:
 
-/usr/include/openssl/configuration.h:
-
 /home/tawfiq/Banking-Application/shared/classes/UserAccount.cpp:
 
 /usr/include/bits/stdint-least.h:
+
+/usr/include/c++/15.2.1/bits/exception.h:
+
+/usr/include/bits/uio_lim.h:
 
 /usr/include/c++/15.2.1/bits/codecvt.h:
 
@@ -2298,15 +2386,3 @@ CMakeFiles/server.dir/shared/hash.cpp.o:
 /usr/include/bits/types/sigset_t.h:
 
 /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/messages_members.h:
-
-/usr/include/bits/endianness.h:
-
-/usr/include/libintl.h:
-
-/usr/include/openssl/e_os2.h:
-
-/usr/include/linux/types.h:
-
-/usr/include/c++/15.2.1/bits/std_abs.h:
-
-/usr/include/openssl/opensslconf.h:

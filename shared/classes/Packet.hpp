@@ -8,6 +8,7 @@ class Packet
 {
 private:
     int clientSock;
+    string command;
     string name_seg;
     string username_seg;
     string password_seg;
@@ -17,8 +18,9 @@ private:
     string favAni_seg;
     string salt_seg;
 public:
-    Packet(int clientSock, string name_seg="", string username_seg="", string password_seg="", Date date_seg=Date(), 
+    Packet(int clientSock, string command="", string name_seg="", string username_seg="", string password_seg="", Date date_seg=Date(), 
         double balance_seg=0, string accountNo_seg="", string favAni_seg="",string salt_seg="");
+    string get_command() const;
     string get_name_seg() const;
     string get_username_seg() const;
     string get_password_seg() const;

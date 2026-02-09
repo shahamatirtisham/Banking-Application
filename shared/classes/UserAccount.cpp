@@ -80,20 +80,28 @@ string UserAccount::getFavAni() const
 void UserAccount::printAccountInfo(bool printAsterisk) const
 {
     cout << "Name: " << name << endl;
-    cout << "Username: "; cout << username;
-    cout << "Password: "; cout << password;
+
     if(printAsterisk)
     {
         cout << "Username: ***\n";
         cout << "Password: ***\n";
     }
+    else
+    {
+        cout << "Username: " << username << endl;
+        cout << "Password: " << password << endl;
+    }
     cout << "Date of Birth: ";
     DOB.display(); cout << endl;
-    cout << "Balance: " << balance;
+    cout << "Balance: " << balance << endl;
     cout << "Account Number: " << accountNo << endl;
     if(printAsterisk)
     {
         cout << "Favorite Animal: ***\n";
+    }
+    else
+    {
+        cout << "Favorite Animal: " << favAni;
     }
 }
 

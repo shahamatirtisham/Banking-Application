@@ -41,8 +41,12 @@ int Date::getYear() const
 {
     return year;
 }
-bool Date::check_valid_date() const
+bool check_valid_date(const Date& _date)
 {
+    int date = _date.getDate();
+    int month = _date.getMonth();
+    int year = _date.getYear();
+
     int max_date;
 
     bool leap_year = false;
@@ -108,4 +112,27 @@ int Date::getAge() const
 void Date::display() const
 {
     cout << date << "-" << month << "-" << year;
+}
+Date stringToDate(const string &str_date)
+{
+    int birth_date = 0, birth_month = 0, birth_year = 0;
+    int multiplier = 10;
+    for (int i = 0; i <= 1; i++)
+    {
+        birth_date += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    multiplier = 10;
+    for (int i = 3; i <= 4; i++)
+    {
+        birth_month += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    multiplier = 1000;
+    for (int i = 6; i <= 9; i++)
+    {
+        birth_year += (str_date[i] - '0') * multiplier;
+        multiplier /= 10;
+    }
+    return Date(birth_date, birth_month, birth_year);
 }

@@ -6,11 +6,11 @@
 
 using namespace std;
 
-Packet::Packet(int clientSock, string name_seg, string username_seg, string password_seg, Date date_seg, 
+Packet::Packet(int clientSock, string command, string name_seg, string username_seg, string password_seg, Date date_seg, 
         double balance_seg, string accountNo_seg, string favAni_seg,string salt_seg)
 {
     this->clientSock = clientSock;
-    
+    this->command = command;
     this->name_seg = name_seg;
     this->username_seg = username_seg;
     this->password_seg = password_seg;
@@ -21,6 +21,10 @@ Packet::Packet(int clientSock, string name_seg, string username_seg, string pass
     this->salt_seg = salt_seg;
 }
 
+string Packet::get_command() const
+{
+    return command;
+}
 string Packet::get_name_seg() const
 {
     return name_seg;
@@ -55,6 +59,7 @@ string Packet::get_salt_seg() const
 }
 void Packet:: write()
 {
+    ::write(clientSock, command.c_str(), 31);
     ::write(clientSock, name_seg.c_str(), 31);
     ::write(clientSock, username_seg.c_str(), 65);
     ::write(clientSock, password_seg.c_str(), 65);
@@ -77,6 +82,7 @@ void Packet:: read()
     int month;
     int year; 
 
+    command.resize(31);
     name_seg.resize(31);
     username_seg.resize(65);
     password_seg.resize(65);
@@ -84,6 +90,7 @@ void Packet:: read()
     favAni_seg.resize(31);
     salt_seg.resize(17);
 
+    ::read(clientSock, command.data(), 31);
     ::read(clientSock, name_seg.data(), 31);
     ::read(clientSock, username_seg.data(), 65);
     ::read(clientSock, password_seg.data(), 65);
