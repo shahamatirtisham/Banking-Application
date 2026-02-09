@@ -14,6 +14,7 @@ add_executable(server
     shared/classes/Packet.cpp
     shared/classes/Account.cpp
     shared/classes/Date.cpp
+    server/requests/readRequests.cpp
 )
 
 target_include_directories(server PRIVATE

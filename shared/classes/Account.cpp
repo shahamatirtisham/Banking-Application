@@ -14,6 +14,12 @@ Account::Account(string name, string username, string password)
     setUsername(username);
     setPassword(password);   
 }
+Account:: Account()
+{
+    setName("");
+    setUsername("");
+    setPassword("");
+}
 void Account::setName(string name)
 {
     this->name = name;

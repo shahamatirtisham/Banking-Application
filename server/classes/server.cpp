@@ -1,4 +1,5 @@
 #include "../../shared/classes/Packet.hpp"
+#include "../requests/readRequests.hpp"
 #include <iostream>
 #include <strings.h>
 #include <unistd.h>
@@ -85,5 +86,19 @@ void Server::run()
 void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
+    readRequests_init(clientSocket);
+    cout << "Check1\n";
+    while(1)
+    {
+        Packet packet(clientSocket);
+        cout << "Check2\n";
+        packet.read();
+        string command = packet.getCommand();
+        cout << "Command: " << command << endl;
+
+        if(command == "SIGNUP")
+            requests::user::signup(packet);
+    }
+
     
 }

@@ -17,6 +17,14 @@ UserAccount::UserAccount(string name, string username, string password, Date DOB
     setFavAni(favAni);
 }
 
+UserAccount::UserAccount() : Account()
+{
+    setDOB();
+    setBalance();
+    setAccountNo();
+    setFavAni();
+}
+
 
 void UserAccount::setDOB(Date DOB)
 {
@@ -101,8 +109,21 @@ void UserAccount::printAccountInfo(bool printAsterisk) const
     }
     else
     {
-        cout << "Favorite Animal: " << favAni;
+        cout << "Favorite Animal: " << favAni << endl;
     }
+}
+
+UserAccount UserAccount::operator = (const Packet& packet)
+{
+    UserAccount acc;
+    acc.name = packet.getName();
+    acc.username = packet.getUsername();
+    acc.password = packet.getPassword();
+    acc.DOB = packet.getDate();
+    acc.balance = packet.getBalance();
+    acc.accountNo = packet.getAccountNo();
+    acc.favAni = packet.getFavAni();
+    return acc;
 }
 
 

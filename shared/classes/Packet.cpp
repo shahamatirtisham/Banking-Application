@@ -6,103 +6,101 @@
 
 using namespace std;
 
-Packet::Packet(int clientSock, string command, string name_seg, string username_seg, string password_seg, Date date_seg, 
-        double balance_seg, string accountNo_seg, string favAni_seg,string salt_seg)
+Packet::Packet(int clientSock, string command, string name, string username, string password, Date date, 
+        double balance, string accountNo, string favAni,string salt)
 {
-    this->clientSock = clientSock;
-    this->command = command;
-    this->name_seg = name_seg;
-    this->username_seg = username_seg;
-    this->password_seg = password_seg;
-    this->date_seg = date_seg;
-    this->balance_seg = balance_seg;
-    this->accountNo_seg = accountNo_seg;
-    this->favAni_seg = favAni_seg;
-    this->salt_seg = salt_seg;
+    this->clientSock, clientSock;
+    strcpy(this->command, command.c_str());
+    strcpy(this->name, name.c_str());
+    strcpy(this->username, username.c_str());
+    strcpy(this->password, password.c_str());
+    this->date, date;
+    this->balance, balance;
+    strcpy(this->accountNo, accountNo.c_str());
+    strcpy(this->favAni, favAni.c_str());
+    strcpy(this->salt, salt.c_str());
 }
 
-string Packet::get_command() const
+string Packet::getCommand() const
 {
     return command;
 }
-string Packet::get_name_seg() const
+string Packet::getName() const
 {
-    return name_seg;
+    return name;
 }
-string Packet::get_username_seg() const
+string Packet::getUsername() const
 {
-    return username_seg;
+    return username;
 }
-string Packet::get_password_seg() const
+string Packet::getPassword() const
 {
-    return password_seg;
+    return password;
 }
-Date Packet::get_date_seg() const
+Date Packet::getDate() const
 {
-    return date_seg;
+    return date;
 }
-double Packet::get_balance_seg() const
+double Packet::getBalance() const
 {
-    return balance_seg;
+    return balance;
 }
-string Packet::get_accountNo_seg() const
+string Packet::getAccountNo() const
 {
-    return accountNo_seg;
+    return accountNo;
 }
-string Packet::get_favAni_seg() const
+string Packet::getFavAni() const
 {
-    return favAni_seg;
+    return favAni;
 }
-string Packet::get_salt_seg() const
+string Packet::getSalt() const
 {
-    return salt_seg;
+    return salt;
 }
 void Packet:: write()
 {
-    ::write(clientSock, command.c_str(), 31);
-    ::write(clientSock, name_seg.c_str(), 31);
-    ::write(clientSock, username_seg.c_str(), 65);
-    ::write(clientSock, password_seg.c_str(), 65);
+    cout << "writing..\n";
+    ::write(clientSock, command, 31);
+    ::write(clientSock, name, 31);
+    ::write(clientSock, username, 65);
+    ::write(clientSock, password, 65);
     
-    int day = date_seg.getDate();
-    int month = date_seg.getMonth();
-    int year = date_seg.getYear();
+    int day = date.getDate();
+    int month = date.getMonth();
+    int year = date.getYear();
     ::write(clientSock, &day, sizeof(int));
     ::write(clientSock, &month, sizeof(int));
     ::write(clientSock, &year, sizeof(int));
 
-    ::write(clientSock, &balance_seg, sizeof(double));
-    ::write(clientSock, accountNo_seg.c_str(), 14);
-    ::write(clientSock, favAni_seg.c_str(), 31);
-    ::write(clientSock, salt_seg.c_str(), 17);
+    ::write(clientSock, &balance, sizeof(double));
+    ::write(clientSock, accountNo, 14);
+    ::write(clientSock, favAni, 31);
+    ::write(clientSock, salt, 17);
+
+    cout << "writing complete..\n";
 }
 void Packet:: read()
 { 
+    cout << "reading..\n";
     int day;
     int month;
     int year; 
 
-    command.resize(31);
-    name_seg.resize(31);
-    username_seg.resize(65);
-    password_seg.resize(65);
-    accountNo_seg.resize(14);
-    favAni_seg.resize(31);
-    salt_seg.resize(17);
-
-    ::read(clientSock, command.data(), 31);
-    ::read(clientSock, name_seg.data(), 31);
-    ::read(clientSock, username_seg.data(), 65);
-    ::read(clientSock, password_seg.data(), 65);
+    ::read(clientSock, command, 31);
+    ::read(clientSock, name, 31);
+    ::read(clientSock, username, 65);
+    ::read(clientSock, password, 65);
     ::read(clientSock, &day, sizeof(int));
     ::read(clientSock, &month, sizeof(int));
     ::read(clientSock, &year, sizeof(int));
-    ::read(clientSock, &balance_seg, sizeof(double));
-    ::read(clientSock, accountNo_seg.data(), 14);
-    ::read(clientSock, favAni_seg.data(), 31);
-    ::read(clientSock, salt_seg.data(), 17);
+    ::read(clientSock, &balance, sizeof(double));
+    ::read(clientSock, accountNo, 14);
+    ::read(clientSock, favAni, 31);
+    ::read(clientSock, salt, 17);
+
+    cout << "reading complete..\n";
     
-    date_seg = Date(day, month, year);
+    date = Date(day, month, year);
 }
 
 

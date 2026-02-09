@@ -262,6 +262,30 @@ server/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/main.cpp.s
 .PHONY : server/main.cpp.s
 
+server/requests/readRequests.o: server/requests/readRequests.cpp.o
+.PHONY : server/requests/readRequests.o
+
+# target to build an object file
+server/requests/readRequests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.o
+.PHONY : server/requests/readRequests.cpp.o
+
+server/requests/readRequests.i: server/requests/readRequests.cpp.i
+.PHONY : server/requests/readRequests.i
+
+# target to preprocess a source file
+server/requests/readRequests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.i
+.PHONY : server/requests/readRequests.cpp.i
+
+server/requests/readRequests.s: server/requests/readRequests.cpp.s
+.PHONY : server/requests/readRequests.s
+
+# target to generate assembly for a file
+server/requests/readRequests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.s
+.PHONY : server/requests/readRequests.cpp.s
+
 shared/classes/Account.o: shared/classes/Account.cpp.o
 .PHONY : shared/classes/Account.o
 
@@ -449,6 +473,9 @@ help:
 	@echo "... server/main.o"
 	@echo "... server/main.i"
 	@echo "... server/main.s"
+	@echo "... server/requests/readRequests.o"
+	@echo "... server/requests/readRequests.i"
+	@echo "... server/requests/readRequests.s"
 	@echo "... shared/classes/Account.o"
 	@echo "... shared/classes/Account.i"
 	@echo "... shared/classes/Account.s"

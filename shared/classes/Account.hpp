@@ -10,9 +10,10 @@ protected:
     
 public:
     Account(string name, string username, string password);
-    void setName(string name);
-    void setUsername(string username);
-    void setPassword(string password);
+    Account();
+    void setName(string name="");
+    void setUsername(string username="");
+    void setPassword(string password="");
     string getUsername() const;
     string getPassword() const;
     string getName() const;

@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/server.dir/server/classes/server.cpp.o.d"
   "CMakeFiles/server.dir/server/main.cpp.o"
   "CMakeFiles/server.dir/server/main.cpp.o.d"
+  "CMakeFiles/server.dir/server/requests/readRequests.cpp.o"
+  "CMakeFiles/server.dir/server/requests/readRequests.cpp.o.d"
   "CMakeFiles/server.dir/shared/classes/Account.cpp.o"
   "CMakeFiles/server.dir/shared/classes/Account.cpp.o.d"
   "CMakeFiles/server.dir/shared/classes/Date.cpp.o"
