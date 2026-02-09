@@ -15,7 +15,7 @@ int readInt()
 
         try
         {
-            size_t pos;
+            size_t pos;                        // pos tells you how many characters were successfully changed to number
             int value = std::stoi(line, &pos);
 
             // ensure whole line was a number
