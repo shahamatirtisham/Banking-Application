@@ -86,8 +86,8 @@ static void preloginScreens::user::signup()
 
     UserAccount user(name, username, password, DOB, 0, favAni);
     user.printAccountInfo(0);
-    Packet packet(sockfd, name, username, password, DOB, 0, "", favAni);
-    packet.write();
+    //Packet packet(sockfd, name, username, password, DOB, 0, "", favAni);
+    //packet.write();
 
 
     // int n = write(sockfd, command, sizeof(command));
