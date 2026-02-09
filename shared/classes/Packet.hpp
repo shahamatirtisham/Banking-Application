@@ -32,4 +32,5 @@ public:
     string getSalt() const;
     void write();
     void read();
+    void display() const;
 };

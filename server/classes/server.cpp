@@ -87,18 +87,16 @@ void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
     readRequests_init(clientSocket);
-    cout << "Check1\n";
+    // cout << "Check1\n";
     while(1)
     {
         Packet packet(clientSocket);
-        cout << "Check2\n";
+        // cout << "Check2\n";
         packet.read();
-        string command = packet.getCommand();
-        cout << "Command: " << command << endl;
+        
+        
 
-        if(command == "SIGNUP")
+        if(packet.getCommand() == "SIGNUP")
             requests::user::signup(packet);
-    }
-
-    
+    }    
 }

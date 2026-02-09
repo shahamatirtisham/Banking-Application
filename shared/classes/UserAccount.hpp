@@ -27,7 +27,7 @@ public:
     string getFavAni() const; 
     void printAccountInfo(bool printAsterisk=1) const;
 
-    UserAccount operator = (const Packet& packet);
+    UserAccount& operator = (const Packet& packet);
 
 };
 

@@ -87,6 +87,8 @@ string UserAccount::getFavAni() const
 }
 void UserAccount::printAccountInfo(bool printAsterisk) const
 {
+
+    cout << "------------------Displaying Account------------------\n";
     cout << "Name: " << name << endl;
 
     if(printAsterisk)
@@ -111,19 +113,19 @@ void UserAccount::printAccountInfo(bool printAsterisk) const
     {
         cout << "Favorite Animal: " << favAni << endl;
     }
+    cout << "-----------------------------------------------------\n";
 }
 
-UserAccount UserAccount::operator = (const Packet& packet)
+UserAccount& UserAccount::operator = (const Packet& packet)
 {
-    UserAccount acc;
-    acc.name = packet.getName();
-    acc.username = packet.getUsername();
-    acc.password = packet.getPassword();
-    acc.DOB = packet.getDate();
-    acc.balance = packet.getBalance();
-    acc.accountNo = packet.getAccountNo();
-    acc.favAni = packet.getFavAni();
-    return acc;
+    name = packet.getName();
+    username = packet.getUsername();
+    password = packet.getPassword();
+    DOB = packet.getDate();
+    balance = packet.getBalance();
+    accountNo = packet.getAccountNo();
+    favAni = packet.getFavAni();
+    return *this;
 }
 
 

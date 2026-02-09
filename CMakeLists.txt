@@ -15,6 +15,7 @@ add_executable(server
     shared/classes/Account.cpp
     shared/classes/Date.cpp
     server/requests/readRequests.cpp
+    server/functions/database-handling.cpp
 )
 
 target_include_directories(server PRIVATE
