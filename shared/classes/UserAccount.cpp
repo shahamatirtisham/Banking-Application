@@ -64,10 +64,7 @@ string generateAccountNo()
 }    
 void UserAccount::setAccountNo(string accounNo)
 {
-    if(accountNo == "")
-        this->accountNo = generateAccountNo();
-    else    
-        this->accountNo = accounNo;
+    this->accountNo = accounNo;
 }
 void UserAccount::setFavAni(string favAni)
 {

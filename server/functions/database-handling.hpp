@@ -4,3 +4,4 @@
 
 
 bool checkUniqueUsername(std::string username);
+void addUser(UserAccount user);

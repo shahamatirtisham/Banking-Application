@@ -1,4 +1,4 @@
-#include "readRequests.hpp"
+#include "executeRequests.hpp"
 #include "../../shared/classes/UserAccount.hpp"
 #include <iostream>
 #include <string>
@@ -21,7 +21,10 @@ void requests::user::signup(Packet packet)
 
     UserAccount acc;
     acc = packet;        // overloaded the UserAccount class to support ' = ' operations with Packet class
-
+    acc.setAccountNo(generateAccountNo());
     acc.printAccountInfo(0);
+
+
+    // enter dbms signup code here
 
 }

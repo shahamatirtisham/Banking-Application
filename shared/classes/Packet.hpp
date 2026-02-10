@@ -6,52 +6,15 @@
 using namespace std;
 
 
-// class Packet 
-// {
-// private:
-    
-//     int clientSock;
-//     string command;
-//     string name;
-//     string username;
-//     string password;
-//     Date date;
-//     double balance;
-//     string accountNo;
-//     string favAni;
-//     string salt;
-
-// public:
-//     Packet(int clientSock, string command="", string name="", string username="", string password="", Date date=Date(), 
-//         double balance=0, string accountNo="", string favAni="",string salt="");
-//     string getCommand() const;
-//     string getName() const;
-//     string getUsername() const;
-//     string getPassword() const;
-//     Date getDate() const;
-//     double getBalance() const;
-//     string getAccountNo() const;
-//     string getFavAni() const;
-//     string getSalt() const;
-//     void write();
-//     void read();
-//     void display() const;
-// };
-
-
 class Packet 
 {
 private:
-    
-    int clientSock;
     string command;
     UserAccount account;
     string salt;
 
 public:
-    // Packet(int clientSock, string command="", string name="", string username="", string password="", Date DOB=Date(), 
-    //     double balance=0, string accountNo="", string favAni="",string salt="");
-    Packet(int clientSock, string command="", UserAccount account=UserAccount(), string salt="");
+    Packet(string command="", UserAccount account=UserAccount(), string salt="");
     string getCommand() const;
     string getName() const;
     string getUsername() const;
@@ -61,7 +24,7 @@ public:
     string getAccountNo() const;
     string getFavAni() const;
     string getSalt() const;
-    void write();
-    void read();
+    void write(int sockfd);
+    void read(int sockfd);
     void display() const;
 };

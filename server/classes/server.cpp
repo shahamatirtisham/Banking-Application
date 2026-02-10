@@ -91,16 +91,33 @@ void Server::handleClient(int clientSocket)
     while(1)
     {
         cout << "check2\n";
-        Packet packet(clientSocket);
+        Packet p;
         cout << "check3\n";
-        packet.read();
+        p.read(clientSocket);
 
         // packet.display();
-        string command = packet.getCommand();
-        packet.display();
+        string command = p.getCommand();
+        p.display();
         
     
         if(command == "SIGNUP")
-            requests::user::signup(packet);
+        {
+            requests::user::signup(p);
+        }
+        else if(command == "UNIQUE-USERNAME-CHECK")
+        {
+            if(checkUniqueUsername(p.getUsername()) == true)
+            {
+                p = Packet("POSITIVE");
+                cout << "username is unique\n";
+            }
+            else
+            {
+                p = Packet("NEGATIVE");
+                cout << "username is taken\n";
+            }
+            p.display();
+            p.write(clientSocket);
+        }
     }    
 }
