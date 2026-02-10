@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/server.dir/link.d"
   "CMakeFiles/server.dir/server/classes/server.cpp.o"
   "CMakeFiles/server.dir/server/classes/server.cpp.o.d"
+  "CMakeFiles/server.dir/server/functions/database-handling.cpp.o"
+  "CMakeFiles/server.dir/server/functions/database-handling.cpp.o.d"
   "CMakeFiles/server.dir/server/main.cpp.o"
   "CMakeFiles/server.dir/server/main.cpp.o.d"
   "CMakeFiles/server.dir/server/requests/readRequests.cpp.o"

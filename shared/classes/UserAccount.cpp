@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Packet.hpp"
 #include "UserAccount.hpp"
 // #include <cctype>
 #include <ctime>
@@ -8,12 +9,12 @@ using namespace std;
 
 
 
-UserAccount::UserAccount(string name, string username, string password, Date DOB, double balance, string favAni) 
+UserAccount::UserAccount(string name, string username, string password, Date DOB, double balance, string accountNo, string favAni) 
         : Account(name, username, password)
 {
     setDOB(DOB);
     setBalance(balance);
-    setAccountNo();
+    setAccountNo(accountNo);
     setFavAni(favAni);
 }
 
@@ -21,7 +22,7 @@ UserAccount::UserAccount() : Account()
 {
     setDOB();
     setBalance();
-    setAccountNo();
+    setAccountNo("");
     setFavAni();
 }
 
@@ -61,9 +62,12 @@ string generateAccountNo()
         }
     }
 }    
-void UserAccount::setAccountNo()
+void UserAccount::setAccountNo(string accounNo)
 {
-    this->accountNo = generateAccountNo();
+    if(accountNo == "")
+        this->accountNo = generateAccountNo();
+    else    
+        this->accountNo = accounNo;
 }
 void UserAccount::setFavAni(string favAni)
 {
@@ -88,7 +92,7 @@ string UserAccount::getFavAni() const
 void UserAccount::printAccountInfo(bool printAsterisk) const
 {
 
-    cout << "------------------Displaying Account------------------\n";
+    cout << "-----------------Displaying Account------------------\n";
     cout << "Name: " << name << endl;
 
     if(printAsterisk)

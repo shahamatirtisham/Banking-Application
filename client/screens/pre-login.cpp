@@ -77,16 +77,21 @@ static void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
+    bool response = false;
+    //while(!response)
+    //{
+        name = acceptName();
+        
 
-    name = acceptName();
+    //}
     username = acceptUsername();
     password = acceptPassword();
     DOB = acceptDOB();
     favAni = acceptFavAni();
 
-    UserAccount user(name, username, password, DOB, 0, favAni);
+    UserAccount user(name, username, password, DOB, 0, "", favAni);
     user.printAccountInfo(0);
-    Packet packet(sockfd, "SIGNUP", name, username, password, DOB, 0, "", favAni);
+    Packet packet(sockfd, "SIGNUP", user);
     packet.display();
     packet.write();
 

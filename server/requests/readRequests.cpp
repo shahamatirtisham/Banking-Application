@@ -18,9 +18,10 @@ void requests::user::login(Packet packet)
 
 void requests::user::signup(Packet packet)
 {
-    packet.display();
+
     UserAccount acc;
     acc = packet;        // overloaded the UserAccount class to support ' = ' operations with Packet class
 
     acc.printAccountInfo(0);
+
 }

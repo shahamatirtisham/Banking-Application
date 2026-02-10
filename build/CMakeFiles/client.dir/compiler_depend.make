@@ -1051,8 +1051,10 @@ CMakeFiles/client.dir/shared/classes/Date.cpp.o: /home/tawfiq/Banking-Applicatio
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h
 
 CMakeFiles/client.dir/shared/classes/Packet.cpp.o: /home/tawfiq/Banking-Application/shared/classes/Packet.cpp \
+  /home/tawfiq/Banking-Application/shared/classes/Account.hpp \
   /home/tawfiq/Banking-Application/shared/classes/Date.hpp \
   /home/tawfiq/Banking-Application/shared/classes/Packet.hpp \
+  /home/tawfiq/Banking-Application/shared/classes/UserAccount.hpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \

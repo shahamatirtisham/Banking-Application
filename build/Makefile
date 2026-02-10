@@ -238,6 +238,30 @@ server/classes/server.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.s
 .PHONY : server/classes/server.cpp.s
 
+server/functions/database-handling.o: server/functions/database-handling.cpp.o
+.PHONY : server/functions/database-handling.o
+
+# target to build an object file
+server/functions/database-handling.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/functions/database-handling.cpp.o
+.PHONY : server/functions/database-handling.cpp.o
+
+server/functions/database-handling.i: server/functions/database-handling.cpp.i
+.PHONY : server/functions/database-handling.i
+
+# target to preprocess a source file
+server/functions/database-handling.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/functions/database-handling.cpp.i
+.PHONY : server/functions/database-handling.cpp.i
+
+server/functions/database-handling.s: server/functions/database-handling.cpp.s
+.PHONY : server/functions/database-handling.s
+
+# target to generate assembly for a file
+server/functions/database-handling.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/functions/database-handling.cpp.s
+.PHONY : server/functions/database-handling.cpp.s
+
 server/main.o: server/main.cpp.o
 .PHONY : server/main.o
 
@@ -470,6 +494,9 @@ help:
 	@echo "... server/classes/server.o"
 	@echo "... server/classes/server.i"
 	@echo "... server/classes/server.s"
+	@echo "... server/functions/database-handling.o"
+	@echo "... server/functions/database-handling.i"
+	@echo "... server/functions/database-handling.s"
 	@echo "... server/main.o"
 	@echo "... server/main.i"
 	@echo "... server/main.s"

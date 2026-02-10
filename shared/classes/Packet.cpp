@@ -6,19 +6,27 @@
 
 using namespace std;
 
-Packet::Packet(int clientSock, string command, string name, string username, string password, Date date, 
-        double balance, string accountNo, string favAni,string salt)
+// Packet::Packet(int clientSock, string command, string name, string username, string password, Date DOB, 
+//         double balance, string accountNo, string favAni,string salt) : account(name, username, password,DOB, balance, accountNo, favAni)
+// {
+
+//     this->clientSock = clientSock;
+//     this->command = command;
+//     account.setName(name);
+//     account.setUsername(username);
+//     account.setPassword(password);
+//     account.setDOB(DOB);
+//     account.setBalance(balance);
+//     account.setAccountNo(accountNo);
+//     account.setFavAni(favAni);
+//     this->salt = salt;
+// }
+Packet::Packet(int clientSock, string command, UserAccount account, string salt)
+    : account(account)
 {
     this->clientSock = clientSock;
-    strcpy(this->command, command.c_str());
-    strcpy(this->name, name.c_str());
-    strcpy(this->username, username.c_str());
-    strcpy(this->password, password.c_str());
-    this->date = date;
-    this->balance = balance;
-    strcpy(this->accountNo, accountNo.c_str());
-    strcpy(this->favAni, favAni.c_str());
-    strcpy(this->salt, salt.c_str());
+    this->command = command;
+    this->salt = salt;
 }
 
 string Packet::getCommand() const
@@ -27,31 +35,31 @@ string Packet::getCommand() const
 }
 string Packet::getName() const
 {
-    return name;
+    return account.getName();
 }
 string Packet::getUsername() const
 {
-    return username;
+    return account.getUsername();
 }
 string Packet::getPassword() const
 {
-    return password;
+    return account.getPassword();
 }
 Date Packet::getDate() const
 {
-    return date;
+    return account.getDOB();
 }
 double Packet::getBalance() const
 {
-    return balance;
+    return account.getBalance();
 }
 string Packet::getAccountNo() const
 {
-    return accountNo;
+    return account.getAccountNo();
 }
 string Packet::getFavAni() const
 {
-    return favAni;
+    return account.getFavAni();
 }
 string Packet::getSalt() const
 {
@@ -60,62 +68,81 @@ string Packet::getSalt() const
 void Packet::write()
 {
     cout << "writing..\n";
-    ::write(clientSock, this->command, 31);
-    ::write(clientSock, this->name, 31);
-    ::write(clientSock, this->username, 65);
-    ::write(clientSock, this->password, 65);
-    ::write(clientSock, this->accountNo, 14);
     
-    int day = date.getDate();
-    int month = date.getMonth();
-    int year = date.getYear();
+    ::write(clientSock, this->command.c_str(), 31);
+    ::write(clientSock, this->account.getName().c_str(), 31);
+    ::write(clientSock, this->account.getUsername().c_str(), 65);
+    ::write(clientSock, this->account.getPassword().c_str(), 65);
+    ::write(clientSock, this->account.getAccountNo().c_str(), 14); 
+    ::write(clientSock, this->account.getFavAni().c_str(), 31);
+    ::write(clientSock, this->salt.c_str(), 17);
+    
+    int day = account.getDOB().getDate();
+    int month = account.getDOB().getMonth();
+    int year = account.getDOB().getYear();
     ::write(clientSock, &day, sizeof(int));
     ::write(clientSock, &month, sizeof(int));
     ::write(clientSock, &year, sizeof(int));
-
+    double balance = account.getBalance();
     ::write(clientSock, &balance, sizeof(double));
-    ::write(clientSock, favAni, 31);
-    ::write(clientSock, salt, 17);
-
+    
     cout << "writing complete..\n";
 }
+
+
+
 void Packet:: read()
 { 
     cout << "reading..\n";
     int day;
     int month;
     int year; 
-
-    ::read(clientSock, command, 31);
-    ::read(clientSock, name, 31);
-    ::read(clientSock, username, 65);
-    ::read(clientSock, password, 65);
-    ::read(clientSock, accountNo, 14);
+    
+    char _command[31] = {0};
+    char _name[31] = {0};
+    char _username[65] = {0};
+    char _password[65] = {0};
+    char _accountNo[14] = {0};
+    char _favAni[31] = {0};
+    char _salt[17] = {0};
+    double _balance;
+    
+    
+    ::read(clientSock, _command, 31);
+    ::read(clientSock, _name, 31);
+    ::read(clientSock, _username, 65);
+    ::read(clientSock, _password, 65);
+    ::read(clientSock, _accountNo, 14);
+    ::read(clientSock, _favAni, 31);
+    ::read(clientSock, _salt, 17);
     ::read(clientSock, &day, sizeof(int));
     ::read(clientSock, &month, sizeof(int));
     ::read(clientSock, &year, sizeof(int));
-    ::read(clientSock, &balance, sizeof(double));
-    ::read(clientSock, favAni, 31);
-    ::read(clientSock, salt, 17);
-
+    ::read(clientSock, &_balance, sizeof(double));
+    
+    
+    command = _command;
+    account.setName(_name);
+    account.setUsername(_username);
+    account.setPassword(_password);
+    account.setAccountNo(_accountNo);
+    account.setFavAni(_favAni);
+    account.setDOB(Date(day, month, year));
+    salt = _salt;
+    
+    
+    
     cout << "reading complete..\n";
     
-    date = Date(day, month, year);
 }
 
 void Packet::display() const
 {
-    cout << "---------------Displaying Packet---------------\n";
+    cout << "------------------Displaying Packet------------------\n";
     cout << "Command: " << command << endl;
-    cout << "Name: " << name << endl;
-    cout << "Username: " << username << endl;
-    cout << "Password: " << password << endl;
-    cout << "DOB: "; date.display(); cout << endl;
-    cout << "Balance: " << balance << endl;
-    cout << "Account No: " << accountNo << endl;
-    cout << "Favorite animal: " << favAni << endl;
+    account.printAccountInfo();
     cout << "Salt: " << salt << endl;
-    cout << "-----------------------------------------------\n";
+    cout << "-----------------------------------------------------\n";
 }
 
 

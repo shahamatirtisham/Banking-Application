@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/tawfiq/Banking-Application/server/classes/server.cpp" "CMakeFiles/server.dir/server/classes/server.cpp.o" "gcc" "CMakeFiles/server.dir/server/classes/server.cpp.o.d"
+  "/home/tawfiq/Banking-Application/server/functions/database-handling.cpp" "CMakeFiles/server.dir/server/functions/database-handling.cpp.o" "gcc" "CMakeFiles/server.dir/server/functions/database-handling.cpp.o.d"
   "/home/tawfiq/Banking-Application/server/main.cpp" "CMakeFiles/server.dir/server/main.cpp.o" "gcc" "CMakeFiles/server.dir/server/main.cpp.o.d"
   "/home/tawfiq/Banking-Application/server/requests/readRequests.cpp" "CMakeFiles/server.dir/server/requests/readRequests.cpp.o" "gcc" "CMakeFiles/server.dir/server/requests/readRequests.cpp.o.d"
   "/home/tawfiq/Banking-Application/shared/classes/Account.cpp" "CMakeFiles/server.dir/shared/classes/Account.cpp.o" "gcc" "CMakeFiles/server.dir/shared/classes/Account.cpp.o.d"
