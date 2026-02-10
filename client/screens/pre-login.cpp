@@ -3,6 +3,9 @@
 #include "../../shared/input.hpp"
 #include "../../shared/classes/Packet.hpp"
 #include "../../shared/classes/UserAccount.hpp"
+#include "../../shared/hash.hpp"
+#include "../../server/functions/database-handling.hpp"
+
 using namespace std;
 
 static int sockfd = -1;
@@ -71,6 +74,103 @@ void mainMenu()
 
 static void preloginScreens::user::login()
 {
+    string username, password;
+
+    while(true){
+        cout << " ------------------------ LOGIN  ------------------------ ";
+
+        cout << "Enter your username: " << endl;
+        username = acceptUsername();
+
+        cout << "Enter your password: " << endl;
+        password = acceptPassword();
+
+        Packet userCheckPacket(sockfd, "CHECK-user", "", username);
+        userCheckPacket.write();
+
+        Packet response(sockfd);
+        response.read();
+
+        if(response.getCommand() != "False"){
+            clearScreen();
+            cout << "Username not found! Please try again.\n";
+            continue;
+        }
+
+        Packet passCheckPacket(sockfd, "CHECK-user", "", username, password);
+        passCheckPacket.write();
+
+        response.read();
+
+        if(response.getCommand() == "TRUE"){
+            clearScreen();
+            cout << "Login Successful! Welcome " << username << endl;
+            
+            // Abtahi er kaam
+
+
+            break;
+        }
+
+        else{
+            
+            bool loginSuccess = false;
+
+            while(!loginSuccess){
+
+                clearScreen();
+
+                cout << "Incorrect Password for user: " << username << "\n";
+                cout << "1. Retry Password\n";
+                cout << "2. Forgot Password\n";
+                cout << "0. Go Back to Main Menu\n";
+
+                cout << "Select option: ";
+                
+                int choice = readInt();
+
+                if (choice == 0) return;
+                
+                if (choice == 1)
+                {
+                    password = acceptPassword(); 
+                    
+                    Packet retryPacket(sockfd, "CHECK_PASS", "", username, password);
+                    retryPacket.write();
+                    
+                    response.read();
+                    
+                    if (response.getCommand() == "TRUE")
+                    {
+                        cout << "Login Successful!\n";
+                        loginSuccess = true;
+
+
+                        // abtahi er kaam
+
+                        return;
+                    }
+                }
+                else if (choice == 2)
+                {
+                    forgotPassword(username);
+                    // After changing password, we go back to the retry loop 
+                    // or you can return to main menu. 
+                    // For now, let's just break the retry loop and ask them to login again.
+                    cout << "Please login with your new password.\n";
+                    break; 
+                }
+                else
+                {
+                    cout << "Invalid option.\n";
+                }
+            }
+
+        }
+
+
+    }
+
 
 }
 static void preloginScreens::user::signup()
