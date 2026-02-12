@@ -38,14 +38,12 @@ public:
         const string& db = dbname.empty() ? admin_db : dbname;
 
         auto conninfo = [&]() {
-            // ✅ FIX: use `db`, not `admin_db` (otherwise dbname arg is ignored)
             return "host=" + host + " port=" + port + " dbname=" + db +
                    " user=" + user + " password=" + password;
         };
 
         PGconn* conn = PQconnectdb(conninfo().c_str());
 
-        // ✅ FIX: guard conn==nullptr before PQerrorMessage/PQfinish
         if (!conn || PQstatus(conn) != CONNECTION_OK) {
             cerr << (conn ? PQerrorMessage(conn) : "PQconnectdb returned nullptr") << "\n";
             cout << "Connection Failed\n";
@@ -69,7 +67,6 @@ private:
 public:
     database(PGconn* connx_in = nullptr, bool status = false, string name = "")
         : connx(connx_in),
-          // ✅ FIX: if name not provided, use configured target DB
           db_name(name.empty() ? get_target_db() : name),
           pgconfig_info(),
           it_exists(status)
@@ -78,40 +75,57 @@ public:
         if (!connx || PQstatus(connx) != CONNECTION_OK) {
 
             // 1) connect to admin DB for existence/create
-            connx = connect(get_admin_db());
-            if (!connx) {
+            PGconn* admin = connect(get_admin_db());
+            if (!admin) {
                 it_exists = false;
+                connx = nullptr;
                 return;
             }
 
             // 2) if DB does NOT exist, create it
-            if (!db_exists(connx, db_name)) {
-                bool made = create_db(connx, db_name);
+            if (!db_exists(admin, db_name)) {
+                bool made = create_db(admin, db_name);
                 if (made) {
                     cout << "Database has been made\n";
                     it_exists = true;
                 } else {
                     cout << "Create Database failed\n";
                     it_exists = false;
-                    // keep admin connection around only until destructor
+                    PQfinish(admin);
+                    connx = nullptr;
                     return;
                 }
             } else {
-                // ✅ FIX: if it already exists, this should be true
-                it_exists = true;
+                it_exists = true; // already existed
             }
 
-            // 3) IMPORTANT: switch from admin DB to target DB connection
-            PQfinish(connx);
+            // 3) close admin connection
+            PQfinish(admin);
+
+            // 4) connect to target DB
             connx = connect(db_name);
             if (!connx) {
                 it_exists = false;
                 return;
             }
 
+            // 5) initialize schema ONLY on target DB
+            if (!init_schema()) {
+                cerr << "Schema init failed\n";
+                it_exists = false;
+                return;
+            }
+
         } else {
-            // ✅ FIX: valid incoming connection; treat as exists/ok
+            // Incoming connection is valid; assume it targets the right DB
             it_exists = true;
+
+            // Initialize schema on that connection
+            if (!init_schema()) {
+                cerr << "Schema init failed\n";
+                it_exists = false;
+                return;
+            }
         }
     }
 
@@ -130,8 +144,6 @@ public:
         const char* vals[1] = { dbname.c_str() };
 
         PGresult* r = PQexecParams(c, sql, 1, nullptr, vals, nullptr, nullptr, 0);
-
-        // ✅ FIX: guard r==nullptr
         if (!r) {
             cerr << "DB existence check failed: PQexecParams returned nullptr\n";
             return false;
@@ -140,7 +152,7 @@ public:
         if (PQresultStatus(r) != PGRES_TUPLES_OK) {
             cerr << "DB existence check failed:\n" << PQerrorMessage(c);
             PQclear(r);
-            return false; // treat as not-exists/unknown
+            return false;
         }
 
         bool exists = PQntuples(r) > 0;
@@ -151,7 +163,6 @@ public:
     static bool create_db(PGconn* c, const string& dbname) {
         if (!c) return false;
 
-        // dbname is an identifier; escape properly
         char* q = PQescapeIdentifier(c, dbname.c_str(), dbname.size());
         if (!q) return false;
 
@@ -179,17 +190,126 @@ public:
         PQclear(r);
         return ok;
     }
+
+    // Create all required tables in the TARGET DB
+    bool init_schema() {
+        if (!connx || PQstatus(connx) != CONNECTION_OK) return false;
+
+        if (!exec_cmd(connx, "BEGIN;")) return false;
+
+        const vector<string> ddl = {
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS client_info (
+                client_ID   VARCHAR(5) PRIMARY KEY,
+                name        VARCHAR(50) NOT NULL,
+                username    VARCHAR(64) NOT NULL UNIQUE,
+                password    VARCHAR(64) NOT NULL,
+                salt        VARCHAR(16) NOT NULL,
+                dob         DATE,
+                balance     NUMERIC(18,2) NOT NULL DEFAULT 0,
+                account_no  VARCHAR(13) UNIQUE,
+                favAni      VARCHAR(30)
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS client_activity_type (
+                code INT PRIMARY KEY,
+                type VARCHAR(20) NOT NULL UNIQUE
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS client_activity (
+                activity_id BIGSERIAL PRIMARY KEY,
+                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+                client_id   VARCHAR(5) NOT NULL REFERENCES client_info(client_ID) ON DELETE CASCADE,
+                code        INT NOT NULL REFERENCES client_activity_type(code)
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS transaction_types (
+                code INT PRIMARY KEY,
+                type VARCHAR(10) NOT NULL UNIQUE
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS transactions (
+                trxid       VARCHAR(64) PRIMARY KEY,
+                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+                sender_id   VARCHAR(5) NOT NULL REFERENCES client_info(client_ID),
+                receiver_id VARCHAR(5) REFERENCES client_info(client_ID),
+                code        INT NOT NULL REFERENCES transaction_types(code)
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS admin_info (
+                admin_ID  VARCHAR(5) PRIMARY KEY,
+                name      VARCHAR(50) NOT NULL,
+                username  VARCHAR(64) NOT NULL UNIQUE,
+                password  VARCHAR(64) NOT NULL
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS admin_activity_type (
+                code INT PRIMARY KEY,
+                type VARCHAR(20) NOT NULL UNIQUE
+            );
+            )SQL",
+
+            R"SQL(
+            CREATE TABLE IF NOT EXISTS admin_activity (
+                activity_id BIGSERIAL PRIMARY KEY,
+                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+                admin_id    VARCHAR(5) REFERENCES admin_info(admin_ID) ON DELETE SET NULL,
+                code        INT NOT NULL REFERENCES admin_activity_type(code)
+            );
+            )SQL",
+
+            // Helpful indexes
+            R"SQL(
+            CREATE INDEX IF NOT EXISTS idx_client_activity_client_time
+                ON client_activity(client_id, time DESC);
+            )SQL",
+
+            R"SQL(
+            CREATE INDEX IF NOT EXISTS idx_transactions_sender_time
+                ON transactions(sender_id, time DESC);
+            )SQL",
+
+            R"SQL(
+            CREATE INDEX IF NOT EXISTS idx_transactions_receiver_time
+                ON transactions(receiver_id, time DESC);
+            )SQL"
+        };
+
+        for (const auto& sql : ddl) {
+            if (!exec_cmd(connx, sql)) {
+                exec_cmd(connx, "ROLLBACK;");
+                return false;
+            }
+        }
+
+        if (!exec_cmd(connx, "COMMIT;")) {
+            exec_cmd(connx, "ROLLBACK;");
+            return false;
+        }
+
+        return true;
+    }
 };
 
 int main() {
-    // Smoke test
     database db;
+
     if (db.get_conn() && db.exists()) {
-        cout << "Connected to target DB '" << "' successfully.\n";
-    } else if (db.get_conn()) {
-        cout << "Connected, but existence flag is false (unexpected).\n";
+        cout << "Connected and schema ensured.\n";
     } else {
-        cout << "Failed to connect.\n";
+        cout << "Failed to connect or initialize schema.\n";
     }
 
     return 0;
