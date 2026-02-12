@@ -18,14 +18,6 @@ UserAccount::UserAccount(string name, string username, string password, Date DOB
     setFavAni(favAni);
 }
 
-UserAccount::UserAccount() : Account()
-{
-    setDOB();
-    setBalance();
-    setAccountNo("");
-    setFavAni();
-}
-
 
 void UserAccount::setDOB(Date DOB)
 {

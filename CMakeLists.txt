@@ -14,8 +14,10 @@ add_executable(server
     shared/classes/Packet.cpp
     shared/classes/Account.cpp
     shared/classes/Date.cpp
-    server/requests/readRequests.cpp
+    shared/classes/Hexadecimal.cpp
+    server/requests/executeRequests.cpp
     server/functions/database-handling.cpp
+    server/classes/bankData.cpp
 )
 
 target_include_directories(server PRIVATE
@@ -34,6 +36,7 @@ add_executable(client
     shared/classes/Packet.cpp
     shared/classes/Account.cpp
     shared/classes/Date.cpp
+    shared/classes/Hexadecimal.cpp
 )
 
 target_include_directories(client PRIVATE

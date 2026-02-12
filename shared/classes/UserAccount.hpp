@@ -10,7 +10,7 @@ class Packet;
 
 class UserAccount : public Account
 {
-private:
+protected:
     Date DOB;
     double balance;
     string accountNo;

@@ -3,17 +3,6 @@
 using namespace std;
 
 
-class Database
-{   
-private:
-    int portNo;
-    UserAccount user;
-    void database_init();
-public:
-    void addUser(UserAccount user);
-    void deleteUser();
-
-};
 
 
 

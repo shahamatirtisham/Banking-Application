@@ -214,6 +214,30 @@ client/screens/pre-login.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/screens/pre-login.cpp.s
 .PHONY : client/screens/pre-login.cpp.s
 
+server/classes/bankData.o: server/classes/bankData.cpp.o
+.PHONY : server/classes/bankData.o
+
+# target to build an object file
+server/classes/bankData.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.o
+.PHONY : server/classes/bankData.cpp.o
+
+server/classes/bankData.i: server/classes/bankData.cpp.i
+.PHONY : server/classes/bankData.i
+
+# target to preprocess a source file
+server/classes/bankData.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.i
+.PHONY : server/classes/bankData.cpp.i
+
+server/classes/bankData.s: server/classes/bankData.cpp.s
+.PHONY : server/classes/bankData.s
+
+# target to generate assembly for a file
+server/classes/bankData.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.s
+.PHONY : server/classes/bankData.cpp.s
+
 server/classes/server.o: server/classes/server.cpp.o
 .PHONY : server/classes/server.o
 
@@ -286,29 +310,29 @@ server/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/main.cpp.s
 .PHONY : server/main.cpp.s
 
-server/requests/readRequests.o: server/requests/readRequests.cpp.o
-.PHONY : server/requests/readRequests.o
+server/requests/executeRequests.o: server/requests/executeRequests.cpp.o
+.PHONY : server/requests/executeRequests.o
 
 # target to build an object file
-server/requests/readRequests.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.o
-.PHONY : server/requests/readRequests.cpp.o
+server/requests/executeRequests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/executeRequests.cpp.o
+.PHONY : server/requests/executeRequests.cpp.o
 
-server/requests/readRequests.i: server/requests/readRequests.cpp.i
-.PHONY : server/requests/readRequests.i
+server/requests/executeRequests.i: server/requests/executeRequests.cpp.i
+.PHONY : server/requests/executeRequests.i
 
 # target to preprocess a source file
-server/requests/readRequests.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.i
-.PHONY : server/requests/readRequests.cpp.i
+server/requests/executeRequests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/executeRequests.cpp.i
+.PHONY : server/requests/executeRequests.cpp.i
 
-server/requests/readRequests.s: server/requests/readRequests.cpp.s
-.PHONY : server/requests/readRequests.s
+server/requests/executeRequests.s: server/requests/executeRequests.cpp.s
+.PHONY : server/requests/executeRequests.s
 
 # target to generate assembly for a file
-server/requests/readRequests.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/readRequests.cpp.s
-.PHONY : server/requests/readRequests.cpp.s
+server/requests/executeRequests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/requests/executeRequests.cpp.s
+.PHONY : server/requests/executeRequests.cpp.s
 
 shared/classes/Account.o: shared/classes/Account.cpp.o
 .PHONY : shared/classes/Account.o
@@ -363,6 +387,33 @@ shared/classes/Date.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Date.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Date.cpp.s
 .PHONY : shared/classes/Date.cpp.s
+
+shared/classes/Hexadecimal.o: shared/classes/Hexadecimal.cpp.o
+.PHONY : shared/classes/Hexadecimal.o
+
+# target to build an object file
+shared/classes/Hexadecimal.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Hexadecimal.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.o
+.PHONY : shared/classes/Hexadecimal.cpp.o
+
+shared/classes/Hexadecimal.i: shared/classes/Hexadecimal.cpp.i
+.PHONY : shared/classes/Hexadecimal.i
+
+# target to preprocess a source file
+shared/classes/Hexadecimal.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Hexadecimal.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.i
+.PHONY : shared/classes/Hexadecimal.cpp.i
+
+shared/classes/Hexadecimal.s: shared/classes/Hexadecimal.cpp.s
+.PHONY : shared/classes/Hexadecimal.s
+
+# target to generate assembly for a file
+shared/classes/Hexadecimal.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/shared/classes/Hexadecimal.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.s
+.PHONY : shared/classes/Hexadecimal.cpp.s
 
 shared/classes/Packet.o: shared/classes/Packet.cpp.o
 .PHONY : shared/classes/Packet.o
@@ -491,6 +542,9 @@ help:
 	@echo "... client/screens/pre-login.o"
 	@echo "... client/screens/pre-login.i"
 	@echo "... client/screens/pre-login.s"
+	@echo "... server/classes/bankData.o"
+	@echo "... server/classes/bankData.i"
+	@echo "... server/classes/bankData.s"
 	@echo "... server/classes/server.o"
 	@echo "... server/classes/server.i"
 	@echo "... server/classes/server.s"
@@ -500,15 +554,18 @@ help:
 	@echo "... server/main.o"
 	@echo "... server/main.i"
 	@echo "... server/main.s"
-	@echo "... server/requests/readRequests.o"
-	@echo "... server/requests/readRequests.i"
-	@echo "... server/requests/readRequests.s"
+	@echo "... server/requests/executeRequests.o"
+	@echo "... server/requests/executeRequests.i"
+	@echo "... server/requests/executeRequests.s"
 	@echo "... shared/classes/Account.o"
 	@echo "... shared/classes/Account.i"
 	@echo "... shared/classes/Account.s"
 	@echo "... shared/classes/Date.o"
 	@echo "... shared/classes/Date.i"
 	@echo "... shared/classes/Date.s"
+	@echo "... shared/classes/Hexadecimal.o"
+	@echo "... shared/classes/Hexadecimal.i"
+	@echo "... shared/classes/Hexadecimal.s"
 	@echo "... shared/classes/Packet.o"
 	@echo "... shared/classes/Packet.i"
 	@echo "... shared/classes/Packet.s"
