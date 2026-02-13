@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---- SERVER executable ----
 add_executable(server
     server/main.cpp
-    server/classes/server.cpp
+    server/classes/Server.cpp
     shared/hash.cpp
     shared/input.cpp
     shared/classes/UserAccount.cpp
@@ -17,7 +17,8 @@ add_executable(server
     shared/classes/Hexadecimal.cpp
     server/requests/executeRequests.cpp
     server/functions/database-handling.cpp
-    server/classes/bankData.cpp
+    server/classes/UserAccount_server.cpp
+    server/classes/BankData.cpp
 )
 
 target_include_directories(server PRIVATE

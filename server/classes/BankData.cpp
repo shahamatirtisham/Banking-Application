@@ -1,16 +1,16 @@
 #include <iostream>
-#include "bankData.hpp"
+#include "BankData.hpp"
 using namespace std;
 
 
 BankData::BankData()
 {
-    FILE *fp = fopen("../data/bankData.bin", "rb");
+    FILE *fp = fopen("server/data/bankData.bin", "rb");
     if(fp == NULL)
     {
         this->accountsCreated = 0;
         this->accountsDeleted = 0;
-        
+        cout << "BankData.bin does not exist.Gotta create\n";
         write();
     }
     else
@@ -22,15 +22,31 @@ BankData::BankData()
 
 void BankData::write()
 {   
-    FILE* fp = fopen("../data/bankData.bin", "wb");
-    fwrite(this, sizeof(*this), 1, fp);
-    fclose(fp);
+    FILE* fp = fopen("server/data/bankData.bin", "wb");
+    if(fp == NULL)
+    {
+        cout << "Failed opening bankData.bin for writing"<< endl;
+        exit(0);
+    }
+    else
+    {
+        fwrite(this, sizeof(*this), 1, fp);
+        fclose(fp);
+    }
 }
 void BankData::read()
 {
-    FILE *fp =  fopen("../data/bankData.bin", "rb");
-    fread(this, sizeof(*this), 1, fp);
-    fclose(fp);
+    FILE *fp =  fopen("server/data/bankData.bin", "rb");
+    if(fp == NULL)
+    {
+        cout << "Failed opening bankData.bin for reading"<< endl;
+        exit(0);
+    }
+    else
+    {
+        fread(this, sizeof(*this), 1, fp);
+        fclose(fp);
+    }
 }
 long BankData::getAccountsCreated()
 {
@@ -62,8 +78,8 @@ void BankData::deletedUser()
 }
 void BankData::display()
 {
-    cout << "------------Bank Information------------";
+    cout << "------------Bank Information------------\n";
     cout << "Total Accounts Created: " << accountsCreated << endl;
     cout << "Total Accounts Deleted: " << accountsDeleted << endl;
-    cout << "----------------------------------------";
+    cout << "----------------------------------------\n";
 }

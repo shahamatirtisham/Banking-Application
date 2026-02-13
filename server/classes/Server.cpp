@@ -1,6 +1,6 @@
 #include "../../shared/classes/Packet.hpp"
 #include "../requests/executeRequests.hpp"
-#include "../classes/bankData.hpp"
+#include "../classes/BankData.hpp"
 #include <iostream>
 #include <strings.h>
 #include <unistd.h>
@@ -82,6 +82,7 @@ void Server::run()
 {
     setupSocket();
     BankData bankData;
+    bankData.display();
     acceptLoop();
 }
 

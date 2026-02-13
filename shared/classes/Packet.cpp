@@ -1,4 +1,5 @@
 #include "Packet.hpp"
+#include "Hexadecimal.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
@@ -21,12 +22,61 @@ using namespace std;
 //     account.setFavAni(favAni);
 //     this->salt = salt;
 // }
-Packet::Packet(string command, UserAccount account, string salt)
-    : account(account)
+
+
+
+
+
+
+
+
+Packet::Packet(string command, UserAccount account, string salt, Hexadecimal ID)
+: account(account), ID(ID)
 {
     this->command = command;
     this->salt = salt;
 }
+void Packet::setCommand(string command)
+{
+    this->command = command;
+}
+void Packet::setID(Hexadecimal ID)
+{
+    this->ID = ID;
+}
+void Packet::setName(string name)
+{
+    this->account.setName(name);
+}
+void Packet::setUsername(string username)
+{
+    this->account.setUsername(username);
+}
+void Packet::setPassword(string password)
+{
+    this->account.setPassword(password);
+}
+void Packet::setDOB(Date DOB)
+{
+    this->account.setDOB(DOB);
+}
+void Packet::setBalance(double balance)
+{
+    this->account.setBalance(balance);
+}
+void Packet::setAccountNo(string accountNo)
+{
+    this->account.setAccountNo(accountNo);
+}
+void Packet::setFavAni(string favAni)
+{
+    this->account.setFavAni(favAni);
+}
+void Packet::setSalt(string salt)
+{
+    this->salt = salt;
+}
+
 string Packet::getCommand() const
 {
     return command;
@@ -43,7 +93,7 @@ string Packet::getPassword() const
 {
     return account.getPassword();
 }
-Date Packet::getDate() const
+Date Packet::getDOB() const
 {
     return account.getDOB();
 }
@@ -63,6 +113,10 @@ string Packet::getSalt() const
 {
     return salt;
 }
+Hexadecimal Packet::getID() const
+{
+    return ID;
+}
 void Packet::write(int sockfd)
 {
     cout << "writing on sockfd = " << sockfd << endl;
@@ -74,6 +128,9 @@ void Packet::write(int sockfd)
     ::write(sockfd, this->account.getAccountNo().c_str(), 14); 
     ::write(sockfd, this->account.getFavAni().c_str(), 31);
     ::write(sockfd, this->salt.c_str(), 17);
+
+    int ID_decimal = this->ID.getDecimal();
+    ::write(sockfd, &ID_decimal, sizeof(int));
     
     int day = account.getDOB().getDate();
     int month = account.getDOB().getMonth();
@@ -100,6 +157,7 @@ void Packet:: read(int sockfd)
     char _accountNo[14] = {0};
     char _favAni[31] = {0};
     char _salt[17] = {0};
+    int ID_decimal;
     double _balance;
     
     
@@ -117,6 +175,8 @@ void Packet:: read(int sockfd)
     cout << "read favAni ";
     ::read(sockfd, _salt, 17);
     cout << "read salt ";
+    ::read(sockfd, &ID_decimal, sizeof(int));
+    cout << "read id ";
     ::read(sockfd, &day, sizeof(int));
     ::read(sockfd, &month, sizeof(int));
     ::read(sockfd, &year, sizeof(int));
@@ -125,6 +185,9 @@ void Packet:: read(int sockfd)
     
     
     command = _command;
+
+    this->ID = Hexadecimal(ID_decimal);
+
     account.setName(_name);
     account.setUsername(_username);
     account.setPassword(_password);
@@ -144,6 +207,7 @@ void Packet::display() const
     cout << "------------------Displaying Packet------------------\n";
     //cout << "Sockfd: " << sockfd << endl;
     cout << "Command: " << command << endl;
+    cout << "ID: " << ID << endl;
     account.printAccountInfo(0);
     cout << "Salt: " << salt << endl;
     cout << "-----------------------------------------------------\n";

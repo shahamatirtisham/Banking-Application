@@ -24,7 +24,10 @@ void Hexadecimal::setValue(int decimalVal)
     this->decimalVal = decimalVal;
     this->hexadecimalVal = decToHex(decimalVal);
 }
-
+int Hexadecimal::getDecimal() const
+{
+    return decimalVal;
+}
 string Hexadecimal::getHexadecimalVal() const
 {
     return hexadecimalVal;
@@ -33,5 +36,11 @@ ostream& operator << (std::ostream& COUT, const Hexadecimal& hexadecimal)
 {
     COUT << hexadecimal.getHexadecimalVal();
     return COUT;
+}
+Hexadecimal& Hexadecimal::operator = (const Hexadecimal& other)
+{
+    this->decimalVal = other.decimalVal;
+    this->hexadecimalVal = other.hexadecimalVal;
+    return *this;
 }
 

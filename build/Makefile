@@ -214,53 +214,77 @@ client/screens/pre-login.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client/screens/pre-login.cpp.s
 .PHONY : client/screens/pre-login.cpp.s
 
-server/classes/bankData.o: server/classes/bankData.cpp.o
-.PHONY : server/classes/bankData.o
+server/classes/BankData.o: server/classes/BankData.cpp.o
+.PHONY : server/classes/BankData.o
 
 # target to build an object file
-server/classes/bankData.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.o
-.PHONY : server/classes/bankData.cpp.o
+server/classes/BankData.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/BankData.cpp.o
+.PHONY : server/classes/BankData.cpp.o
 
-server/classes/bankData.i: server/classes/bankData.cpp.i
-.PHONY : server/classes/bankData.i
+server/classes/BankData.i: server/classes/BankData.cpp.i
+.PHONY : server/classes/BankData.i
 
 # target to preprocess a source file
-server/classes/bankData.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.i
-.PHONY : server/classes/bankData.cpp.i
+server/classes/BankData.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/BankData.cpp.i
+.PHONY : server/classes/BankData.cpp.i
 
-server/classes/bankData.s: server/classes/bankData.cpp.s
-.PHONY : server/classes/bankData.s
+server/classes/BankData.s: server/classes/BankData.cpp.s
+.PHONY : server/classes/BankData.s
 
 # target to generate assembly for a file
-server/classes/bankData.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/bankData.cpp.s
-.PHONY : server/classes/bankData.cpp.s
+server/classes/BankData.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/BankData.cpp.s
+.PHONY : server/classes/BankData.cpp.s
 
-server/classes/server.o: server/classes/server.cpp.o
-.PHONY : server/classes/server.o
+server/classes/Server.o: server/classes/Server.cpp.o
+.PHONY : server/classes/Server.o
 
 # target to build an object file
-server/classes/server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.o
-.PHONY : server/classes/server.cpp.o
+server/classes/Server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/Server.cpp.o
+.PHONY : server/classes/Server.cpp.o
 
-server/classes/server.i: server/classes/server.cpp.i
-.PHONY : server/classes/server.i
+server/classes/Server.i: server/classes/Server.cpp.i
+.PHONY : server/classes/Server.i
 
 # target to preprocess a source file
-server/classes/server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.i
-.PHONY : server/classes/server.cpp.i
+server/classes/Server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/Server.cpp.i
+.PHONY : server/classes/Server.cpp.i
 
-server/classes/server.s: server/classes/server.cpp.s
-.PHONY : server/classes/server.s
+server/classes/Server.s: server/classes/Server.cpp.s
+.PHONY : server/classes/Server.s
 
 # target to generate assembly for a file
-server/classes/server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/server.cpp.s
-.PHONY : server/classes/server.cpp.s
+server/classes/Server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/Server.cpp.s
+.PHONY : server/classes/Server.cpp.s
+
+server/classes/UserAccount_server.o: server/classes/UserAccount_server.cpp.o
+.PHONY : server/classes/UserAccount_server.o
+
+# target to build an object file
+server/classes/UserAccount_server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/UserAccount_server.cpp.o
+.PHONY : server/classes/UserAccount_server.cpp.o
+
+server/classes/UserAccount_server.i: server/classes/UserAccount_server.cpp.i
+.PHONY : server/classes/UserAccount_server.i
+
+# target to preprocess a source file
+server/classes/UserAccount_server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/UserAccount_server.cpp.i
+.PHONY : server/classes/UserAccount_server.cpp.i
+
+server/classes/UserAccount_server.s: server/classes/UserAccount_server.cpp.s
+.PHONY : server/classes/UserAccount_server.s
+
+# target to generate assembly for a file
+server/classes/UserAccount_server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server/classes/UserAccount_server.cpp.s
+.PHONY : server/classes/UserAccount_server.cpp.s
 
 server/functions/database-handling.o: server/functions/database-handling.cpp.o
 .PHONY : server/functions/database-handling.o
@@ -542,12 +566,15 @@ help:
 	@echo "... client/screens/pre-login.o"
 	@echo "... client/screens/pre-login.i"
 	@echo "... client/screens/pre-login.s"
-	@echo "... server/classes/bankData.o"
-	@echo "... server/classes/bankData.i"
-	@echo "... server/classes/bankData.s"
-	@echo "... server/classes/server.o"
-	@echo "... server/classes/server.i"
-	@echo "... server/classes/server.s"
+	@echo "... server/classes/BankData.o"
+	@echo "... server/classes/BankData.i"
+	@echo "... server/classes/BankData.s"
+	@echo "... server/classes/Server.o"
+	@echo "... server/classes/Server.i"
+	@echo "... server/classes/Server.s"
+	@echo "... server/classes/UserAccount_server.o"
+	@echo "... server/classes/UserAccount_server.i"
+	@echo "... server/classes/UserAccount_server.s"
 	@echo "... server/functions/database-handling.o"
 	@echo "... server/functions/database-handling.i"
 	@echo "... server/functions/database-handling.s"
