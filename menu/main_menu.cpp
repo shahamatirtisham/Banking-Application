@@ -13,7 +13,8 @@ void MainMenu::printMenu()
 {
     cout <<"1. Login" <<endl;
     cout <<"2. Sign Up" <<endl;
-    cout <<"3. Exit" <<endl <<endl;
+    cout <<"3. Admin Login" <<endl;
+    cout <<"4. Exit" <<endl <<endl;
 }
 
 int MainMenu::readChoice()
@@ -22,7 +23,7 @@ int MainMenu::readChoice()
     while(true)
     {
         cout <<"Enter Choice: "; cin >>choice;
-        if(cin.fail() || choice <1 || choice >3)
+        if(cin.fail() || choice <1 || choice >4)
         {
             cin.clear();
             cin.ignore(9999, '\n');
