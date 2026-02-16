@@ -4,6 +4,7 @@
 class HomePage
 {
     private:
+    int sockfd;
     UserAccount user;
     UserOperations operation;
     void printHeader();

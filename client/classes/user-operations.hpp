@@ -2,11 +2,12 @@
 
 class UserOperations
 {
+    int sockfd;
     public:
-    void check_balance();
-    void deposit(double amount);
-    void withdraw(double amount);
-    void transfer_money(UserAccount destAcc, double amount);
-    void transaction_history();
-    void logout();
+    void check_balance(UserAccount user);
+    void deposit(UserAccount user);
+    void withdraw(UserAccount user);
+    void transfer_money(UserAccount user);
+    void transaction_history(UserAccount user);
+    void logout(UserAccount user);
 };

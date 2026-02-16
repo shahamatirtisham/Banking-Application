@@ -122,5 +122,34 @@ void Server::handleClient(int clientSocket)
             p.display();
             p.write(clientSocket);
         }
+        else if(command == "CHECK-BALANCE")
+        {
+            requests::user::check_balance(p);
+        }
+        else if(command == "DEPOSIT")
+        {
+            requests::user::deposit(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "WITHDRAW")
+        {
+            requests::user::withdraw(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "TRANSFER-MONEY")
+        {
+            requests::user::transfer_money(p);
+            // ekhane amount er kaj baki ase
+            // ekhane receiver account er kaj baki ase
+
+        }
+        else if(command == "TRANSACTION-HISTORY")
+        {
+            requests::user::transaction_history(p);
+        }
+        else if(command == "LOGOUT")
+        {
+            requests::user::logout(p);
+        }
     }    
 }

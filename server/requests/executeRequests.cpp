@@ -31,3 +31,33 @@ void requests::user::signup(Packet packet)
     // enter dbms signup code here
 
 }
+
+void requests::user::check_balance(Packet packet)
+{
+
+}
+
+void requests::user::deposit(Packet packet)
+{
+
+}
+
+void requests::user::withdraw(Packet packet)
+{
+
+}
+
+void requests::user::transfer_money(Packet packet)
+{
+
+}
+
+void requests::user::transaction_history(Packet packet)
+{
+
+}
+
+void requests::user::logout(Packet packet)
+{
+
+}

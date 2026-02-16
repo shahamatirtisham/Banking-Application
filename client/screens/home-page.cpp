@@ -48,28 +48,10 @@ int HomePage::getChoice()
 
 void HomePage::userOperation(int choice)
 {
-    if(choice == 1) 
-    {
-
-    }
-    else if(choice == 2) 
-    {
-        
-    }
-    else if(choice == 3) 
-    {
-        
-    }
-    else if(choice == 4) 
-    {
-        
-    }
-    else if(choice == 5) 
-    {
-        
-    }
-    else if(choice == 6) 
-    {
-        
-    }
+    if(choice == 1) operation.check_balance(user);
+    else if(choice == 2) operation.deposit(user);
+    else if(choice == 3) operation.withdraw(user);
+    else if(choice == 4) operation.transfer_money(user);
+    else if(choice == 5) operation.transaction_history(user);
+    else if(choice == 6) operation.logout(user);
 }
