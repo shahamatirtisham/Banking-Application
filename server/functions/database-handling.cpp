@@ -211,115 +211,135 @@ public:
     }
 
     // Create all required tables in the TARGET DB
-    bool init_schema() {
-        if (!connx || PQstatus(connx) != CONNECTION_OK) return false;
+bool init_schema() {
+    if (!connx || PQstatus(connx) != CONNECTION_OK) return false;
 
-        if (!exec_cmd(connx, "BEGIN;")) return false;
+    if (!exec_cmd(connx, "BEGIN;")) return false;
 
-        const vector<string> ddl = {
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS client_info (
-                client_ID   VARCHAR(5) PRIMARY KEY,
-                name        VARCHAR(50) NOT NULL,
-                username    VARCHAR(64) NOT NULL UNIQUE,
-                password    VARCHAR(64) NOT NULL,
-                salt        VARCHAR(16) NOT NULL,
-                dob         DATE,
-                balance     NUMERIC(18,2) NOT NULL DEFAULT 0,
-                account_no  VARCHAR(13) UNIQUE,
-                favAni      VARCHAR(30)
-            );
-            )SQL",
+    const vector<string> ddl = {
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS client_activity_type (
-                code INT PRIMARY KEY,
-                type VARCHAR(20) NOT NULL UNIQUE
-            );
-            )SQL",
+        // ---------- CLIENT TABLES ----------
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS client_personal_info (
+            client_ID   VARCHAR(5) PRIMARY KEY,
+            name        VARCHAR(50) NOT NULL,
+            username    VARCHAR(64) NOT NULL UNIQUE,
+            password    VARCHAR(64) NOT NULL,
+            DOB         DATE,
+            account_no  VARCHAR(13) UNIQUE,
+            favAni      VARCHAR(30),
+            salt        VARCHAR(16) NOT NULL
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS client_activity (
-                activity_id BIGSERIAL PRIMARY KEY,
-                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
-                client_id   VARCHAR(5) NOT NULL REFERENCES client_info(client_ID) ON DELETE CASCADE,
-                code        INT NOT NULL REFERENCES client_activity_type(code)
-            );
-            )SQL",
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS client_account_status (
+            client_ID VARCHAR(5) PRIMARY KEY
+                REFERENCES client_personal_info(client_ID) ON DELETE CASCADE,
+            balance DOUBLE PRECISION NOT NULL DEFAULT 0
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS transaction_types (
-                code INT PRIMARY KEY,
-                type VARCHAR(10) NOT NULL UNIQUE
-            );
-            )SQL",
+        // ---------- CLIENT ACTIVITY ----------
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS client_activity_type (
+            code INT PRIMARY KEY,
+            type VARCHAR(20) NOT NULL UNIQUE
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS transactions (
-                trxid       VARCHAR(64) PRIMARY KEY,
-                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
-                sender_id   VARCHAR(5) NOT NULL REFERENCES client_info(client_ID),
-                receiver_id VARCHAR(5) REFERENCES client_info(client_ID),
-                code        INT NOT NULL REFERENCES transaction_types(code)
-            );
-            )SQL",
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS client_activity (
+            activity_id BIGSERIAL PRIMARY KEY,
+            time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+            client_id   VARCHAR(5) NOT NULL
+                REFERENCES client_personal_info(client_ID) ON DELETE CASCADE,
+            code        INT NOT NULL
+                REFERENCES client_activity_type(code)
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS admin_info (
-                admin_ID  VARCHAR(5) PRIMARY KEY,
-                name      VARCHAR(50) NOT NULL,
-                username  VARCHAR(64) NOT NULL UNIQUE,
-                password  VARCHAR(64) NOT NULL
-            );
-            )SQL",
+        // ---------- TRANSACTIONS ----------
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS transaction_types (
+            code INT PRIMARY KEY,
+            type VARCHAR(10) NOT NULL UNIQUE
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS admin_activity_type (
-                code INT PRIMARY KEY,
-                type VARCHAR(20) NOT NULL UNIQUE
-            );
-            )SQL",
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS transactions (
+            trxid       VARCHAR(64) PRIMARY KEY,
+            time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+            sender_id   VARCHAR(5) NOT NULL
+                REFERENCES client_personal_info(client_ID),
+            receiver_id VARCHAR(5)
+                REFERENCES client_personal_info(client_ID),
+            code        INT NOT NULL
+                REFERENCES transaction_types(code)
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE TABLE IF NOT EXISTS admin_activity (
-                activity_id BIGSERIAL PRIMARY KEY,
-                time        TIMESTAMPTZ NOT NULL DEFAULT now(),
-                admin_id    VARCHAR(5) REFERENCES admin_info(admin_ID) ON DELETE SET NULL,
-                code        INT NOT NULL REFERENCES admin_activity_type(code)
-            );
-            )SQL",
+        // ---------- ADMIN ----------
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS admin_info (
+            admin_ID  VARCHAR(5) PRIMARY KEY,
+            name      VARCHAR(50) NOT NULL,
+            username  VARCHAR(64) NOT NULL UNIQUE,
+            password  VARCHAR(64) NOT NULL
+        );
+        )SQL",
 
-            // Helpful indexes
-            R"SQL(
-            CREATE INDEX IF NOT EXISTS idx_client_activity_client_time
-                ON client_activity(client_id, time DESC);
-            )SQL",
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS admin_activity_type (
+            code INT PRIMARY KEY,
+            type VARCHAR(20) NOT NULL UNIQUE
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE INDEX IF NOT EXISTS idx_transactions_sender_time
-                ON transactions(sender_id, time DESC);
-            )SQL",
+        // Keeping admin_id (otherwise you can't tie activity to an admin)
+        R"SQL(
+        CREATE TABLE IF NOT EXISTS admin_activity (
+            activity_id BIGSERIAL PRIMARY KEY,
+            time        TIMESTAMPTZ NOT NULL DEFAULT now(),
+            admin_id    VARCHAR(5)
+                REFERENCES admin_info(admin_ID) ON DELETE SET NULL,
+            code        INT NOT NULL
+                REFERENCES admin_activity_type(code)
+        );
+        )SQL",
 
-            R"SQL(
-            CREATE INDEX IF NOT EXISTS idx_transactions_receiver_time
-                ON transactions(receiver_id, time DESC);
-            )SQL"
-        };
+        // ---------- INDEXES ----------
+        R"SQL(
+        CREATE INDEX IF NOT EXISTS idx_client_activity_client_time
+            ON client_activity(client_id, time DESC);
+        )SQL",
 
-        for (const auto& sql : ddl) {
-            if (!exec_cmd(connx, sql)) {
-                exec_cmd(connx, "ROLLBACK;");
-                return false;
-            }
-        }
+        R"SQL(
+        CREATE INDEX IF NOT EXISTS idx_transactions_sender_time
+            ON transactions(sender_id, time DESC);
+        )SQL",
 
-        if (!exec_cmd(connx, "COMMIT;")) {
+        R"SQL(
+        CREATE INDEX IF NOT EXISTS idx_transactions_receiver_time
+            ON transactions(receiver_id, time DESC);
+        )SQL"
+    };
+
+    for (const auto& sql : ddl) {
+        if (!exec_cmd(connx, sql)) {
             exec_cmd(connx, "ROLLBACK;");
             return false;
         }
-
-        return true;
     }
+
+    if (!exec_cmd(connx, "COMMIT;")) {
+        exec_cmd(connx, "ROLLBACK;");
+        return false;
+    }
+
+    return true;
+}
 
     void show(){
         cout << "Status : ";
