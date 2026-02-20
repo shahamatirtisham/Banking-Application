@@ -4,5 +4,4 @@
 
 
 bool checkUniqueUsername(std::string username);
-
-static void forgetPassword(std::string username);
+void addUser(UserAccount user);

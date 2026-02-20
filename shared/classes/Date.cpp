@@ -12,9 +12,9 @@ Date::Date(int d, int m, int y)
 }
 Date::Date()
 {
-    setDate(15);
-    setMonth(1);
-    setYear(2004);
+    setDate(0);
+    setMonth(0);
+    setYear(0);
 }
 
 void Date::setDate(int date)

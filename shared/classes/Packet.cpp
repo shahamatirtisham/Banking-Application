@@ -1,4 +1,5 @@
 #include "Packet.hpp"
+#include "Hexadecimal.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
@@ -6,19 +7,74 @@
 
 using namespace std;
 
-Packet::Packet(int clientSock, string command, string name, string username, string password, Date date, 
-        double balance, string accountNo, string favAni,string salt)
+// Packet::Packet(int sockfd, string command, string name, string username, string password, Date DOB, 
+//         double balance, string accountNo, string favAni,string salt) : account(name, username, password,DOB, balance, accountNo, favAni)
+// {
+
+//     this->sockfd = sockfd;
+//     this->command = command;
+//     account.setName(name);
+//     account.setUsername(username);
+//     account.setPassword(password);
+//     account.setDOB(DOB);
+//     account.setBalance(balance);
+//     account.setAccountNo(accountNo);
+//     account.setFavAni(favAni);
+//     this->salt = salt;
+// }
+
+
+
+
+
+
+
+
+Packet::Packet(string command, UserAccount account, string salt, Hexadecimal ID)
+: account(account), ID(ID)
 {
-    this->clientSock = clientSock;
-    strcpy(this->command, command.c_str());
-    strcpy(this->name, name.c_str());
-    strcpy(this->username, username.c_str());
-    strcpy(this->password, password.c_str());
-    this->date = date;
-    this->balance = balance;
-    strcpy(this->accountNo, accountNo.c_str());
-    strcpy(this->favAni, favAni.c_str());
-    strcpy(this->salt, salt.c_str());
+    this->command = command;
+    this->salt = salt;
+}
+void Packet::setCommand(string command)
+{
+    this->command = command;
+}
+void Packet::setID(Hexadecimal ID)
+{
+    this->ID = ID;
+}
+void Packet::setName(string name)
+{
+    this->account.setName(name);
+}
+void Packet::setUsername(string username)
+{
+    this->account.setUsername(username);
+}
+void Packet::setPassword(string password)
+{
+    this->account.setPassword(password);
+}
+void Packet::setDOB(Date DOB)
+{
+    this->account.setDOB(DOB);
+}
+void Packet::setBalance(double balance)
+{
+    this->account.setBalance(balance);
+}
+void Packet::setAccountNo(string accountNo)
+{
+    this->account.setAccountNo(accountNo);
+}
+void Packet::setFavAni(string favAni)
+{
+    this->account.setFavAni(favAni);
+}
+void Packet::setSalt(string salt)
+{
+    this->salt = salt;
 }
 
 string Packet::getCommand() const
@@ -27,95 +83,134 @@ string Packet::getCommand() const
 }
 string Packet::getName() const
 {
-    return name;
+    return account.getName();
 }
 string Packet::getUsername() const
 {
-    return username;
+    return account.getUsername();
 }
 string Packet::getPassword() const
 {
-    return password;
+    return account.getPassword();
 }
-Date Packet::getDate() const
+Date Packet::getDOB() const
 {
-    return date;
+    return account.getDOB();
 }
 double Packet::getBalance() const
 {
-    return balance;
+    return account.getBalance();
 }
 string Packet::getAccountNo() const
 {
-    return accountNo;
+    return account.getAccountNo();
 }
 string Packet::getFavAni() const
 {
-    return favAni;
+    return account.getFavAni();
 }
 string Packet::getSalt() const
 {
     return salt;
 }
-void Packet::write()
+Hexadecimal Packet::getID() const
 {
-    cout << "writing..\n";
-    ::write(clientSock, this->command, 31);
-    ::write(clientSock, this->name, 31);
-    ::write(clientSock, this->username, 65);
-    ::write(clientSock, this->password, 65);
-    ::write(clientSock, this->accountNo, 14);
+    return ID;
+}
+void Packet::write(int sockfd)
+{
+    cout << "writing on sockfd = " << sockfd << endl;
     
-    int day = date.getDate();
-    int month = date.getMonth();
-    int year = date.getYear();
-    ::write(clientSock, &day, sizeof(int));
-    ::write(clientSock, &month, sizeof(int));
-    ::write(clientSock, &year, sizeof(int));
+    ::write(sockfd, this->command.c_str(), 31);
+    ::write(sockfd, this->account.getName().c_str(), 31);
+    ::write(sockfd, this->account.getUsername().c_str(), 65);
+    ::write(sockfd, this->account.getPassword().c_str(), 65);
+    ::write(sockfd, this->account.getAccountNo().c_str(), 14); 
+    ::write(sockfd, this->account.getFavAni().c_str(), 31);
+    ::write(sockfd, this->salt.c_str(), 17);
 
-    ::write(clientSock, &balance, sizeof(double));
-    ::write(clientSock, favAni, 31);
-    ::write(clientSock, salt, 17);
-
+    int ID_decimal = this->ID.getDecimal();
+    ::write(sockfd, &ID_decimal, sizeof(int));
+    
+    int day = account.getDOB().getDate();
+    int month = account.getDOB().getMonth();
+    int year = account.getDOB().getYear();
+    ::write(sockfd, &day, sizeof(int));
+    ::write(sockfd, &month, sizeof(int));
+    ::write(sockfd, &year, sizeof(int));
+    double balance = account.getBalance();
+    ::write(sockfd, &balance, sizeof(double));
+    
     cout << "writing complete..\n";
 }
-void Packet:: read()
+void Packet:: read(int sockfd)
 { 
-    cout << "reading..\n";
+    cout << "reading on sockfd = " << sockfd << endl;
     int day;
     int month;
     int year; 
+    
+    char _command[31] = {0};
+    char _name[31] = {0};
+    char _username[65] = {0};
+    char _password[65] = {0};
+    char _accountNo[14] = {0};
+    char _favAni[31] = {0};
+    char _salt[17] = {0};
+    int ID_decimal;
+    double _balance;
+    
+    
+    ::read(sockfd, _command, 31);
+    cout << "read command ";
+    ::read(sockfd, _name, 31);
+    cout << "read name ";
+    ::read(sockfd, _username, 65);
+    cout << "read username ";
+    ::read(sockfd, _password, 65);
+    cout << "read password ";
+    ::read(sockfd, _accountNo, 14);
+    cout << "read accNO ";
+    ::read(sockfd, _favAni, 31);
+    cout << "read favAni ";
+    ::read(sockfd, _salt, 17);
+    cout << "read salt ";
+    ::read(sockfd, &ID_decimal, sizeof(int));
+    cout << "read id ";
+    ::read(sockfd, &day, sizeof(int));
+    ::read(sockfd, &month, sizeof(int));
+    ::read(sockfd, &year, sizeof(int));
+    ::read(sockfd, &_balance, sizeof(double));
+    cout << "read data & balance\n";
+    
+    
+    command = _command;
 
-    ::read(clientSock, command, 31);
-    ::read(clientSock, name, 31);
-    ::read(clientSock, username, 65);
-    ::read(clientSock, password, 65);
-    ::read(clientSock, accountNo, 14);
-    ::read(clientSock, &day, sizeof(int));
-    ::read(clientSock, &month, sizeof(int));
-    ::read(clientSock, &year, sizeof(int));
-    ::read(clientSock, &balance, sizeof(double));
-    ::read(clientSock, favAni, 31);
-    ::read(clientSock, salt, 17);
+    this->ID = Hexadecimal(ID_decimal);
 
+    account.setName(_name);
+    account.setUsername(_username);
+    account.setPassword(_password);
+    account.setAccountNo(_accountNo);
+    account.setFavAni(_favAni);
+    account.setDOB(Date(day, month, year));
+    salt = _salt;
+    
+    
+    
     cout << "reading complete..\n";
     
-    date = Date(day, month, year);
 }
 
 void Packet::display() const
 {
-    cout << "---------------Displaying Packet---------------\n";
+    cout << "------------------Displaying Packet------------------\n";
+    //cout << "Sockfd: " << sockfd << endl;
     cout << "Command: " << command << endl;
-    cout << "Name: " << name << endl;
-    cout << "Username: " << username << endl;
-    cout << "Password: " << password << endl;
-    cout << "DOB: "; date.display(); cout << endl;
-    cout << "Balance: " << balance << endl;
-    cout << "Account No: " << accountNo << endl;
-    cout << "Favorite animal: " << favAni << endl;
+    cout << "ID: " << ID << endl;
+    account.printAccountInfo(0);
     cout << "Salt: " << salt << endl;
-    cout << "-----------------------------------------------\n";
+    cout << "-----------------------------------------------------\n";
 }
 
 

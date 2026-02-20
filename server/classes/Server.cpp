@@ -1,5 +1,6 @@
 #include "../../shared/classes/Packet.hpp"
-#include "../requests/readRequests.hpp"
+#include "../requests/executeRequests.hpp"
+#include "../classes/BankData.hpp"
 #include <iostream>
 #include <strings.h>
 #include <unistd.h>
@@ -80,6 +81,8 @@ void Server::acceptLoop()
 void Server::run()
 {
     setupSocket();
+    BankData bankData;
+    bankData.display();
     acceptLoop();
 }
 
@@ -87,16 +90,37 @@ void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
     readRequests_init(clientSocket);
-    // cout << "Check1\n";
+    cout << "check1\n";
     while(1)
     {
-        Packet packet(clientSocket);
-        // cout << "Check2\n";
-        packet.read();
-        
-        
+        cout << "check2\n";
+        Packet p;
+        cout << "check3\n";
+        p.read(clientSocket);
 
-        if(packet.getCommand() == "SIGNUP")
-            requests::user::signup(packet);
+        // packet.display();
+        string command = p.getCommand();
+        p.display();
+        
+    
+        if(command == "SIGNUP")
+        {
+            requests::user::signup(p);
+        }
+        else if(command == "UNIQUE-USERNAME-CHECK")
+        {
+            if(checkUniqueUsername(p.getUsername()) == true)
+            {
+                p = Packet("POSITIVE");
+                cout << "username is unique\n";
+            }
+            else
+            {
+                p = Packet("NEGATIVE");
+                cout << "username is taken\n";
+            }
+            p.display();
+            p.write(clientSocket);
+        }
     }    
 }

@@ -1,5 +1,5 @@
-#include "pre-login.hpp"
 #include <iostream>
+#include "pre-login.hpp"
 #include "../../shared/input.hpp"
 #include "../../shared/classes/Packet.hpp"
 #include "../../shared/classes/UserAccount.hpp"
@@ -177,45 +177,40 @@ static void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
-
+    // Packet packet(sockfd);
     name = acceptName();
-    username = acceptUsername();
+    while(1)
+    {
+        username = acceptUsername();
+        UserAccount account;
+        account.setUsername(username);
+        Packet p("UNIQUE-USERNAME-CHECK", account);
+        p.display();
+        p.write(sockfd);
+        p.read(sockfd);
+        // p.display();
+
+        if(p.getCommand() != "POSITIVE")
+        {
+            cout << "Username already taken\n";
+            continue;
+        }
+        else
+        {
+            //cout << "Username is unique. Moving on\n";
+            break;
+        }
+    }
     password = acceptPassword();
     DOB = acceptDOB();
     favAni = acceptFavAni();
 
-    UserAccount user(name, username, password, DOB, 0, favAni);
+    UserAccount user(name, username, password, DOB, 0, "", favAni);
     user.printAccountInfo(0);
-    Packet packet(sockfd, "SIGNUP", name, username, password, DOB, 0, "", favAni);
+    Packet packet("SIGNUP", user);
     packet.display();
-    packet.write();
+    packet.write(sockfd);
 
-
-    // int n = write(sockfd, command, sizeof(command));
-    // if(n < 0)
-    //         error("Error on writing.");
-
-    // n = read(sockfd, &account_no, sizeof(account_no));
-    // if(n < 0)
-    //         error("Error on writing.");
-
-    //printf("Generated acc no\n");
-
-
-    // package_command(command, "SIGNUP", username, password, date_of_birth, favourite_animal, account_no, salt);
-
-    // write(sockfd, command, sizeof(command));
-
-    // read(sockfd, &response, sizeof(response));
-    // if(response == true)
-    // {
-    //     clear_screen();
-    //     printf("Account creation successful. Your account number is %s\n\n", account_no);
-    // }
-    // else
-    // {
-    //     printf("Account creation failed.\n");
-    // }
 }
 static void preloginScreens::admin::signup()
 {

@@ -5,6 +5,7 @@
 
 int readInt();
 double readDouble();
+char readChar();
 
 bool checkValidDOB(const std::string &dob);
 Date acceptDOB();

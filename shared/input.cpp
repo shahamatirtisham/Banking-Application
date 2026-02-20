@@ -54,6 +54,21 @@ double readDouble()
         std::cout << "Invalid integer, try again: ";
     }
 }
+char readChar()
+{
+    while (true)
+    {
+        std::string line;
+        std::getline(std::cin, line);
+
+        if(line.size() == 1)
+        {
+            return line[0];
+        }
+
+        std::cout << "Invalid input\n";
+    }
+}
 
 bool checkValidDOB(const string& dob)
 {

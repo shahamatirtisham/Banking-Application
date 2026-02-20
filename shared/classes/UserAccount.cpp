@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Packet.hpp"
 #include "UserAccount.hpp"
 // #include <cctype>
 #include <ctime>
@@ -8,21 +9,13 @@ using namespace std;
 
 
 
-UserAccount::UserAccount(string name, string username, string password, Date DOB, double balance, string favAni) 
+UserAccount::UserAccount(string name, string username, string password, Date DOB, double balance, string accountNo, string favAni) 
         : Account(name, username, password)
 {
     setDOB(DOB);
     setBalance(balance);
-    setAccountNo();
+    setAccountNo(accountNo);
     setFavAni(favAni);
-}
-
-UserAccount::UserAccount() : Account()
-{
-    setDOB();
-    setBalance();
-    setAccountNo();
-    setFavAni();
 }
 
 
@@ -61,9 +54,9 @@ string generateAccountNo()
         }
     }
 }    
-void UserAccount::setAccountNo()
+void UserAccount::setAccountNo(string accounNo)
 {
-    this->accountNo = generateAccountNo();
+    this->accountNo = accounNo;
 }
 void UserAccount::setFavAni(string favAni)
 {
@@ -88,7 +81,7 @@ string UserAccount::getFavAni() const
 void UserAccount::printAccountInfo(bool printAsterisk) const
 {
 
-    cout << "------------------Displaying Account------------------\n";
+    cout << "-----------------Displaying Account------------------\n";
     cout << "Name: " << name << endl;
 
     if(printAsterisk)
@@ -121,7 +114,7 @@ UserAccount& UserAccount::operator = (const Packet& packet)
     name = packet.getName();
     username = packet.getUsername();
     password = packet.getPassword();
-    DOB = packet.getDate();
+    DOB = packet.getDOB();
     balance = packet.getBalance();
     accountNo = packet.getAccountNo();
     favAni = packet.getFavAni();

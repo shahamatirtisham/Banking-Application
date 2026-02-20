@@ -10,6 +10,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/client.dir/shared/classes/Account.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/Date.cpp.o"
   "CMakeFiles/client.dir/shared/classes/Date.cpp.o.d"
+  "CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.o"
+  "CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/Packet.cpp.o"
   "CMakeFiles/client.dir/shared/classes/Packet.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/UserAccount.cpp.o"
