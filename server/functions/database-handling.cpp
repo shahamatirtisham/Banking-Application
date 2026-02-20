@@ -1,5 +1,5 @@
-// #include "../../shared/classes/Date.hpp"
-// #include "../../shared/classes/UserAccount.hpp"
+ #include "../../shared/classes/Date.hpp"
+ #include "../../shared/classes/UserAccount.hpp"
 
 #include <iostream>
 #include <string>
@@ -8,7 +8,13 @@
 
 using namespace std;
 
-class pgconfig_info {
+class overall_con_db{
+    virtual void show()=0;
+};
+
+
+
+class pgconfig_info : public overall_con_db{
 private:
     string host;
     string port;
@@ -16,6 +22,7 @@ private:
     string password;
     string target_db;
     string admin_db;
+
 
 public:
     pgconfig_info(
@@ -34,6 +41,7 @@ public:
           admin_db(admin_db_in) {}
 
     // Connect to a specified DB; if none provided, connect to admin_db
+    
     PGconn* connect(const string& dbname = "") {
         const string& db = dbname.empty() ? admin_db : dbname;
 
@@ -56,10 +64,21 @@ public:
 
     const string& get_target_db() const { return target_db; }
     const string& get_admin_db() const { return admin_db; }
+
+
+    void show(){
+        cout << "host: " << host << endl;
+        cout << "port: " << port << endl;
+        cout << "user: " << user << endl;
+        cout << "target db : " << target_db << endl;
+        cout << "admin db : " << admin_db << endl;
+    }
+
 };
 
-class database : public pgconfig_info {
+class database : public pgconfig_info,public overall_con_db{
 private:
+
     PGconn* connx;
     bool it_exists;
     string db_name;
@@ -301,7 +320,29 @@ public:
 
         return true;
     }
+
+    void show(){
+        cout << "Status : ";
+        
+        if(it_exists){
+            cout << "Found & Fetchable." << endl;
+        }
+        else{
+            cout << "Not Found."<< endl;
+        }
+
+        cout << "Database name : " << db_name << endl;
+
+        pgconfig_info:: show();
+
+    }
+
+
+
 };
+
+
+
 
 int main() {
     database db;
