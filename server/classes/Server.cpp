@@ -9,7 +9,7 @@ using namespace std;
 
 class Server
 {
-private:    
+private:
     int port;
     int listenSock;
     void setupSocket();
@@ -31,18 +31,18 @@ void Server::setupSocket()
     socklen_t client_len;
 
     listenSock = socket(AF_INET, SOCK_STREAM, 0);
-    if(listenSock < 0)
+    if (listenSock < 0)
     {
         perror("Error opening socket.");
     }
 
-    bzero((char *) &server_address, sizeof(server_address));      //sets all bytes in the server_address block to be zero
+    bzero((char *)&server_address, sizeof(server_address)); // sets all bytes in the server_address block to be zero
 
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = INADDR_ANY;
     server_address.sin_port = htons(port);
 
-    if(bind(listenSock, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
+    if (bind(listenSock, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
     {
         perror("Binding failed");
     }
@@ -52,29 +52,28 @@ void Server::setupSocket()
 
 void Server::acceptLoop()
 {
-    while(true)
+    while (true)
     {
         struct sockaddr_in clientAddr;
         socklen_t client_len = sizeof(clientAddr);
-        int clientSock = accept(listenSock, (struct sockaddr *) &clientAddr, &client_len);
+        int clientSock = accept(listenSock, (struct sockaddr *)&clientAddr, &client_len);
 
-        if(client_len < 0)
+        if (client_len < 0)
             continue;
 
         pid_t pid = fork();
 
-        if(pid == 0)    // child process has pid 0, it mustnt listen for new clients, therefore closes the listening socket 
+        if (pid == 0) // child process has pid 0, it mustnt listen for new clients, therefore closes the listening socket
         {
-            close(listenSock);   
+            close(listenSock);
             handleClient(clientSock);
             close(clientSock);
             exit(0);
         }
-        else            // parent process mustnt handle client, therefore closes the client socket
+        else // parent process mustnt handle client, therefore closes the client socket
         {
             close(clientSock);
         }
-
     }
 }
 
@@ -91,7 +90,7 @@ void Server::handleClient(int clientSocket)
     std::cout << "Handling client\n";
     readRequests_init(clientSocket);
     cout << "check1\n";
-    while(1)
+    while (1)
     {
         cout << "check2\n";
         Packet p;
@@ -101,15 +100,25 @@ void Server::handleClient(int clientSocket)
         // packet.display();
         string command = p.getCommand();
         p.display();
-        
-    
-        if(command == "SIGNUP")
+
+        if (command == "LOGIN")
+        {
+            requests::user::login(p);
+        }
+
+        else if (command == "SIGNUP")
         {
             requests::user::signup(p);
         }
-        else if(command == "UNIQUE-USERNAME-CHECK")
+
+        else if (command == "FORGOT-PASS")
         {
-            if(checkUniqueUsername(p.getUsername()) == true)
+            requests::user::forgotPassword(p);
+        }
+
+        else if (command == "UNIQUE-USERNAME-CHECK")
+        {
+            if (checkUniqueUsername(p.getUsername()) == true)
             {
                 p = Packet("POSITIVE");
                 cout << "username is unique\n";
@@ -122,5 +131,5 @@ void Server::handleClient(int clientSocket)
             p.display();
             p.write(clientSocket);
         }
-    }    
+    }
 }
