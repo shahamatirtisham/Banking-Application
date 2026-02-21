@@ -10,6 +10,7 @@ namespace requests::user
 {
     void login(Packet packet);
     void signup(Packet packet);
+    void forgotPassword(Packet packet);
 } 
 namespace requests::admin
 {

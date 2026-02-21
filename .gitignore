@@ -2,6 +2,7 @@ test/
 .vscode/
 *.o
 *.out
+build/
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
