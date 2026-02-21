@@ -214,4 +214,23 @@ void Packet::display() const
 }
 
 
+// int sockfd -> client
+//               server;
 
+// string str;
+
+// write(sockfd, str, sizeof(n));
+// read(sockfd, str, sizeof(n));
+
+// Client Side
+// UserAccount myAcc("tawfiq", "tawfiq123", "15-01-20404", "12342354543", 0, "cat");
+// Packet p("SIGNUP", acc);
+// p.write();
+
+// Server side;
+// UserAccount_server acc();
+// Packet p(acc);
+// p.read();
+
+// client_ID;
+// 1 2 3 4 5 6 7 8 9 A B 

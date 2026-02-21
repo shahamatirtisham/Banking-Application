@@ -16,17 +16,16 @@ void requests::user::login(Packet packet)
 
 }
 
-void requests::user::signup(Packet packet)
+void requests::user::signup(Packet p)
 {
 
     UserAccount_server acc;
-    acc = packet;        // overloaded the UserAccount class to support ' = ' operations with Packet class
+    acc = p;        // overloaded the UserAccount class to support ' = ' operations with Packet class
     acc.printAccountInfo(0);
     acc.setAccountNo(generateAccountNo());
     cout << "generated acc no \n";
     acc.setClientID(acc.generateClientID());
     acc.printAccountInfo(0);
-
 
     // enter dbms signup code here
 
