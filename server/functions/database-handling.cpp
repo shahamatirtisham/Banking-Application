@@ -402,9 +402,74 @@ bool checkUniqueUsername(PGconn* conn, const std::string& username)
     PQclear(res);
     return isUnique;
 }
-void addUser(UserAccount user)
+
+void addUser(PGconn* conn, const UserAccount& user)
 {
-    // input dbms code
+    if (!conn || PQstatus(conn) != CONNECTION_OK) {
+        cerr << "Invalid database connection.\n";
+        return;
+    }
+
+    if (!checkUniqueUsername(conn, user.getUsername())) {
+        cerr << "Username already exists.\n";
+        return;
+    }
+
+    PGresult* res = PQexec(conn, "BEGIN;");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Failed to begin transaction.\n";
+        PQclear(res);
+        return;
+    }
+    PQclear(res);
+
+    const char* sql1 =
+        "INSERT INTO client_personal_info "
+        "(client_ID, name, username, password, DOB, account_no, favAni, salt) "
+        "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
+
+    const char* values1[8] = {
+        user.getClientID().c_str(),
+        user.getName().c_str(),
+        user.getUsername().c_str(),
+        user.getPassword().c_str(),
+        user.getDOB().c_str(),
+        user.getAccountNo().c_str(),
+        user.getFavAni().c_str(),
+        user.getSalt().c_str()
+    };
+
+    res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Insert personal info failed:\n" << PQerrorMessage(conn);
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    const char* sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
+    const char* values2[1] = { user.getClientID().c_str() };
+    res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Insert account status failed:\n" << PQerrorMessage(conn);
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    res = PQexec(conn, "COMMIT;");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Commit failed.\n";
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    cout << "User successfully added.\n";
 }
 
 
