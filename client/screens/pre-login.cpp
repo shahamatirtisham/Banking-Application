@@ -10,6 +10,8 @@ using namespace std;
 
 static int sockfd = -1;
 
+static void forgotPassword(string username);
+
 namespace preloginScreens::user
 {
     void signup();
