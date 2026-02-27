@@ -501,6 +501,30 @@ bool hasEnoughBalance(PGconn* conn, const std::string& username, double amount)
 }
 
 
+bool updateBalance(PGconn* conn, const std::string& username, double newBalance)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return false;
+
+    const char* sql =
+        "UPDATE client_account_status cas "
+        "SET balance = $1 "
+        "FROM client_personal_info cpi "
+        "WHERE cas.client_ID = cpi.client_ID "
+        "AND cpi.username = $2;";
+
+    std::string balStr = std::to_string(newBalance);
+    const char* values[2] = { balStr.c_str(), username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
+
+    bool ok = res && PQresultStatus(res) == PGRES_COMMAND_OK;
+    if (res) PQclear(res);
+
+    return ok;
+}
+
+
 int main() {
     database db;
 
