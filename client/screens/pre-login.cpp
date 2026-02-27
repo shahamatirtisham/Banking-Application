@@ -39,40 +39,35 @@ void mainMenu()
     clearScreen();
     cout << "Welcome to Londu Bank!\n\n";
 
-    while (1)
+    while(1)
     {
         cout << "1. Login as existing user.\n"
-                "2. Signup as new user.\n"
-                "3. Register as an admin.\n"
-                "4. Login as admin.\n"
-                "Please select your desired option (1-4): ";
+               "2. Signup as new user.\n"
+               "3. Register as an admin.\n"
+               "4. Login as admin.\n"
+               "Please select your desired option (1-4): ";
         int choice = readInt();
 
-        switch (choice)
+        switch(choice)
         {
-        case 1:
-            clearScreen();
-            preloginScreens::user::login();
-            break;
+            case  1:    clearScreen(); 
+                        preloginScreens::user::login();
+                        break;
 
-        case 2:
-            clearScreen();
-            preloginScreens::user::signup();
-            break;
+            case  2:    clearScreen(); 
+                        preloginScreens::user::signup();
+                        break;
 
-        case 3:
-            clearScreen();
-            preloginScreens::admin::signup();
-            break;
+            case  3:    clearScreen(); 
+                        preloginScreens::admin::signup();
+                        break;
 
-        case 4:
-            clearScreen();
-            preloginScreens::admin::login();
-            break;
+            case  4:    clearScreen(); 
+                        preloginScreens::admin::login();
+                        break;
 
-        default:
-            clearScreen();
-            cout << "Invalid choice. Try again.\n";
+            default:    clearScreen(); 
+                        cout << "Invalid choice. Try again.\n";
         }
     }
 }
@@ -176,7 +171,7 @@ static void preloginScreens::user::signup()
     Date DOB;
     // Packet packet(sockfd);
     name = acceptName();
-    while (1)
+    while(1)
     {
         username = acceptUsername();
         UserAccount account;
@@ -187,14 +182,14 @@ static void preloginScreens::user::signup()
         p.read(sockfd);
         // p.display();
 
-        if (p.getCommand() != "POSITIVE")
+        if(p.getCommand() != "POSITIVE")
         {
             cout << "Username already taken\n";
             continue;
         }
         else
         {
-            // cout << "Username is unique. Moving on\n";
+            //cout << "Username is unique. Moving on\n";
             break;
         }
     }

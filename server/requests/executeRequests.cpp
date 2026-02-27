@@ -1,4 +1,5 @@
 #include "executeRequests.hpp"
+#include "../functions/database-handling.hpp"
 #include "../classes/UserAccount_server.hpp"
 #include <iostream>
 #include <string>
@@ -23,7 +24,7 @@ void requests::user::login(Packet packet)
         // username not found in DB (unique = doesn't exist)
         response = Packet("USER-NOT-FOUND");
     }
-    else if (checkPassword(username, password))
+    else if (checkUserPassword(username, password))
     {
         // username exists AND password matches
         UserAccount_server user = getUserByUsername(username);

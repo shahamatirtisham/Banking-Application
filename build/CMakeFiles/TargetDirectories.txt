@@ -1,4 +1,0 @@
-/home/tawfiq/Banking-Application/build/CMakeFiles/server.dir
-/home/tawfiq/Banking-Application/build/CMakeFiles/client.dir
-/home/tawfiq/Banking-Application/build/CMakeFiles/edit_cache.dir
-/home/tawfiq/Banking-Application/build/CMakeFiles/rebuild_cache.dir
