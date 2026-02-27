@@ -473,6 +473,34 @@ void addUser(PGconn* conn, const UserAccount& user)
 }
 
 
+bool hasEnoughBalance(PGconn* conn, const std::string& username, double amount)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return false;
+
+    const char* sql =
+        "SELECT cas.balance "
+        "FROM client_account_status cas "
+        "JOIN client_personal_info cpi "
+        "ON cas.client_ID = cpi.client_ID "
+        "WHERE cpi.username = $1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+        if (res) PQclear(res);
+        return false;
+    }
+
+    double balance = atof(PQgetvalue(res, 0, 0));
+    PQclear(res);
+
+    return balance >= amount;
+}
+
+
 int main() {
     database db;
 
