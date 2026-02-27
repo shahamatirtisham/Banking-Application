@@ -525,6 +525,50 @@ bool updateBalance(PGconn* conn, const std::string& username, double newBalance)
 }
 
 
+class PgGuard {
+public:
+    static bool ensure_conn(PGconn* c, const char* context = "DB") {
+        if (!c) {
+            std::cerr << context << ": connection is null\n";
+            return false;
+        }
+        if (PQstatus(c) != CONNECTION_OK) {
+            std::cerr << context << ": connection not OK: " << PQerrorMessage(c) << "\n";
+            return false;
+        }
+        return true;
+    }
+
+    static bool expect_tuples(PGconn* c, PGresult* r, const char* context) {
+        if (!r) {
+            std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
+            return false;
+        }
+        if (PQresultStatus(r) != PGRES_TUPLES_OK) {
+            std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+            PQclear(r);
+            return false;
+        }
+        return true;
+    }
+
+    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback = false) {
+        if (!r) {
+            std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
+            if (rollback) PQexec(c, "ROLLBACK;");
+            return false;
+        }
+        if (PQresultStatus(r) != PGRES_COMMAND_OK) {
+            std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+            PQclear(r);
+            if (rollback) PQexec(c, "ROLLBACK;");
+            return false;
+        }
+        return true;
+    }
+};
+
+
 int main() {
     database db;
 
