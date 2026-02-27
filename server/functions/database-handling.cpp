@@ -9,12 +9,15 @@
 using namespace std;
 
 class overall_con_db{
+
+public:
     virtual void show()=0;
+    virtual ~overall_con_db() = default;
 };
 
 
 
-class pgconfig_info : public overall_con_db{
+class pgconfig_info{
 private:
     string host;
     string port;
@@ -210,7 +213,7 @@ public:
         return ok;
     }
 
-    // Create all required tables in the TARGET DB
+    // Schema initialization
 bool init_schema() {
     if (!connx || PQstatus(connx) != CONNECTION_OK) return false;
 
@@ -360,6 +363,178 @@ bool init_schema() {
 
 
 };
+
+
+class User_Queries{
+
+private:
+    PGconn* conn;
+
+    static void clear_result(PGresult*r){
+        if(r){
+            PQclear(r);
+        }
+    }
+
+public:
+
+    User_Queries(PGconn *c): conn(c){}
+
+bool checkUniqueUsername(const std::string& username)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return false;
+
+    const char* sql =
+        "SELECT 1 FROM client_personal_info WHERE username = $1 LIMIT 1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(
+        conn,
+        sql,
+        1,          
+        nullptr,    
+        values,
+        nullptr,
+        nullptr,
+        0          
+    );
+
+    if (!res)
+    {
+        std::cerr << "Username check failed: PQexecParams returned nullptr\n";
+        return false;
+    }
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+        std::cerr << "Username check failed:\n"
+                  << PQerrorMessage(conn);
+        PQclear(res);
+        return false;
+    }
+
+    // If any row exists → username already taken
+
+    bool isUnique = (PQntuples(res) == 0);
+
+    PQclear(res);
+    return isUnique;
+}
+
+void addUser(const UserAccount& user)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK) {
+        cerr << "Invalid database connection.\n";
+        return;
+    }
+
+    if (!checkUniqueUsername(user.getUsername())) {
+        cerr << "Username already exists.\n";
+        return;
+    }
+
+    PGresult* res = PQexec(conn, "BEGIN;");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Failed to begin transaction.\n";
+        PQclear(res);
+        return;
+    }
+    PQclear(res);
+
+    const char* sql1 =
+        "INSERT INTO client_personal_info "
+        "(client_ID, name, username, password, DOB, account_no, favAni, salt) "
+        "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
+
+    const char* values1[8] = {
+        // user.getClientID().c_str(),
+        user.getName().c_str(),
+        user.getUsername().c_str(),
+        user.getPassword().c_str(),
+        // user.getDOB().c_str(),
+        user.getAccountNo().c_str(),
+        user.getFavAni().c_str(),
+        // user.getSalt().c_str()
+    };
+
+    res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Insert personal info failed:\n" << PQerrorMessage(conn);
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    const char* sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
+    const char* values2[1] = { user.getClientID().c_str() };
+    res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Insert account status failed:\n" << PQerrorMessage(conn);
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    res = PQexec(conn, "COMMIT;");
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        cerr << "Commit failed.\n";
+        PQclear(res);
+        PQexec(conn, "ROLLBACK;");
+        return;
+    }
+    PQclear(res);
+
+    cout << "User successfully added.\n";
+}
+
+
+};
+
+
+
+class PgGuard {
+public:
+    static bool ensure_conn(PGconn* c, const char* context) {
+        if (!c) { std::cerr << context << ": connection is null\n"; return false; }
+        if (PQstatus(c) != CONNECTION_OK) {
+            std::cerr << context << ": connection not OK: " << PQerrorMessage(c) << "\n";
+            return false;
+        }
+        return true;
+    }
+
+    static bool expect_tuples(PGconn* c, PGresult* r, const char* context) {
+        if (!r) { std::cerr << context << ": PQexec/PQexecParams returned nullptr\n"; return false; }
+        if (PQresultStatus(r) != PGRES_TUPLES_OK) {
+            std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+            PQclear(r);
+            return false;
+        }
+        return true; 
+    }
+
+    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback=false) {
+        if (!r) {
+            std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
+            if (rollback) PQexec(c, "ROLLBACK;");
+            return false;
+        }
+        if (PQresultStatus(r) != PGRES_COMMAND_OK) {
+            std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+            PQclear(r);
+            if (rollback) PQexec(c, "ROLLBACK;");
+            return false;
+        }
+        return true; 
+    }
+};
+
+
 
 
 
