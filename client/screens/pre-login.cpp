@@ -83,7 +83,6 @@ static void preloginScreens::user::login()
 
     while (true)
     {
-        clearScreen();
         cout << " -------- LOGIN -------- \n";
 
         cout << "Enter your username: ";
@@ -218,9 +217,8 @@ static void preloginScreens::admin::login()
 
 
 
-static void forgotPassword(string username)
+static void preloginScreens::user::forgotPassword(string username)
 {
-    clearScreen();
     cout << " -------- FORGOT PASSWORD -------- \n";
 
     UserAccount tempAccount;

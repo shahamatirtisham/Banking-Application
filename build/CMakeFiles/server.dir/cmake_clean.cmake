@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/server.dir/link.d"
   "CMakeFiles/server.dir/server/classes/BankData.cpp.o"
   "CMakeFiles/server.dir/server/classes/BankData.cpp.o.d"
   "CMakeFiles/server.dir/server/classes/Server.cpp.o"
