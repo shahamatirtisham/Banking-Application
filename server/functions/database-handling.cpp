@@ -645,6 +645,30 @@ bool updatePasswordByUsername(PGconn* conn,
 }
 
 
+bool deleteUserByUsername(PGconn* conn, const std::string& username)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return false;
+
+    const char* sql =
+        "DELETE FROM client_personal_info "
+        "WHERE username = $1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        std::cerr << "Delete failed: " << PQerrorMessage(conn) << "\n";
+        PQclear(res);
+        return false;
+    }
+
+    PQclear(res);
+    return true;
+}
+
+
 int main() {
     database db;
 
