@@ -38,6 +38,7 @@ add_executable(client
     shared/classes/Account.cpp
     shared/classes/Date.cpp
     shared/classes/Hexadecimal.cpp
+    shared/classes/Colors.cpp 
 )
 
 target_include_directories(client PRIVATE

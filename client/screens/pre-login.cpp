@@ -5,6 +5,7 @@
 #include "../../shared/classes/UserAccount.hpp"
 #include "../../shared/hash.hpp"
 #include "../../server/functions/database-handling.hpp"
+#include "../../shared/classes/Colors.hpp"
 
 using namespace std;
 
@@ -86,7 +87,8 @@ static void preloginScreens::user::login()
     while (true)
     {
         clearScreen();
-        cout << " -------- LOGIN -------- \n";
+        cout << Color::cyan("===============================") << endl;
+        cout << Color::yellow("------------ LOGIN ------------") << endl;
 
         cout << "Enter your username: ";
         username = acceptUsername();
