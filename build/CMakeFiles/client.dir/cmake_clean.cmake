@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/client.dir/client/screens/pre-login.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/Account.cpp.o"
   "CMakeFiles/client.dir/shared/classes/Account.cpp.o.d"
+  "CMakeFiles/client.dir/shared/classes/Colors.cpp.o"
+  "CMakeFiles/client.dir/shared/classes/Colors.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/Date.cpp.o"
   "CMakeFiles/client.dir/shared/classes/Date.cpp.o.d"
   "CMakeFiles/client.dir/shared/classes/Hexadecimal.cpp.o"

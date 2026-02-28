@@ -416,6 +416,7 @@ CMakeFiles/client.dir/client/screens/pre-login.cpp.o: /home/irtisham/Banking-App
   /home/irtisham/Banking-Application/server/classes/UserAccount_server.hpp \
   /home/irtisham/Banking-Application/server/functions/database-handling.hpp \
   /home/irtisham/Banking-Application/shared/classes/Account.hpp \
+  /home/irtisham/Banking-Application/shared/classes/Colors.hpp \
   /home/irtisham/Banking-Application/shared/classes/Date.hpp \
   /home/irtisham/Banking-Application/shared/classes/Hexadecimal.hpp \
   /home/irtisham/Banking-Application/shared/classes/Packet.hpp \
@@ -2048,6 +2049,8 @@ CMakeFiles/client.dir/shared/input.cpp.o: /home/irtisham/Banking-Application/sha
 
 /usr/include/openssl/bio.h:
 
+/usr/include/openssl/asn1err.h:
+
 /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
 /usr/include/x86_64-linux-gnu/asm/errno.h:
@@ -2187,8 +2190,6 @@ CMakeFiles/client.dir/shared/input.cpp.o: /home/irtisham/Banking-Application/sha
 /home/irtisham/Banking-Application/client/classes/client.cpp:
 
 /usr/include/x86_64-linux-gnu/sys/single_threaded.h:
-
-/usr/include/c++/13/bits/cxxabi_forced.h:
 
 /usr/include/c++/13/bits/memoryfwd.h:
 
@@ -2536,6 +2537,10 @@ CMakeFiles/client.dir/shared/input.cpp.o: /home/irtisham/Banking-Application/sha
 
 /home/irtisham/Banking-Application/client/screens/pre-login.cpp:
 
+/usr/include/c++/13/bits/cxxabi_forced.h:
+
+/home/irtisham/Banking-Application/shared/classes/Colors.hpp:
+
 /usr/include/openssl/err.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
@@ -2593,5 +2598,3 @@ CMakeFiles/client.dir/shared/input.cpp.o: /home/irtisham/Banking-Application/sha
 /usr/include/c++/13/initializer_list:
 
 /usr/include/limits.h:
-
-/usr/include/openssl/asn1err.h:

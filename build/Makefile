@@ -385,6 +385,30 @@ shared/classes/Account.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Account.cpp.s
 .PHONY : shared/classes/Account.cpp.s
 
+shared/classes/Colors.o: shared/classes/Colors.cpp.o
+.PHONY : shared/classes/Colors.o
+
+# target to build an object file
+shared/classes/Colors.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Colors.cpp.o
+.PHONY : shared/classes/Colors.cpp.o
+
+shared/classes/Colors.i: shared/classes/Colors.cpp.i
+.PHONY : shared/classes/Colors.i
+
+# target to preprocess a source file
+shared/classes/Colors.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Colors.cpp.i
+.PHONY : shared/classes/Colors.cpp.i
+
+shared/classes/Colors.s: shared/classes/Colors.cpp.s
+.PHONY : shared/classes/Colors.s
+
+# target to generate assembly for a file
+shared/classes/Colors.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/shared/classes/Colors.cpp.s
+.PHONY : shared/classes/Colors.cpp.s
+
 shared/classes/Date.o: shared/classes/Date.cpp.o
 .PHONY : shared/classes/Date.o
 
@@ -587,6 +611,9 @@ help:
 	@echo "... shared/classes/Account.o"
 	@echo "... shared/classes/Account.i"
 	@echo "... shared/classes/Account.s"
+	@echo "... shared/classes/Colors.o"
+	@echo "... shared/classes/Colors.i"
+	@echo "... shared/classes/Colors.s"
 	@echo "... shared/classes/Date.o"
 	@echo "... shared/classes/Date.i"
 	@echo "... shared/classes/Date.s"
