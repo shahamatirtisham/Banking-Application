@@ -1,5 +1,5 @@
  #include "../../shared/classes/Date.hpp"
- #include "../../shared/classes/UserAccount.hpp"
+ #include "../classes/UserAccount_server.hpp"
 
 #include <iostream>
 #include <string>
@@ -416,14 +416,13 @@ bool checkUniqueUsername(const std::string& username)
     }
 
     // If any row exists → username already taken
-
     bool isUnique = (PQntuples(res) == 0);
 
     PQclear(res);
     return isUnique;
 }
 
-void addUser(const UserAccount& user)
+void addUser(const UserAccount_server& user)
 {
     if (!conn || PQstatus(conn) != CONNECTION_OK) {
         cerr << "Invalid database connection.\n";
@@ -448,15 +447,21 @@ void addUser(const UserAccount& user)
         "(client_ID, name, username, password, DOB, account_no, favAni, salt) "
         "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
 
+    Date DOB = user.getDOB();
+    string Date_str = to_string(DOB.getDate()) + "/" +
+                       to_string(DOB.getMonth()) + "/" +
+                       to_string(DOB.getYear());
+
+
     const char* values1[8] = {
-        // user.getClientID().c_str(),
+        user.getClientID().getHexadecimalVal().c_str(),
         user.getName().c_str(),
         user.getUsername().c_str(),
         user.getPassword().c_str(),
-        // user.getDOB().c_str(),
+        Date_str.c_str(),
         user.getAccountNo().c_str(),
         user.getFavAni().c_str(),
-        // user.getSalt().c_str()
+        user.getSalt().c_str()
     };
 
     res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
@@ -469,7 +474,7 @@ void addUser(const UserAccount& user)
     PQclear(res);
 
     const char* sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
-    const char* values2[1] = { user.getClientID().c_str() };
+    const char* values2[1] = { user.getClientID().getHexadecimalVal().c_str() };
     res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
@@ -491,6 +496,58 @@ void addUser(const UserAccount& user)
 
     cout << "User successfully added.\n";
 }
+
+
+
+    bool hasEnoughBalance(const std::string& username, double amount)
+    {
+        if (!conn || PQstatus(conn) != CONNECTION_OK)
+            return false;
+
+        const char* sql =
+            "SELECT cas.balance "
+            "FROM client_account_status cas "
+            "JOIN client_personal_info cpi "
+            "ON cas.client_ID = cpi.client_ID "
+            "WHERE cpi.username = $1;";
+
+        const char* values[1] = { username.c_str() };
+
+        PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+        if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+            clear_result(res);
+            return false;
+        }
+
+        double balance = std::atof(PQgetvalue(res, 0, 0));
+        clear_result(res);
+
+        return balance >= amount;
+    }
+
+    bool updateBalance(const std::string& username, double newBalance)
+    {
+        if (!conn || PQstatus(conn) != CONNECTION_OK)
+            return false;
+
+        const char* sql =
+            "UPDATE client_account_status cas "
+            "SET balance = $1 "
+            "FROM client_personal_info cpi "
+            "WHERE cas.client_ID = cpi.client_ID "
+            "AND cpi.username = $2;";
+
+        std::string balStr = std::to_string(newBalance);
+        const char* values[2] = { balStr.c_str(), username.c_str() };
+
+        PGresult* res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
+
+        bool ok = res && PQresultStatus(res) == PGRES_COMMAND_OK;
+        clear_result(res);
+
+        return ok;
+    }
 
 
 };
