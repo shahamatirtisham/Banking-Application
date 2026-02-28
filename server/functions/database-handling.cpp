@@ -617,6 +617,34 @@ std::string getSaltByUsername(PGconn* conn, const std::string& username)
 }
 
 
+bool updatePasswordByUsername(PGconn* conn,
+                               const std::string& username,
+                               const std::string& newPassword,
+                               const std::string& newSalt)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return false;
+
+    const char* sql =
+        "UPDATE client_personal_info "
+        "SET password = $1, salt = $2 "
+        "WHERE username = $3;";
+
+    const char* values[3] = { newPassword.c_str(), newSalt.c_str(), username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 3, nullptr, values, nullptr, nullptr, 0);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        std::cerr << "Update failed: " << PQerrorMessage(conn) << "\n";
+        PQclear(res);
+        return false;
+    }
+
+    PQclear(res);
+    return true;
+}
+
+
 int main() {
     database db;
 
