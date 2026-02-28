@@ -593,6 +593,30 @@ std::string getPasswordByUsername(PGconn* conn, const std::string& username)
 }
 
 
+std::string getSaltByUsername(PGconn* conn, const std::string& username)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return "";
+
+    const char* sql =
+        "SELECT salt FROM client_personal_info WHERE username = $1 LIMIT 1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+        if (res) PQclear(res);
+        return "";
+    }
+
+    std::string salt = PQgetvalue(res, 0, 0);  // row 0, column 0 (salt)
+    PQclear(res);
+
+    return salt;
+}
+
+
 int main() {
     database db;
 
