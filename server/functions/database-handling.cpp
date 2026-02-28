@@ -569,6 +569,30 @@ public:
 };
 
 
+std::string getPasswordByUsername(PGconn* conn, const std::string& username)
+{
+    if (!conn || PQstatus(conn) != CONNECTION_OK)
+        return "";
+
+    const char* sql =
+        "SELECT password FROM client_personal_info WHERE username = $1 LIMIT 1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+        if (res) PQclear(res);
+        return "";
+    }
+
+    std::string password = PQgetvalue(res, 0, 0);
+    PQclear(res);
+
+    return password;
+}
+
+
 int main() {
     database db;
 
