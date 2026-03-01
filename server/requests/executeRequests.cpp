@@ -14,8 +14,8 @@ void exeRequests_init(int passed_sockfd, PGconn* passed_connection)
     connection = passed_connection;
 }
 
-// void requests::user::login(Packet packet)
-// {
+void requests::user::login(Packet packet)
+{
 //     string username = packet.getUsername();
 //     string password = packet.getPassword();
 
@@ -41,15 +41,13 @@ void exeRequests_init(int passed_sockfd, PGconn* passed_connection)
 //     }
 
 //     response.write(sockfd);
-// }
+}
 
 bool requests::user::checkUniqueUsername(string username)
 {
     Packet response;
     User_Queries query(connection);
-    bool isUnique = query.checkUniqueUsername(username);
-    isUnique ? response = Packet("TRUE") : response = Packet("FALSE");
-    response.write(sockfd); 
+    return query.checkUniqueUsername(username);
 
     // if (checkUniqueUsername(p.getUsername()) == true)
     // {

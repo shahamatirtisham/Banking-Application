@@ -112,7 +112,7 @@ void Server::handleClient(int clientSocket)
 
         if (command == "LOGIN")
         {
-            requests::user::login(p);
+            //requests::user::login(p);
         }
 
         else if (command == "SIGNUP")
