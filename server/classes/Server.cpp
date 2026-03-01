@@ -10,28 +10,20 @@
 using namespace std;
 
 
-Server::Server(int port) : port(port), listenSock(-1) 
-{
-    connection = config_info.connect();
-    if(!connection)
-    {
-        cout << "Connection to the database failed, exiting program\n";
-        exit(1);
-    }
-    database db(connection, 1, "");
-}
+Server::Server(int port) : port(port), listenSock(-1) {}
 
 void Server::setupSocket()
 {
-    cout << "Server running.\n";
-
     struct sockaddr_in server_address, client_address;
     socklen_t client_len;
+
+    
 
     listenSock = socket(AF_INET, SOCK_STREAM, 0);
     if (listenSock < 0)
     {
         perror("Error opening socket.");
+        exit(1);
     }
 
     bzero((char *)&server_address, sizeof(server_address)); // sets all bytes in the server_address block to be zero
@@ -40,15 +32,15 @@ void Server::setupSocket()
     server_address.sin_addr.s_addr = INADDR_ANY;
     server_address.sin_port = htons(port);
 
+
     if (bind(listenSock, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
     {
         perror("Binding failed");
+        exit(1);
     }
 
+
     listen(listenSock, 5);
-
-
-    
 }
 
 void Server::acceptLoop()
@@ -78,18 +70,22 @@ void Server::acceptLoop()
     }
 }
 
+void Server::setupDatabase()
+{
+    connection = config_info.connect();
+    if(!connection)
+    {
+        cout << "Connection to the database failed, exiting program\n";
+        exit(1);
+    }
+    Database db(connection, 1, "");
+}
+
 void Server::run()
 {
-    setupSocket();
-
-    
-
-    // pgconfig_info config_info;
-    // PGconn* connection = config_info.connect();
-
-    
-
+    setupSocket();    
     BankData bankData;
+    setupDatabase();
     bankData.display();
     acceptLoop();
 }

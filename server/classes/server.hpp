@@ -8,12 +8,12 @@ private:
     int listenSock;
     void setupSocket();
     void acceptLoop();
+    void setupDatabase();
     void handleClient(int clientSock);
-    pgconfig_info config_info;
+    PG_Config_Info config_info;
     PGconn* connection;
 
 public:
     Server(int port);
     void run();
-
 };

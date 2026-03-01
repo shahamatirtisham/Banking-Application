@@ -10,28 +10,26 @@
 
 
 
-class overall_con_db {
+class OverallConDB 
+{
 public:
     virtual void show() = 0;
-    virtual ~overall_con_db() = default;
+    virtual ~OverallConDB() = default;
 };
 
 
-class PgGuard {
+class PG_Guard 
+{
 public:
     static bool ensure_conn(PGconn* c, const char* context);
-
     static bool expect_tuples(PGconn* c, PGresult* r, const char* context);
-
     static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback = false);
-
     static bool expect_ok(PGconn* c, PGresult* r, const char* context, bool rollback = false);
-
     static bool command_and_clear(PGconn* c, PGresult*& r, const char* context, bool rollback = false);
 };
 
 
-class pgconfig_info {
+class PG_Config_Info {
 private:
     std::string host;
     std::string port;
@@ -41,7 +39,7 @@ private:
     std::string admin_db;
 
 public:
-    pgconfig_info(
+    PG_Config_Info(
         std::string host_in = "localhost",
         std::string port_in = "5432",
         std::string user_in = "myuser",
@@ -59,7 +57,8 @@ public:
 };
 
 
-class database : public pgconfig_info, public overall_con_db {
+class Database : public PG_Config_Info, public OverallConDB 
+{
 private:
     PGconn* connx;
     bool it_exists;
@@ -68,8 +67,8 @@ private:
     static bool exec_cmd(PGconn* c, const std::string& sql);
 
 public:
-    database(PGconn* connx_in = nullptr, bool status = false, std::string name = "");
-    ~database() override;
+    Database(PGconn* connx_in = nullptr, bool status = false, std::string name = "");
+    ~Database() override;
 
     PGconn* get_conn() const;
     bool exists() const;
@@ -83,7 +82,8 @@ public:
 };
 
 
-class User_Queries {
+class User_Queries 
+{
 private:
     PGconn* conn;
 
@@ -102,7 +102,8 @@ public:
 };
 
 
-class DatabaseUpdates {
+class DatabaseUpdates 
+{
 private:
     PGconn* conn;
 

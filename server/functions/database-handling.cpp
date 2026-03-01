@@ -4,66 +4,67 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
+// in Ubuntu, the include directory of libpq-fe is:            
+// #include <postgres/libpq-fe.h>
+// in Arch, the include directory of libpq-fe is:
 #include <libpq-fe.h>
 using namespace std;
 
 
 
-bool PgGuard::ensure_conn(PGconn* c, const char* context) 
+bool PG_Guard::ensure_conn(PGconn* c, const char* context) 
 {
-    if (!c) { std::cerr << context << ": connection is null\n"; return false; }
+    if (!c) { cerr << context << ": connection is null\n"; return false; }
     if (PQstatus(c) != CONNECTION_OK) {
-        std::cerr << context << ": connection not OK: " << PQerrorMessage(c) << "\n";
+        cerr << context << ": connection not OK: " << PQerrorMessage(c) << "\n";
         return false;
     }
     return true;
 }
-
-bool PgGuard::expect_tuples(PGconn* c, PGresult* r, const char* context) 
+bool PG_Guard::expect_tuples(PGconn* c, PGresult* r, const char* context) 
 {
-    if (!r) { std::cerr << context << ": PQexec/PQexecParams returned nullptr\n"; return false; }
+    if (!r) { cerr << context << ": PQexec/PQexecParams returned nullptr\n"; return false; }
     if (PQresultStatus(r) != PGRES_TUPLES_OK) {
-        std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+        cerr << context << ": " << PQerrorMessage(c) << "\n";
         PQclear(r);
         return false;
     }
     return true;
 }
-
-bool PgGuard::expect_command(PGconn* c, PGresult* r, const char* context, bool rollback) 
+bool PG_Guard::expect_command(PGconn* c, PGresult* r, const char* context, bool rollback) 
 {
-    if (!r) {
-        std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
+    if (!r) 
+    {
+        cerr << context << ": PQexec/PQexecParams returned nullptr\n";
         if (rollback) PQexec(c, "ROLLBACK;");
         return false;
     }
     if (PQresultStatus(r) != PGRES_COMMAND_OK) {
-        std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+        cerr << context << ": " << PQerrorMessage(c) << "\n";
         PQclear(r);
         if (rollback) PQexec(c, "ROLLBACK;");
         return false;
     }
     return true;
 }
-
-bool PgGuard::expect_ok(PGconn* c, PGresult* r, const char* context, bool rollback) 
+bool PG_Guard::expect_ok(PGconn* c, PGresult* r, const char* context, bool rollback) 
 {
     if (!r) {
-        std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
+        cerr << context << ": PQexec/PQexecParams returned nullptr\n";
         if (rollback) PQexec(c, "ROLLBACK;");
         return false;
     }
     auto st = PQresultStatus(r);
     if (st != PGRES_COMMAND_OK && st != PGRES_TUPLES_OK) {
-        std::cerr << context << ": " << PQerrorMessage(c) << "\n";
+        cerr << context << ": " << PQerrorMessage(c) << "\n";
         PQclear(r);
         if (rollback) PQexec(c, "ROLLBACK;");
         return false;
     }
     return true;
 }
-
-bool PgGuard::command_and_clear(PGconn* c, PGresult*& r, const char* context, bool rollback) 
+bool PG_Guard::command_and_clear(PGconn* c, PGresult*& r, const char* context, bool rollback) 
 {
     if (!expect_command(c, r, context, rollback)) { r = nullptr; return false; }
     PQclear(r);
@@ -73,10 +74,7 @@ bool PgGuard::command_and_clear(PGconn* c, PGresult*& r, const char* context, bo
 
 
 
-
-
-
-pgconfig_info::pgconfig_info(
+PG_Config_Info::PG_Config_Info(
     string host_in,
     string port_in,
     string user_in,
@@ -84,16 +82,16 @@ pgconfig_info::pgconfig_info(
     string target_db_in,
     string admin_db_in
 )
-    : host(std::move(host_in)),
-      port(std::move(port_in)),
-      user(std::move(user_in)),
-      password(std::move(password_in)),
-      target_db(std::move(target_db_in)),
-      admin_db(std::move(admin_db_in)) {}
+    : host(move(host_in)),
+      port(move(port_in)),
+      user(move(user_in)),
+      password(move(password_in)),
+      target_db(move(target_db_in)),
+      admin_db(move(admin_db_in)) {}
 
-PGconn* pgconfig_info::connect(const std::string& dbname) 
+PGconn* PG_Config_Info::connect(const string& dbname) 
 {
-    const std::string& db = dbname.empty() ? admin_db : dbname;
+    const string& db = dbname.empty() ? admin_db : dbname;
 
     auto conninfo = [&]() 
     {
@@ -105,8 +103,8 @@ PGconn* pgconfig_info::connect(const std::string& dbname)
 
     if (!conn || PQstatus(conn) != CONNECTION_OK) 
     {
-        std::cerr << (conn ? PQerrorMessage(conn) : "PQconnectdb returned nullptr") << "\n";
-        std::cout << "Connection Failed\n";
+        cerr << (conn ? PQerrorMessage(conn) : "PQconnectdb returned nullptr") << "\n";
+        cout << "Connection Failed\n";
         if (conn) PQfinish(conn);
         return nullptr;
     }
@@ -114,56 +112,47 @@ PGconn* pgconfig_info::connect(const std::string& dbname)
     return conn;
 }
 
-const std::string& pgconfig_info::get_target_db() const { return target_db; }
-const std::string& pgconfig_info::get_admin_db()  const { return admin_db; }
+const string& PG_Config_Info::get_target_db() const { return target_db; }
+const string& PG_Config_Info::get_admin_db()  const { return admin_db; }
 
-void pgconfig_info::show() 
+void PG_Config_Info::show() 
 {
-    std::cout << "host: " << host << "\n";
-    std::cout << "port: " << port << "\n";
-    std::cout << "user: " << user << "\n";
-    std::cout << "target db : " << target_db << "\n";
-    std::cout << "admin db : " << admin_db << "\n";
+    cout << "host: " << host << "\n";
+    cout << "port: " << port << "\n";
+    cout << "user: " << user << "\n";
+    cout << "target db : " << target_db << "\n";
+    cout << "admin db : " << admin_db << "\n";
 }
 
 
 
 
 
-bool database::exec_cmd(PGconn* c, const std::string& sql) 
-{
-    if (!PgGuard::ensure_conn(c, "exec_cmd")) return false;
 
-    PGresult* r = PQexec(c, sql.c_str());
-    bool ok = PgGuard::expect_ok(c, r, ("SQL failed: " + sql).c_str());
-    if (r) PQclear(r);
-    return ok;
-}
-
-database::database(PGconn* connx_in, bool status, std::string name)
-    : connx(connx_in),
-        it_exists(status),
-        db_name(std::move(name)),
-        pgconfig_info()
+Database::Database(PGconn* connx_in, bool status, string name)
+: connx(connx_in),
+it_exists(status),
+db_name(move(name)),
+PG_Config_Info()
 {
     if (db_name.empty()) db_name = get_target_db();
-
+    
     if (!connx || PQstatus(connx) != CONNECTION_OK) {
-
+        
         PGconn* admin = connect(get_admin_db());
         if (!admin) {
             it_exists = false;
             connx = nullptr;
             return;
         }
-
+        
         if (!db_exists(admin, db_name)) {
             bool made = create_db(admin, db_name);
             if (made) {
-                std::cout << "Database has been made\n";
+                cout << "Database has been made\n";
                 it_exists = true;
             } else {
-                std::cout << "Create Database failed\n";
+                cout << "Create Database failed\n";
                 it_exists = false;
                 PQfinish(admin);
                 connx = nullptr;
@@ -172,76 +161,80 @@ database::database(PGconn* connx_in, bool status, std::string name)
         } else {
             it_exists = true;
         }
-
+        
         PQfinish(admin);
-
+        
         connx = connect(db_name);
         if (!connx) {
             it_exists = false;
             return;
         }
-
+        
         if (!init_schema()) {
-            std::cerr << "Schema init failed\n";
+            cerr << "Schema init failed\n";
             it_exists = false;
             return;
         }
-
+        
     } else {
         it_exists = true;
-
+        
         if (!init_schema()) {
-            std::cerr << "Schema init failed\n";
+            cerr << "Schema init failed\n";
             it_exists = false;
             return;
         }
     }
 }
-
-database::~database() 
+Database::~Database() 
 {
     // if (connx) PQfinish(connx);
     // connx = nullptr;
 }
-
-PGconn* database::get_conn() const { return connx; }
-bool database::exists() const { return it_exists; }
-
-bool database::db_exists(PGconn* c, const std::string& dbname) 
+bool Database::exec_cmd(PGconn* c, const string& sql) 
 {
-    if (!PgGuard::ensure_conn(c, "db_exists")) return false;
+    if (!PG_Guard::ensure_conn(c, "exec_cmd")) return false;
 
-    const char* sql = "SELECT 1 FROM pg_database WHERE datname = $1;";
+    PGresult* r = PQexec(c, sql.c_str());
+    bool ok = PG_Guard::expect_ok(c, r, ("SQL failed: " + sql).c_str());
+    if (r) PQclear(r);
+    return ok;
+}
+PGconn* Database::get_conn() const { return connx; }
+bool Database::exists() const { return it_exists; }
+bool Database::db_exists(PGconn* c, const string& dbname) 
+{
+    if (!PG_Guard::ensure_conn(c, "db_exists")) return false;
+
+    const char* sql = "SELECT 1 FROM pg_Database WHERE datname = $1;";
     const char* vals[1] = { dbname.c_str() };
 
     PGresult* r = PQexecParams(c, sql, 1, nullptr, vals, nullptr, nullptr, 0);
-    if (!PgGuard::expect_tuples(c, r, "db_exists")) return false;
+    if (!PG_Guard::expect_tuples(c, r, "db_exists")) return false;
 
     bool exists = PQntuples(r) > 0;
     PQclear(r);
     return exists;
 }
-
-bool database::create_db(PGconn* c, const std::string& dbname) 
+bool Database::create_db(PGconn* c, const string& dbname) 
 {
-    if (!PgGuard::ensure_conn(c, "create_db")) return false;
+    if (!PG_Guard::ensure_conn(c, "create_db")) return false;
 
     char* q = PQescapeIdentifier(c, dbname.c_str(), dbname.size());
     if (!q) return false;
 
-    std::string sql = std::string("CREATE DATABASE ") + q + ";";
+    string sql = string("CREATE Database ") + q + ";";
     PQfreemem(q);
 
     return exec_cmd(c, sql);
 }
-
-bool database::init_schema() 
+bool Database::init_schema() 
 {
-    if (!PgGuard::ensure_conn(connx, "init_schema")) return false;
+    if (!PG_Guard::ensure_conn(connx, "init_schema")) return false;
 
     if (!exec_cmd(connx, "BEGIN;")) return false;
 
-    const std::vector<std::string> ddl = 
+    const vector<string> ddl = 
     {
         R"SQL(
         CREATE TABLE IF NOT EXISTS client_personal_info (
@@ -348,48 +341,44 @@ bool database::init_schema()
 
     return true;
 }
-
-void database::show()  
+void Database::show()  
 {
-    std::cout << "Status : " << (it_exists ? "Found & Fetchable." : "Not Found.") << "\n";
-    std::cout << "Database name : " << db_name << "\n";
-    pgconfig_info::show();
+    cout << "Status : " << (it_exists ? "Found & Fetchable." : "Not Found.") << "\n";
+    cout << "Database name : " << db_name << "\n";
+    PG_Config_Info::show();
 }
 
 
 
 
 
+User_Queries::User_Queries(PGconn* c) : conn(c) {}
 void User_Queries::clear_result(PGresult* r) 
 {
     if (r) PQclear(r);
 }
-
-User_Queries::User_Queries(PGconn* c) : conn(c) {}
-
-bool User_Queries::checkUniqueUsername(const std::string& username) 
+bool User_Queries::checkUniqueUsername(const string& username) 
 {
-    if (!PgGuard::ensure_conn(conn, "checkUniqueUsername")) return false;
+    if (!PG_Guard::ensure_conn(conn, "checkUniqueUsername")) return false;
 
     const char* sql =
         "SELECT 1 FROM client_personal_info WHERE username = $1 LIMIT 1;";
     const char* values[1] = { username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_tuples(conn, res, "checkUniqueUsername SELECT failed")) return false;
+    if (!PG_Guard::expect_tuples(conn, res, "checkUniqueUsername SELECT failed")) return false;
 
     bool isUnique = (PQntuples(res) == 0);
     PQclear(res);
     return isUnique;
 }
-
 void User_Queries::addUser(const UserAccount_server& user) 
 {
-    if (!PgGuard::ensure_conn(conn, "addUser")) return;
+    if (!PG_Guard::ensure_conn(conn, "addUser")) return;
 
 
     PGresult* res = PQexec(conn, "BEGIN;");
-    if (!PgGuard::command_and_clear(conn, res, "BEGIN failed")) return;
+    if (!PG_Guard::command_and_clear(conn, res, "BEGIN failed")) return;
 
     const char* sql1 =
         "INSERT INTO client_personal_info "
@@ -397,10 +386,10 @@ void User_Queries::addUser(const UserAccount_server& user)
         "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
 
     Date DOB = user.getDOB();
-    std::string Date_str =
-        std::to_string(DOB.getYear()) + "-" +
-        (DOB.getMonth() < 10 ? "0" : "") + std::to_string(DOB.getMonth()) + "-" +
-        (DOB.getDate()  < 10 ? "0" : "") + std::to_string(DOB.getDate());
+    string Date_str =
+        to_string(DOB.getYear()) + "-" +
+        (DOB.getMonth() < 10 ? "0" : "") + to_string(DOB.getMonth()) + "-" +
+        (DOB.getDate()  < 10 ? "0" : "") + to_string(DOB.getDate());
 
     const char* values1[8] = {
         user.getClientID().getHexadecimalVal().c_str(),
@@ -414,26 +403,25 @@ void User_Queries::addUser(const UserAccount_server& user)
     };
 
     res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
-    if (!PgGuard::expect_command(conn, res, "Insert personal info failed", true)) return;
+    if (!PG_Guard::expect_command(conn, res, "Insert personal info failed", true)) return;
     PQclear(res);
 
     const char* sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
     const char* values2[1] = { user.getClientID().getHexadecimalVal().c_str() };
 
     res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
-    if (!PgGuard::expect_command(conn, res, "Insert account status failed", true)) return;
+    if (!PG_Guard::expect_command(conn, res, "Insert account status failed", true)) return;
     PQclear(res);
 
     res = PQexec(conn, "COMMIT;");
-    if (!PgGuard::expect_command(conn, res, "COMMIT failed", true)) return;
+    if (!PG_Guard::expect_command(conn, res, "COMMIT failed", true)) return;
     PQclear(res);
 
-    std::cout << "User successfully added.\n";
+    cout << "User successfully added.\n";
 }
-
-bool User_Queries::hasEnoughBalance(const std::string& username, double amount) 
+bool User_Queries::hasEnoughBalance(const string& username, double amount) 
 {
-    if (!PgGuard::ensure_conn(conn, "hasEnoughBalance")) return false;
+    if (!PG_Guard::ensure_conn(conn, "hasEnoughBalance")) return false;
 
     const char* sql =
         "SELECT cas.balance "
@@ -445,18 +433,17 @@ bool User_Queries::hasEnoughBalance(const std::string& username, double amount)
     const char* values[1] = { username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_tuples(conn, res, "hasEnoughBalance SELECT failed")) return false;
+    if (!PG_Guard::expect_tuples(conn, res, "hasEnoughBalance SELECT failed")) return false;
 
     if (PQntuples(res) == 0) { PQclear(res); return false; }
 
-    double balance = std::atof(PQgetvalue(res, 0, 0));
+    double balance = atof(PQgetvalue(res, 0, 0));
     PQclear(res);
     return balance >= amount;
 }
-
-bool User_Queries::updateBalance(const std::string& username, double newBalance) 
+bool User_Queries::updateBalance(const string& username, double newBalance) 
 {
-    if (!PgGuard::ensure_conn(conn, "updateBalance")) return false;
+    if (!PG_Guard::ensure_conn(conn, "updateBalance")) return false;
 
     const char* sql =
         "UPDATE client_account_status cas "
@@ -465,23 +452,20 @@ bool User_Queries::updateBalance(const std::string& username, double newBalance)
         "WHERE cas.client_ID = cpi.client_ID "
         "AND cpi.username = $2;";
 
-    std::string balStr = std::to_string(newBalance);
+    string balStr = to_string(newBalance);
     const char* values[2] = { balStr.c_str(), username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_command(conn, res, "updateBalance UPDATE failed")) return false;
+    if (!PG_Guard::expect_command(conn, res, "updateBalance UPDATE failed")) return false;
 
     PQclear(res);
     return true;
 }
 
 
-
-
 DatabaseUpdates::DatabaseUpdates(PGconn* connection) : conn(connection) {}
-
-bool DatabaseUpdates::deleteUserByUsername(const std::string& username) {
-    if (!PgGuard::ensure_conn(conn, "deleteUserByUsername")) return false;
+bool DatabaseUpdates::deleteUserByUsername(const string& username) {
+    if (!PG_Guard::ensure_conn(conn, "deleteUserByUsername")) return false;
 
     const char* sql =
         "DELETE FROM client_personal_info "
@@ -490,16 +474,14 @@ bool DatabaseUpdates::deleteUserByUsername(const std::string& username) {
     const char* values[1] = { username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_command(conn, res, "deleteUserByUsername DELETE failed")) return false;
+    if (!PG_Guard::expect_command(conn, res, "deleteUserByUsername DELETE failed")) return false;
 
     PQclear(res);
     return true;
 }
-
-bool DatabaseUpdates::updatePasswordByUsername(const std::string& username,
-                                const std::string& newPassword,
-                                const std::string& newSalt) {
-    if (!PgGuard::ensure_conn(conn, "updatePasswordByUsername")) return false;
+bool DatabaseUpdates::updatePasswordByUsername(const string& username, const string& newPassword, const string& newSalt) 
+{
+    if (!PG_Guard::ensure_conn(conn, "updatePasswordByUsername")) return false;
 
     const char* sql =
         "UPDATE client_personal_info "
@@ -509,42 +491,42 @@ bool DatabaseUpdates::updatePasswordByUsername(const std::string& username,
     const char* values[3] = { newPassword.c_str(), newSalt.c_str(), username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 3, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_command(conn, res, "updatePasswordByUsername UPDATE failed")) return false;
+    if (!PG_Guard::expect_command(conn, res, "updatePasswordByUsername UPDATE failed")) return false;
 
     PQclear(res);
     return true;
 }
-
-std::string DatabaseUpdates::getSaltByUsername(const std::string& username) {
-    if (!PgGuard::ensure_conn(conn, "getSaltByUsername")) return "";
+string DatabaseUpdates::getSaltByUsername(const string& username) 
+{
+    if (!PG_Guard::ensure_conn(conn, "getSaltByUsername")) return "";
 
     const char* sql =
         "SELECT salt FROM client_personal_info WHERE username = $1 LIMIT 1;";
     const char* values[1] = { username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_tuples(conn, res, "getSaltByUsername SELECT failed")) return "";
+    if (!PG_Guard::expect_tuples(conn, res, "getSaltByUsername SELECT failed")) return "";
 
     if (PQntuples(res) == 0) { PQclear(res); return ""; }
 
-    std::string salt = PQgetvalue(res, 0, 0);
+    string salt = PQgetvalue(res, 0, 0);
     PQclear(res);
     return salt;
 }
-
-std::string DatabaseUpdates::getPasswordByUsername(const std::string& username) {
-    if (!PgGuard::ensure_conn(conn, "getPasswordByUsername")) return "";
+string DatabaseUpdates::getPasswordByUsername(const string& username) 
+{
+    if (!PG_Guard::ensure_conn(conn, "getPasswordByUsername")) return "";
 
     const char* sql =
         "SELECT password FROM client_personal_info WHERE username = $1 LIMIT 1;";
     const char* values[1] = { username.c_str() };
 
     PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PgGuard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed")) return "";
+    if (!PG_Guard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed")) return "";
 
     if (PQntuples(res) == 0) { PQclear(res); return ""; }
 
-    std::string password = PQgetvalue(res, 0, 0);
+    string password = PQgetvalue(res, 0, 0);
     PQclear(res);
     return password;
 }
