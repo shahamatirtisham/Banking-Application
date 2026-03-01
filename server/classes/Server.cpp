@@ -1,5 +1,7 @@
+#include "server.hpp"
 #include "../../shared/classes/Packet.hpp"
 #include "../requests/executeRequests.hpp"
+#include "../functions/database-handling.hpp"
 #include "../classes/BankData.hpp"
 #include <iostream>
 #include <strings.h>
@@ -7,21 +9,17 @@
 #include <netinet/in.h>
 using namespace std;
 
-class Server
+
+Server::Server(int port) : port(port), listenSock(-1) 
 {
-private:
-    int port;
-    int listenSock;
-    void setupSocket();
-    void acceptLoop();
-    void handleClient(int clientSock);
-
-public:
-    Server(int port);
-    void run();
-};
-
-Server::Server(int port) : port(port), listenSock(-1) {};
+    connection = config_info.connect();
+    if(!connection)
+    {
+        cout << "Connection to the database failed, exiting program\n";
+        exit(1);
+    }
+    database db(connection, 1, "");
+}
 
 void Server::setupSocket()
 {
@@ -48,6 +46,9 @@ void Server::setupSocket()
     }
 
     listen(listenSock, 5);
+
+
+    
 }
 
 void Server::acceptLoop()
@@ -80,6 +81,14 @@ void Server::acceptLoop()
 void Server::run()
 {
     setupSocket();
+
+    
+
+    // pgconfig_info config_info;
+    // PGconn* connection = config_info.connect();
+
+    
+
     BankData bankData;
     bankData.display();
     acceptLoop();
@@ -88,13 +97,13 @@ void Server::run()
 void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
-    exeRequests_init(clientSocket);
-    cout << "check1\n";
+    exeRequests_init(clientSocket, connection);
+    // cout << "check1\n";
     while (1)
     {
-        cout << "check2\n";
+        // cout << "check2\n";
         Packet p;
-        cout << "check3\n";
+        // cout << "check3\n";
         p.read(clientSocket);
 
         // packet.display();
@@ -118,17 +127,8 @@ void Server::handleClient(int clientSocket)
 
         else if (command == "UNIQUE-USERNAME-CHECK")
         {
-            if (checkUniqueUsername(p.getUsername()) == true)
-            {
-                p = Packet("POSITIVE");
-                cout << "username is unique\n";
-            }
-            else
-            {
-                p = Packet("NEGATIVE");
-                cout << "username is taken\n";
-            }
-            p.display();
+            bool response = requests::user::checkUniqueUsername(p.getUsername());
+            response ? p = Packet("POSITIVE") : p = Packet("NEGATIVE");
             p.write(clientSocket);
         }
     }

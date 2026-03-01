@@ -1,9 +1,9 @@
-#pragma once
+#ifndef DATABASE_HANDLING_HPP
+#define DATABASE_HANDLING_HPP
 
 #include "../../shared/classes/Date.hpp"
 #include "../classes/UserAccount_server.hpp"
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <libpq-fe.h>   
@@ -20,10 +20,14 @@ public:
 class PgGuard {
 public:
     static bool ensure_conn(PGconn* c, const char* context);
+
     static bool expect_tuples(PGconn* c, PGresult* r, const char* context);
-    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback=false);
-    static bool expect_ok(PGconn* c, PGresult* r, const char* context, bool rollback=false);
-    static bool command_and_clear(PGconn* c, PGresult*& r, const char* context, bool rollback=false);
+
+    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback = false);
+
+    static bool expect_ok(PGconn* c, PGresult* r, const char* context, bool rollback = false);
+
+    static bool command_and_clear(PGconn* c, PGresult*& r, const char* context, bool rollback = false);
 };
 
 
@@ -37,17 +41,19 @@ private:
     std::string admin_db;
 
 public:
-    pgconfig_info(std::string host_in = "localhost",
-                  std::string port_in = "5432",
-                  std::string user_in = "myuser",
-                  std::string password_in = "mypass",
-                  std::string target_db_in = "bankdb",
-                  std::string admin_db_in = "postgres");
+    pgconfig_info(
+        std::string host_in = "localhost",
+        std::string port_in = "5432",
+        std::string user_in = "myuser",
+        std::string password_in = "mypass",
+        std::string target_db_in = "bankdb",
+        std::string admin_db_in = "postgres"
+    );
 
     PGconn* connect(const std::string& dbname = "");
 
     const std::string& get_target_db() const;
-    const std::string& get_admin_db()  const;
+    const std::string& get_admin_db() const;
 
     void show();
 };
@@ -63,7 +69,7 @@ private:
 
 public:
     database(PGconn* connx_in = nullptr, bool status = false, std::string name = "");
-    ~database();
+    ~database() override;
 
     PGconn* get_conn() const;
     bool exists() const;
@@ -80,15 +86,18 @@ public:
 class User_Queries {
 private:
     PGconn* conn;
+
     static void clear_result(PGresult* r);
 
 public:
     explicit User_Queries(PGconn* c);
 
     bool checkUniqueUsername(const std::string& username);
+
     void addUser(const UserAccount_server& user);
 
     bool hasEnoughBalance(const std::string& username, double amount);
+
     bool updateBalance(const std::string& username, double newBalance);
 };
 
@@ -107,5 +116,8 @@ public:
                                   const std::string& newSalt);
 
     std::string getSaltByUsername(const std::string& username);
+
     std::string getPasswordByUsername(const std::string& username);
 };
+
+#endif 

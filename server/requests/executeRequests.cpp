@@ -6,39 +6,62 @@
 using namespace std;
 
 static int sockfd = -1;
+static PGconn* connection = NULL;
 
-void exeRequests_init(int passed_sockfd)
+void exeRequests_init(int passed_sockfd, PGconn* passed_connection)
 {
     sockfd = passed_sockfd;
+    connection = passed_connection;
 }
 
-void requests::user::login(Packet packet)
+// void requests::user::login(Packet packet)
+// {
+//     string username = packet.getUsername();
+//     string password = packet.getPassword();
+
+//     Packet response;
+
+//     if (checkUniqueUsername(username))
+//     {
+//         // username not found in DB (unique = doesn't exist)
+//         response = Packet("USER-NOT-FOUND");
+//     }
+//     else if (checkUserPassword(username, password))
+//     {
+//         // username exists AND password matches
+//         UserAccount_server user = getUserByUsername(username);
+//         Packet successPacket("LOGIN-SUCCESS", user);
+//         successPacket.write(sockfd);
+//         return;
+//     }
+//     else
+//     {
+//         // username exists but wrong password
+//         response = Packet("LOGIN-FAIL");
+//     }
+
+//     response.write(sockfd);
+// }
+
+bool requests::user::checkUniqueUsername(string username)
 {
-    string username = packet.getUsername();
-    string password = packet.getPassword();
-
     Packet response;
+    User_Queries query(connection);
+    bool isUnique = query.checkUniqueUsername(username);
+    isUnique ? response = Packet("TRUE") : response = Packet("FALSE");
+    response.write(sockfd); 
 
-    if (checkUniqueUsername(username))
-    {
-        // username not found in DB (unique = doesn't exist)
-        response = Packet("USER-NOT-FOUND");
-    }
-    else if (checkUserPassword(username, password))
-    {
-        // username exists AND password matches
-        UserAccount_server user = getUserByUsername(username);
-        Packet successPacket("LOGIN-SUCCESS", user);
-        successPacket.write(sockfd);
-        return;
-    }
-    else
-    {
-        // username exists but wrong password
-        response = Packet("LOGIN-FAIL");
-    }
-
-    response.write(sockfd);
+    // if (checkUniqueUsername(p.getUsername()) == true)
+    // {
+    //     cout << "username is unique\n";
+    //     return true;
+    // }
+    // else
+    // {
+    //     cout << "username is taken\n";
+    //     return false;
+    // }
+    
 }
 
 void requests::user::signup(Packet p)
@@ -101,3 +124,4 @@ void requests::user::forgotPassword(Packet packet)
     Packet done("PASS-CHANGED");
     done.write(sockfd);
 }
+
