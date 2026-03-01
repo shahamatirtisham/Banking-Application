@@ -88,7 +88,7 @@ void Server::run()
 void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
-    readRequests_init(clientSocket);
+    exeRequests_init(clientSocket);
     cout << "check1\n";
     while (1)
     {

@@ -1,5 +1,9 @@
 #include "../../shared/classes/Packet.hpp"
 #include "../requests/executeRequests.hpp"
+<<<<<<< HEAD
+=======
+#include "../classes/BankData.hpp"
+>>>>>>> 38e601733d936c68ce1c8a0609c274700e4c4d5b
 #include <iostream>
 #include <strings.h>
 #include <unistd.h>
@@ -80,6 +84,8 @@ void Server::acceptLoop()
 void Server::run()
 {
     setupSocket();
+    BankData bankData;
+    bankData.display();
     acceptLoop();
 }
 

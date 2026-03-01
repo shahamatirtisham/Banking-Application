@@ -1,22 +1,23 @@
-#include "../../shared/classes/Date.hpp"
-#include "../../shared/classes/UserAccount.hpp"
+ #include "../../shared/classes/Date.hpp"
+ #include "../classes/UserAccount_server.hpp"
+
 #include <iostream>
 #include <string>
 #include <vector>
-// on Ubuntu, the include directory is:
-// #include <postgresql/libpq-fe.h>
-// on Arch, the include directory is:
 #include <libpq-fe.h>
 
 using namespace std;
 
 class overall_con_db{
+
+public:
     virtual void show()=0;
+    virtual ~overall_con_db() = default;
 };
 
 
 
-class pgconfig_info : public overall_con_db{
+class pgconfig_info{
 private:
     string host;
     string port;
@@ -212,7 +213,7 @@ public:
         return ok;
     }
 
-    // Create all required tables in the TARGET DB
+    // Schema initialization
 bool init_schema() {
     if (!connx || PQstatus(connx) != CONNECTION_OK) return false;
 
@@ -363,7 +364,23 @@ bool init_schema() {
 
 };
 
-bool checkUniqueUsername(PGconn* conn, const std::string& username)
+
+class User_Queries{
+
+private:
+    PGconn* conn;
+
+    static void clear_result(PGresult*r){
+        if(r){
+            PQclear(r);
+        }
+    }
+
+public:
+
+    User_Queries(PGconn *c): conn(c){}
+
+bool checkUniqueUsername(const std::string& username)
 {
     if (!conn || PQstatus(conn) != CONNECTION_OK)
         return false;
@@ -405,14 +422,14 @@ bool checkUniqueUsername(PGconn* conn, const std::string& username)
     return isUnique;
 }
 
-void addUser(PGconn* conn, const UserAccount& user)
+void addUser(const UserAccount_server& user)
 {
     if (!conn || PQstatus(conn) != CONNECTION_OK) {
         cerr << "Invalid database connection.\n";
         return;
     }
 
-    if (!checkUniqueUsername(conn, user.getUsername())) {
+    if (!checkUniqueUsername(user.getUsername())) {
         cerr << "Username already exists.\n";
         return;
     }
@@ -430,12 +447,18 @@ void addUser(PGconn* conn, const UserAccount& user)
         "(client_ID, name, username, password, DOB, account_no, favAni, salt) "
         "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
 
+    Date DOB = user.getDOB();
+    string Date_str = to_string(DOB.getDate()) + "/" +
+                       to_string(DOB.getMonth()) + "/" +
+                       to_string(DOB.getYear());
+
+
     const char* values1[8] = {
-        user.getClientID().c_str(),
+        user.getClientID().getHexadecimalVal().c_str(),
         user.getName().c_str(),
         user.getUsername().c_str(),
         user.getPassword().c_str(),
-        user.getDOB().c_str(),
+        Date_str.c_str(),
         user.getAccountNo().c_str(),
         user.getFavAni().c_str(),
         user.getSalt().c_str()
@@ -451,7 +474,7 @@ void addUser(PGconn* conn, const UserAccount& user)
     PQclear(res);
 
     const char* sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
-    const char* values2[1] = { user.getClientID().c_str() };
+    const char* values2[1] = { user.getClientID().getHexadecimalVal().c_str() };
     res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
@@ -475,65 +498,66 @@ void addUser(PGconn* conn, const UserAccount& user)
 }
 
 
-bool hasEnoughBalance(PGconn* conn, const std::string& username, double amount)
-{
-    if (!conn || PQstatus(conn) != CONNECTION_OK)
-        return false;
 
-    const char* sql =
-        "SELECT cas.balance "
-        "FROM client_account_status cas "
-        "JOIN client_personal_info cpi "
-        "ON cas.client_ID = cpi.client_ID "
-        "WHERE cpi.username = $1;";
+    bool hasEnoughBalance(const std::string& username, double amount)
+    {
+        if (!conn || PQstatus(conn) != CONNECTION_OK)
+            return false;
 
-    const char* values[1] = { username.c_str() };
+        const char* sql =
+            "SELECT cas.balance "
+            "FROM client_account_status cas "
+            "JOIN client_personal_info cpi "
+            "ON cas.client_ID = cpi.client_ID "
+            "WHERE cpi.username = $1;";
 
-    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+        const char* values[1] = { username.c_str() };
 
-    if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
-        if (res) PQclear(res);
-        return false;
+        PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+        if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+            clear_result(res);
+            return false;
+        }
+
+        double balance = std::atof(PQgetvalue(res, 0, 0));
+        clear_result(res);
+
+        return balance >= amount;
     }
 
-    double balance = atof(PQgetvalue(res, 0, 0));
-    PQclear(res);
+    bool updateBalance(const std::string& username, double newBalance)
+    {
+        if (!conn || PQstatus(conn) != CONNECTION_OK)
+            return false;
 
-    return balance >= amount;
-}
+        const char* sql =
+            "UPDATE client_account_status cas "
+            "SET balance = $1 "
+            "FROM client_personal_info cpi "
+            "WHERE cas.client_ID = cpi.client_ID "
+            "AND cpi.username = $2;";
+
+        std::string balStr = std::to_string(newBalance);
+        const char* values[2] = { balStr.c_str(), username.c_str() };
+
+        PGresult* res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
+
+        bool ok = res && PQresultStatus(res) == PGRES_COMMAND_OK;
+        clear_result(res);
+
+        return ok;
+    }
 
 
-bool updateBalance(PGconn* conn, const std::string& username, double newBalance)
-{
-    if (!conn || PQstatus(conn) != CONNECTION_OK)
-        return false;
+};
 
-    const char* sql =
-        "UPDATE client_account_status cas "
-        "SET balance = $1 "
-        "FROM client_personal_info cpi "
-        "WHERE cas.client_ID = cpi.client_ID "
-        "AND cpi.username = $2;";
-
-    std::string balStr = std::to_string(newBalance);
-    const char* values[2] = { balStr.c_str(), username.c_str() };
-
-    PGresult* res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
-
-    bool ok = res && PQresultStatus(res) == PGRES_COMMAND_OK;
-    if (res) PQclear(res);
-
-    return ok;
-}
 
 
 class PgGuard {
 public:
-    static bool ensure_conn(PGconn* c, const char* context = "DB") {
-        if (!c) {
-            std::cerr << context << ": connection is null\n";
-            return false;
-        }
+    static bool ensure_conn(PGconn* c, const char* context) {
+        if (!c) { std::cerr << context << ": connection is null\n"; return false; }
         if (PQstatus(c) != CONNECTION_OK) {
             std::cerr << context << ": connection not OK: " << PQerrorMessage(c) << "\n";
             return false;
@@ -542,19 +566,16 @@ public:
     }
 
     static bool expect_tuples(PGconn* c, PGresult* r, const char* context) {
-        if (!r) {
-            std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
-            return false;
-        }
+        if (!r) { std::cerr << context << ": PQexec/PQexecParams returned nullptr\n"; return false; }
         if (PQresultStatus(r) != PGRES_TUPLES_OK) {
             std::cerr << context << ": " << PQerrorMessage(c) << "\n";
             PQclear(r);
             return false;
         }
-        return true;
+        return true; 
     }
 
-    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback = false) {
+    static bool expect_command(PGconn* c, PGresult* r, const char* context, bool rollback=false) {
         if (!r) {
             std::cerr << context << ": PQexec/PQexecParams returned nullptr\n";
             if (rollback) PQexec(c, "ROLLBACK;");
@@ -566,9 +587,13 @@ public:
             if (rollback) PQexec(c, "ROLLBACK;");
             return false;
         }
-        return true;
+        return true; 
     }
 };
+
+
+
+
 
 
 int main() {
@@ -582,5 +607,3 @@ int main() {
 
     return 0;
 }
-
-

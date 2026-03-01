@@ -109,6 +109,10 @@ int Date::getAge() const
 
     return year;    
 }
+string Date::to_str() 
+{
+    return to_string(date) + "-" + to_string(month) + "-" + to_string(year);
+}
 void Date::display() const
 {
     cout << date << "-" << month << "-" << year;

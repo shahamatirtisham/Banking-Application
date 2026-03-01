@@ -4,7 +4,7 @@
 #include "../functions/database-handling.hpp"
 #include "../../shared/classes/Packet.hpp"
 
-void readRequests_init(int passed_sockfd);
+void exeRequests_init(int passed_sockfd);
 
 namespace requests::user
 {

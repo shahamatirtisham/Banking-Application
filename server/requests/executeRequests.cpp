@@ -7,7 +7,7 @@ using namespace std;
 
 static int sockfd = -1;
 
-void readRequests_init(int passed_sockfd)
+void exeRequests_init(int passed_sockfd)
 {
     sockfd = passed_sockfd;
 }
