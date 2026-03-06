@@ -701,6 +701,32 @@ UserAccount getUserAccount_server(PGconn* conn, const string& username)
 }
 
 
+double getBalance(PGconn* conn, const string& username)
+{
+    const char* sql =
+        "SELECT cas.balance "
+        "FROM client_account_status cas "
+        "JOIN client_personal_info cpi "
+        "ON cas.client_ID = cpi.client_ID "
+        "WHERE cpi.username = $1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return -1;
+    }
+
+    double balance = atof(PQgetvalue(res,0,0));
+    PQclear(res);
+
+    return balance;
+}
+
+
 int main() {
     database db;
 
