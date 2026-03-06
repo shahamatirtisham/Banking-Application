@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "Server.hpp"
 #include "../../shared/classes/Packet.hpp"
 #include "../requests/executeRequests.hpp"
 #include "../functions/database-handling.hpp"
@@ -127,5 +127,34 @@ void Server::handleClient(int clientSocket)
             response ? p = Packet("POSITIVE") : p = Packet("NEGATIVE");
             p.write(clientSocket);
         }
-    }
+        else if(command == "CHECK-BALANCE")
+        {
+            requests::user::check_balance(p);
+        }
+        else if(command == "DEPOSIT")
+        {
+            requests::user::deposit(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "WITHDRAW")
+        {
+            requests::user::withdraw(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "TRANSFER-MONEY")
+        {
+            requests::user::transfer_money(p);
+            // ekhane amount er kaj baki ase
+            // ekhane receiver account er kaj baki ase
+
+        }
+        else if(command == "TRANSACTION-HISTORY")
+        {
+            requests::user::transaction_history(p);
+        }
+        else if(command == "LOGOUT")
+        {
+            requests::user::logout(p);
+        }
+    }    
 }

@@ -123,3 +123,34 @@ void requests::user::forgotPassword(Packet packet)
     done.write(sockfd);
 }
 
+
+
+void requests::user::check_balance(Packet packet)
+{
+
+}
+
+void requests::user::deposit(Packet packet)
+{
+
+}
+
+void requests::user::withdraw(Packet packet)
+{
+
+}
+
+void requests::user::transfer_money(Packet packet)
+{
+
+}
+
+void requests::user::transaction_history(Packet packet)
+{
+
+}
+
+void requests::user::logout(Packet packet)
+{
+
+}

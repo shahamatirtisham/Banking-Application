@@ -40,6 +40,10 @@ add_executable(client
     client/main.cpp
     client/classes/client.cpp
     client/screens/pre-login.cpp
+    client/classes/user-operations.cpp
+	client/classes/user-operations.hpp
+	client/screens/home-page.cpp
+	client/screens/home-page.hpp
     shared/hash.cpp
     shared/input.cpp
     shared/classes/UserAccount.cpp
