@@ -4,7 +4,7 @@
 #include "../../shared/classes/Packet.hpp"
 #include "../../shared/classes/UserAccount.hpp"
 #include "../../shared/hash.hpp"
-#include "../../server/functions/database-handling.hpp"
+//#include "../../server/functions/database-handling.hpp"
 #include "../../shared/classes/Colors.hpp"
 
 using namespace std;
