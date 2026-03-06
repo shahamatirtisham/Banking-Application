@@ -669,6 +669,38 @@ bool deleteUserByUsername(PGconn* conn, const std::string& username)
 }
 
 
+UserAccount getUserAccount_server(PGconn* conn, const string& username)
+{
+    const char* sql = "SELECT name, username, password, DOB, account_no, favAni, balance "
+        "FROM client_personal_info c "
+        "JOIN client_account_status s ON c.client_ID = s.client_ID "
+        "WHERE username = $1;";
+
+    const char* values[1] = { username.c_str() };
+
+    PGresult* res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if(PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return UserAccount();  
+    }
+
+    string name = PQgetvalue(res,0,0);
+    string user = PQgetvalue(res,0,1);
+    string pass = PQgetvalue(res,0,2);
+    string dob  = PQgetvalue(res,0,3);
+    string acc  = PQgetvalue(res,0,4);
+    string fav  = PQgetvalue(res,0,5);
+    double bal  = atof(PQgetvalue(res,0,6));
+
+    PQclear(res);
+
+    Date DOB(dob);
+    return UserAccount(name, user, pass, DOB, bal, acc, fav);
+}
+
+
 int main() {
     database db;
 
