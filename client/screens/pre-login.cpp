@@ -5,6 +5,7 @@
 #include "../../shared/classes/UserAccount.hpp"
 #include "../../shared/hash.hpp"
 #include "../../server/functions/database-handling.hpp"
+#include "homepage-screen.hpp"
 
 using namespace std;
 
@@ -72,7 +73,7 @@ void mainMenu()
     }
 }
 
-void preloginScreens::user::login()
+static void preloginScreens::user::login()
 {
     string username, password;
 
@@ -105,6 +106,8 @@ void preloginScreens::user::login()
             clearScreen();
             cout << "Login Successful! Welcome, " << username << "!\n";
             // TODO: abtahi's post-login screen goes here
+            homepage_init(sockfd);
+            homepage_Menu(tempAccount);
             return;
         }
         else if (cmd == "USER-NOT-FOUND")
@@ -144,6 +147,8 @@ void preloginScreens::user::login()
                         clearScreen();
                         cout << "Login Successful! Welcome, " << username << "!\n";
                         // TODO: abtahi er post login
+                        homepage_init(sockfd);
+                        homepage_Menu(tempAccount);
                         return;
                     }
                     else
@@ -165,7 +170,7 @@ void preloginScreens::user::login()
         }
     }
 }
-void preloginScreens::user::signup()
+static void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
@@ -203,16 +208,16 @@ void preloginScreens::user::signup()
     packet.display();
     packet.write(sockfd);
 }
-void preloginScreens::admin::signup()
+static void preloginScreens::admin::signup()
 {
 }
-void preloginScreens::admin::login()
+static void preloginScreens::admin::login()
 {
 }
 
 
 
-void preloginScreens::user::forgotPassword(string username)
+static void preloginScreens::user::forgotPassword(string username)
 {
     cout << " -------- FORGOT PASSWORD -------- \n";
 

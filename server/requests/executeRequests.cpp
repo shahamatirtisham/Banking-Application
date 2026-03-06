@@ -74,8 +74,6 @@ void requests::user::signup(Packet p)
     acc.printAccountInfo(0);
 
     // enter dbms signup code here
-    User_Queries db(connection);
-    db.addUser(acc);
 }
 
 void requests::user::forgotPassword(Packet packet)
@@ -129,30 +127,51 @@ void requests::user::forgotPassword(Packet packet)
 
 void requests::user::check_balance(Packet packet)
 {
-
+    string username = packet.getUsername();
+    // database theke balance amount return korte hobe 
 }
 
 void requests::user::deposit(Packet packet)
 {
+    string username = packet.getUsername();
+    double amount = packet.getBalance(); // eita balance na, eita deposit amount
+    // database e balance update korbo
+    // success or fail msg return korbo
+    
+    /*
+        bool db_deposit(username, amount);
+        double newBalance = db_getBalance(username);
 
+        Packet p("POSITIVE", user);
+        user.setBalance = newBalance;
+        p.write(sockfd);
+    */
 }
 
 void requests::user::withdraw(Packet packet)
 {
-
+    string username = packet.getUsername();
+    double amount = packet.getBalance(); // eita balance na, eita withdraw amount
+    // database e balance update korbo
+    // success or fail msg return korbo
 }
 
 void requests::user::transfer_money(Packet packet)
 {
-
+    string sender = packet.getUsername(); // sender er username
+    string receiver = packet.getAccountNo(); // receiver er account no
+    double amount = packet.getBalance(); // eita balance na, eita transfer amount
+    // database e balance update korbo
+    // success or fail msg return korbo
 }
 
 void requests::user::transaction_history(Packet packet)
 {
-
+    string username = packet.getUsername();
+    // database theke vector return korbo
 }
 
 void requests::user::logout(Packet packet)
 {
-
+    // eita baki roilo
 }
