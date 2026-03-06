@@ -72,7 +72,7 @@ void mainMenu()
     }
 }
 
-static void preloginScreens::user::login()
+void preloginScreens::user::login()
 {
     string username, password;
 
@@ -165,7 +165,7 @@ static void preloginScreens::user::login()
         }
     }
 }
-static void preloginScreens::user::signup()
+void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
@@ -203,16 +203,16 @@ static void preloginScreens::user::signup()
     packet.display();
     packet.write(sockfd);
 }
-static void preloginScreens::admin::signup()
+void preloginScreens::admin::signup()
 {
 }
-static void preloginScreens::admin::login()
+void preloginScreens::admin::login()
 {
 }
 
 
 
-static void preloginScreens::user::forgotPassword(string username)
+void preloginScreens::user::forgotPassword(string username)
 {
     cout << " -------- FORGOT PASSWORD -------- \n";
 

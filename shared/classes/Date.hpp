@@ -18,6 +18,7 @@ public:
     void setYear(int y);
 
     int getDate() const;
+    std::string getDate_string() const;
     int getMonth() const;
     int getYear() const;
     int getAge() const;

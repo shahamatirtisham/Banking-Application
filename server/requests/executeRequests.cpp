@@ -74,6 +74,8 @@ void requests::user::signup(Packet p)
     acc.printAccountInfo(0);
 
     // enter dbms signup code here
+    User_Queries db(connection);
+    db.addUser(acc);
 }
 
 void requests::user::forgotPassword(Packet packet)

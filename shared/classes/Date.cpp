@@ -1,6 +1,7 @@
 #include "Date.hpp"
 #include <iostream>
 #include <ctime>
+#include <sstream>
 using namespace std;
 
 Date::Date(int d, int m, int y)
@@ -32,6 +33,12 @@ void Date::setYear(int year)
 int Date::getDate() const
 {
     return date;
+}
+string Date::getDate_string() const
+{
+    stringstream ss;
+    ss << year << "-" << month << "-" << date;
+    return ss.str();
 }
 int Date::Date::getMonth() const
 {

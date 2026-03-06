@@ -5,9 +5,9 @@
 
 namespace preloginScreens::user
 {
-    static void signup();
-    static void login();
-    static void forgotPassword(std::string username);
+    void signup();
+    void login();
+    void forgotPassword(std::string username);
 
 }
 

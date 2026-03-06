@@ -186,11 +186,7 @@ PG_Config_Info()
         }
     }
 }
-Database::~Database() 
-{
-    // if (connx) PQfinish(connx);
-    // connx = nullptr;
-}
+Database::~Database() {}
 bool Database::exec_cmd(PGconn* c, const string& sql) 
 {
     if (!PG_Guard::ensure_conn(c, "exec_cmd")) return false;
@@ -385,21 +381,30 @@ void User_Queries::addUser(const UserAccount_server& user)
         "(client_ID, name, username, password, DOB, account_no, favAni, salt) "
         "VALUES ($1,$2,$3,$4,$5,$6,$7,$8);";
 
+    
     Date DOB = user.getDOB();
-    string Date_str =
-        to_string(DOB.getYear()) + "-" +
-        (DOB.getMonth() < 10 ? "0" : "") + to_string(DOB.getMonth()) + "-" +
-        (DOB.getDate()  < 10 ? "0" : "") + to_string(DOB.getDate());
+    
+    
+    string _ID = user.getClientID().getHexadecimalVal();
+    string name = user.getName();
+    string username = user.getUsername();
+    string password = user.getPassword();
+    string _DOB = DOB.getDate_string(); 
+    string accountNo = user.getAccountNo();
+    string favAni = user.getFavAni();
+    string salt = user.getSalt();
 
     const char* values1[8] = {
-        user.getClientID().getHexadecimalVal().c_str(),
-        user.getName().c_str(),
-        user.getUsername().c_str(),
-        user.getPassword().c_str(),
-        Date_str.c_str(),
-        user.getAccountNo().c_str(),
-        user.getFavAni().c_str(),
-        user.getSalt().c_str()
+        
+
+        _ID.c_str(),
+        name.c_str(),
+        username.c_str(),
+        password.c_str(),
+        _DOB.c_str(),
+        accountNo.c_str(),
+        favAni.c_str(),
+        salt.c_str(),
     };
 
     res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
