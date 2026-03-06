@@ -1,50 +1,72 @@
 #include "executeRequests.hpp"
+#include "../functions/database-handling.hpp"
 #include "../classes/UserAccount_server.hpp"
 #include <iostream>
 #include <string>
 using namespace std;
 
 static int sockfd = -1;
+static PGconn* connection = NULL;
 
-void readRequests_init(int passed_sockfd)
+void exeRequests_init(int passed_sockfd, PGconn* passed_connection)
 {
     sockfd = passed_sockfd;
+    connection = passed_connection;
 }
 
 void requests::user::login(Packet packet)
 {
-    string username = packet.getUsername();
-    string password = packet.getPassword();
+//     string username = packet.getUsername();
+//     string password = packet.getPassword();
 
-    Packet response;
+//     Packet response;
 
-    if (checkUniqueUsername(username))
-    {
-        // username not found in DB (unique = doesn't exist)
-        response = Packet("USER-NOT-FOUND");
-    }
-    else if (checkPassword(username, password))
-    {
-        // username exists AND password matches
-        UserAccount_server user = getUserByUsername(username);
-        Packet successPacket("LOGIN-SUCCESS", user);
-        successPacket.write(sockfd);
-        return;
-    }
-    else
-    {
-        // username exists but wrong password
-        response = Packet("LOGIN-FAIL");
-    }
+//     if (checkUniqueUsername(username))
+//     {
+//         // username not found in DB (unique = doesn't exist)
+//         response = Packet("USER-NOT-FOUND");
+//     }
+//     else if (checkUserPassword(username, password))
+//     {
+//         // username exists AND password matches
+//         UserAccount_server user = getUserByUsername(username);
+//         Packet successPacket("LOGIN-SUCCESS", user);
+//         successPacket.write(sockfd);
+//         return;
+//     }
+//     else
+//     {
+//         // username exists but wrong password
+//         response = Packet("LOGIN-FAIL");
+//     }
 
-    response.write(sockfd);
+//     response.write(sockfd);
 }
 
-void requests::user::signup(Packet packet)
+bool requests::user::checkUniqueUsername(string username)
+{
+    Packet response;
+    User_Queries query(connection);
+    return query.checkUniqueUsername(username);
+
+    // if (checkUniqueUsername(p.getUsername()) == true)
+    // {
+    //     cout << "username is unique\n";
+    //     return true;
+    // }
+    // else
+    // {
+    //     cout << "username is taken\n";
+    //     return false;
+    // }
+    
+}
+
+void requests::user::signup(Packet p)
 {
 
     UserAccount_server acc;
-    acc = packet; // overloaded the UserAccount class to support ' = ' operations with Packet class
+    acc = p;        // overloaded the UserAccount class to support ' = ' operations with Packet class
     acc.printAccountInfo(0);
     acc.setAccountNo(generateAccountNo());
     cout << "generated acc no \n";
@@ -52,6 +74,8 @@ void requests::user::signup(Packet packet)
     acc.printAccountInfo(0);
 
     // enter dbms signup code here
+    User_Queries db(connection);
+    db.addUser(acc);
 }
 
 void requests::user::forgotPassword(Packet packet)
@@ -99,4 +123,36 @@ void requests::user::forgotPassword(Packet packet)
     
     Packet done("PASS-CHANGED");
     done.write(sockfd);
+}
+
+
+
+void requests::user::check_balance(Packet packet)
+{
+
+}
+
+void requests::user::deposit(Packet packet)
+{
+
+}
+
+void requests::user::withdraw(Packet packet)
+{
+
+}
+
+void requests::user::transfer_money(Packet packet)
+{
+
+}
+
+void requests::user::transaction_history(Packet packet)
+{
+
+}
+
+void requests::user::logout(Packet packet)
+{
+
 }

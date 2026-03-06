@@ -1,4 +1,0 @@
-/home/irtisham/Banking-Application/build/CMakeFiles/server.dir
-/home/irtisham/Banking-Application/build/CMakeFiles/client.dir
-/home/irtisham/Banking-Application/build/CMakeFiles/edit_cache.dir
-/home/irtisham/Banking-Application/build/CMakeFiles/rebuild_cache.dir

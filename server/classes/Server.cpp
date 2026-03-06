@@ -1,5 +1,7 @@
+#include "Server.hpp"
 #include "../../shared/classes/Packet.hpp"
 #include "../requests/executeRequests.hpp"
+#include "../functions/database-handling.hpp"
 #include "../classes/BankData.hpp"
 #include <iostream>
 #include <strings.h>
@@ -7,33 +9,21 @@
 #include <netinet/in.h>
 using namespace std;
 
-class Server
-{
-private:
-    int port;
-    int listenSock;
-    void setupSocket();
-    void acceptLoop();
-    void handleClient(int clientSock);
 
-public:
-    Server(int port);
-    void run();
-};
-
-Server::Server(int port) : port(port), listenSock(-1) {};
+Server::Server(int port) : port(port), listenSock(-1) {}
 
 void Server::setupSocket()
 {
-    cout << "Server running.\n";
-
     struct sockaddr_in server_address, client_address;
     socklen_t client_len;
+
+    
 
     listenSock = socket(AF_INET, SOCK_STREAM, 0);
     if (listenSock < 0)
     {
         perror("Error opening socket.");
+        exit(1);
     }
 
     bzero((char *)&server_address, sizeof(server_address)); // sets all bytes in the server_address block to be zero
@@ -42,10 +32,13 @@ void Server::setupSocket()
     server_address.sin_addr.s_addr = INADDR_ANY;
     server_address.sin_port = htons(port);
 
+
     if (bind(listenSock, (struct sockaddr *)&server_address, sizeof(server_address)) < 0)
     {
         perror("Binding failed");
+        exit(1);
     }
+
 
     listen(listenSock, 5);
 }
@@ -77,10 +70,22 @@ void Server::acceptLoop()
     }
 }
 
+void Server::setupDatabase()
+{
+    connection = config_info.connect();
+    if(!connection)
+    {
+        cout << "Connection to the database failed, exiting program\n";
+        exit(1);
+    }
+    Database db(connection, 1, "");
+}
+
 void Server::run()
 {
-    setupSocket();
+    setupSocket();    
     BankData bankData;
+    setupDatabase();
     bankData.display();
     acceptLoop();
 }
@@ -88,13 +93,13 @@ void Server::run()
 void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
-    readRequests_init(clientSocket);
-    cout << "check1\n";
+    exeRequests_init(clientSocket, connection);
+    // cout << "check1\n";
     while (1)
     {
-        cout << "check2\n";
+        // cout << "check2\n";
         Packet p;
-        cout << "check3\n";
+        // cout << "check3\n";
         p.read(clientSocket);
 
         // packet.display();
@@ -103,7 +108,7 @@ void Server::handleClient(int clientSocket)
 
         if (command == "LOGIN")
         {
-            requests::user::login(p);
+            //requests::user::login(p);
         }
 
         else if (command == "SIGNUP")
@@ -118,18 +123,38 @@ void Server::handleClient(int clientSocket)
 
         else if (command == "UNIQUE-USERNAME-CHECK")
         {
-            if (checkUniqueUsername(p.getUsername()) == true)
-            {
-                p = Packet("POSITIVE");
-                cout << "username is unique\n";
-            }
-            else
-            {
-                p = Packet("NEGATIVE");
-                cout << "username is taken\n";
-            }
-            p.display();
+            bool response = requests::user::checkUniqueUsername(p.getUsername());
+            response ? p = Packet("POSITIVE") : p = Packet("NEGATIVE");
             p.write(clientSocket);
         }
-    }
+        else if(command == "CHECK-BALANCE")
+        {
+            requests::user::check_balance(p);
+        }
+        else if(command == "DEPOSIT")
+        {
+            requests::user::deposit(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "WITHDRAW")
+        {
+            requests::user::withdraw(p);
+            // ekhane amount er kaj baki ase
+        }
+        else if(command == "TRANSFER-MONEY")
+        {
+            requests::user::transfer_money(p);
+            // ekhane amount er kaj baki ase
+            // ekhane receiver account er kaj baki ase
+
+        }
+        else if(command == "TRANSACTION-HISTORY")
+        {
+            requests::user::transaction_history(p);
+        }
+        else if(command == "LOGOUT")
+        {
+            requests::user::logout(p);
+        }
+    }    
 }
