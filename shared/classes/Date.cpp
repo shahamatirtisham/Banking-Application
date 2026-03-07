@@ -11,6 +11,20 @@ Date::Date(int d, int m, int y)
     setYear(y);
     
 }
+
+Date::Date(const string& date_str)
+{
+    stringstream ss(date_str);
+    string _year, _month, _date;
+    getline(ss, _year, '|');
+    getline(ss, _month, '|');
+    getline(ss, _date, '|');
+
+    date = stoi(_date);
+    month = stoi(_month);
+    year = stoi(_year);
+}
+
 Date::Date()
 {
     setDate(0);

@@ -102,6 +102,10 @@ public:
     bool hasEnoughBalance(const std::string& username, double amount);
 
     bool updateBalance(const std::string& username, double newBalance);
+
+    UserAccount_server getUserAccount_server(const string &username);
+
+    double User_Queries::getBalance(const string &username);
 };
 
 
@@ -114,6 +118,7 @@ public:
     explicit DatabaseUpdates(PGconn* connection);
 
     bool deleteUserByUsername(const std::string& username);
+    
 
     bool updatePasswordByUsername(const std::string& username,
                                   const std::string& newPassword,

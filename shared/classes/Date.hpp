@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <string>
 
 class Date
 {
@@ -11,6 +10,7 @@ private:
 
 public:
     Date(int d, int m, int y);
+    Date(const string& date_str);
     Date();
 
     void setDate(int d);
