@@ -1,6 +1,7 @@
 #include<iostream>
 #include"homepage-screen.hpp"
 #include"HomePage.hpp"
+#include"../classes/user-operations.hpp"
 
 static int sockfd = -1;
 
@@ -18,6 +19,9 @@ void homepage_init(int passed_sockfd)
 
 void homepage_Menu(UserAccount user)
 {
+    useroperation_init(sockfd);
+    cout <<"=========== sockfd " <<sockfd;
+
     HomePage hp(user);
     
     hp.display();

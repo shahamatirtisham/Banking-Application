@@ -12,3 +12,5 @@ class UserOperations
     void transaction_history(UserAccount user);
     void logout(UserAccount user);
 };
+
+void useroperation_init(int passed_sockfd);

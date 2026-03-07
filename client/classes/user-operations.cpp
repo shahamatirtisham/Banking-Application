@@ -4,9 +4,26 @@
 #include "../../shared/input.hpp"
 #include <stdexcept>
 
+static int sockfd = -1;
+
+void useroperation_init(int passed_sockfd)
+{
+    if (passed_sockfd >= 0)
+    {
+        sockfd = passed_sockfd;
+    }
+    else
+    {
+        perror("sockfd not intialized\n");
+    }
+}
+
+
 void UserOperations::check_balance(UserAccount user)
 {
     Packet p("CHECK-BALANCE", user);
+
+    cout <<"=========== sockfd " <<sockfd;
 
     p.write(sockfd);
     p.read(sockfd);
