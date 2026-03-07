@@ -119,32 +119,67 @@ void requests::user::forgotPassword(Packet packet)
 void requests::user::check_balance(Packet packet)
 {
     string username = packet.getUsername();
-    // database theke balance amount return korte hobe 
+    
+    User_Queries db(connection);
+    double balance = db.getBalance(username); // database theke current balance pailam
+
+    UserAccount user;
+    user.setBalance(balance); // packet er moddhe  balance set korlam
+    Packet p("CURRENT-BALANCE", user);
+    p.write(sockfd);
 }
 
 void requests::user::deposit(Packet packet)
 {
     string username = packet.getUsername();
     double amount = packet.getBalance(); // eita balance na, eita deposit amount
-    // database e balance update korbo
-    // success or fail msg return korbo
-    
-    /*
-        bool db_deposit(username, amount);
-        double newBalance = db_getBalance(username);
 
-        Packet p("POSITIVE", user);
-        user.setBalance = newBalance;
-        p.write(sockfd);
-    */
+    User_Queries db(connection);
+    double balance = db.getBalance(username); // database theke current balance pailam
+    double newBalance = balance + amount; // amount deposit korlam
+    
+    bool success = db.updateBalance(username, newBalance); // database e balance update korlam
+    while(!success) 
+    {
+        success = db.updateBalance(username, newBalance); 
+    }
+
+    UserAccount user;
+    user.setBalance(newBalance); // packet er moddhe  newBalance set korlam
+    Packet p("DEPOSIT-SUCCESS", user);
+    p.write(sockfd);
 }
 
 void requests::user::withdraw(Packet packet)
 {
     string username = packet.getUsername();
     double amount = packet.getBalance(); // eita balance na, eita withdraw amount
-    // database e balance update korbo
-    // success or fail msg return korbo
+
+    User_Queries db(connection);
+    bool enoughBalance = db.hasEnoughBalance(username, amount);
+
+    if(enoughBalance)
+    {
+        double balance = db.getBalance(username); // database theke current balance pailam
+        double newBalance = balance - amount; // amount withdraw korlam
+
+        bool success = db.updateBalance(username, newBalance); // database e balance update korlam
+        while(!success) 
+        {
+            success = db.updateBalance(username, newBalance); 
+        }
+
+        UserAccount user;
+        user.setBalance(newBalance); // packet er moddhe  newBalance set korlam
+        Packet p("WITHDRAW-SUCCESS", user); 
+        p.write(sockfd);
+    }
+    else // jodi enough balance na thake taile...
+    {
+        UserAccount user;
+        Packet p("INSUFFICIENT-BALANCE", user); 
+        p.write(sockfd);
+    }
 }
 
 void requests::user::transfer_money(Packet packet)
@@ -152,7 +187,15 @@ void requests::user::transfer_money(Packet packet)
     string sender = packet.getUsername(); // sender er username
     string receiver = packet.getAccountNo(); // receiver er account no
     double amount = packet.getBalance(); // eita balance na, eita transfer amount
+
+    // prothome check korbo receiver acc no valid kina
+
+    // erpor check korbo sender er enough balance ase kina
+
+    // sender theke deduct kore, receiver e add korbo 
+
     // database e balance update korbo
+    
     // success or fail msg return korbo
 }
 
