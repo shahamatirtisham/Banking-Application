@@ -23,6 +23,8 @@ public:
     int getYear() const;
     int getAge() const;
     void display() const;
+
+    bool operator == (const Date& other) const;
 };
 
 Date stringToDate(const std::string& str_date);

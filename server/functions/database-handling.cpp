@@ -7,10 +7,9 @@
 using namespace std;
 
 // in Ubuntu, the include directory of libpq-fe is:
-#include <postgresql/libpq-fe.h>
+// #include <postgresql/libpq-fe.h>
 // in Arch, the include directory of libpq-fe is:
-// #include <libpq-fe.h>
-using namespace std;
+#include <libpq-fe.h>
 
 bool PG_Guard::ensure_conn(PGconn *c, const char *context)
 {
@@ -496,7 +495,7 @@ bool DatabaseUpdates::updateBalance(const string &username, double newBalance)
 }
 UserAccount_server User_Queries::getUserAccount_server(const string &username)
 {
-    const char *sql = "SELECT name, username, password, DOB, account_no, favAni, balance "
+    const char *sql = "SELECT * "
                       "FROM client_personal_info c "
                       "JOIN client_account_status s ON c.client_ID = s.client_ID "
                       "WHERE username = $1;";
@@ -515,18 +514,23 @@ UserAccount_server User_Queries::getUserAccount_server(const string &username)
     string name = PQgetvalue(res, 0, 1);
     string usr = PQgetvalue(res, 0, 2);
     string pass = PQgetvalue(res, 0, 3);
-    string dob = PQgetvalue(res, 0, 4);
+    string _dob = PQgetvalue(res, 0, 4);
     string acc = PQgetvalue(res, 0, 5);
-    string fav = PQgetvalue(res, 0, 6);
+    string favAni = PQgetvalue(res, 0, 6);
     string salt = PQgetvalue(res, 0, 7);
+    string _balance = PQgetvalue(res, 0, 9);
     PQclear(res);
 
+    cout << "balance string: " << _balance << endl;
+    cout << "converting hex" << endl;
     Hexadecimal ID = Hexadecimal(_ID);
-    Date DOB(dob);
+    cout << "converting dob" << endl;
+    Date DOB(_dob);
+    cout << "converting bal" << endl;
+    double balance = stod(_balance);
+    cout << "done conversion" << endl;
 
-    double balance = getBalance(username);
-
-    UserAccount userAccount(name, usr, pass, DOB, balance, acc, fav);
+    UserAccount userAccount(name, usr, pass, DOB, balance, acc, favAni);
     return UserAccount_server(ID, userAccount, salt);
 }
 
@@ -580,24 +584,34 @@ string User_Queries::getSaltByUsername(const string &username)
 string User_Queries::getPasswordByUsername(const string &username)
 {
     if (!PG_Guard::ensure_conn(conn, "getPasswordByUsername"))
+    {
+        cout << "No connection\n";
         return "";
+    }
 
     const char *sql =
         "SELECT password FROM client_personal_info WHERE username = $1 LIMIT 1;";
     const char *values[1] = {username.c_str()};
 
+    cout << "username: " << "'" << values[0] << "'" << endl;
+
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
     if (!PG_Guard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed"))
+    {
+        cout << "expect_tuples failed\n";
         return "";
+    }
 
     if (PQntuples(res) == 0)
     {
         PQclear(res);
+        cout << "PQntuples(res) = 0\n";
         return "";
     }
 
     string password = PQgetvalue(res, 0, 0);
     PQclear(res);
+    cout << "db_pass: " << password << endl;
     return password;
 }
 DatabaseUpdates::DatabaseUpdates(PGconn *connection) : conn(connection) {}
