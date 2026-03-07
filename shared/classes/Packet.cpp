@@ -192,6 +192,7 @@ void Packet:: read(int sockfd)
     account.setUsername(_username);
     account.setPassword(_password);
     account.setAccountNo(_accountNo);
+    account.setBalance(_balance);
     account.setFavAni(_favAni);
     account.setDOB(Date(day, month, year));
     salt = _salt;

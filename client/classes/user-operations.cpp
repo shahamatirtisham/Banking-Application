@@ -52,7 +52,7 @@ void UserOperations::deposit(UserAccount user)
     p.read(sockfd);
 
     if(p.getCommand() != "DEPOSIT-SUCCESS") throw runtime_error("Deposit Failed!");
-    cout <<"Deposit Succes! " <<amount <<"BDT was deposited!" <<endl;
+    cout <<"Deposit Succes! " <<amount <<" BDT was deposited!" <<endl;
     cout <<"Your New Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
 }
 
@@ -79,7 +79,7 @@ void UserOperations::withdraw(UserAccount user)
     }
     else if(p.getCommand() == "WITHDRAW-SUCCESS")
     {
-        cout <<"Withdrawal Succes! " <<amount <<"BDT was withdrawn!" <<endl;
+        cout <<"Withdrawal Succes! " <<amount <<" BDT was withdrawn!" <<endl;
         cout <<"Your New Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
     }
     else throw runtime_error("Withdraw Failed!");
@@ -90,7 +90,7 @@ void UserOperations::transfer_money(UserAccount user)
     Packet p("TRANSFER-MONEY", user);
     
     cout <<"Enter Receiver Account No : ";
-    string accNo; cin >>accNo;
+    string accNo; getline(cin, accNo);
     p.setAccountNo(accNo);  // ekhane eita receiver account no
                             // sender k identify korte username use korbo
 

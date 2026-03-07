@@ -25,8 +25,12 @@ void homepage_Menu(const UserAccount& user)
 
     HomePage hp(sockfd, user);
     
-    
-    hp.display();
-    int choice = hp.getChoice();
-    hp.userOperation(choice);
+    int choice = 0;
+
+    while(choice != 6)
+    {
+        hp.display();
+        choice = hp.getChoice();
+        hp.userOperation(choice);
+    }
 }
