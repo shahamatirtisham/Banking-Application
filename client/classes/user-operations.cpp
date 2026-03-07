@@ -2,6 +2,7 @@
 #include "../shared/classes/Packet.hpp"
 #include "../client/classes/client.hpp"
 #include "../../shared/input.hpp"
+#include <stdexcept>
 
 void UserOperations::check_balance(UserAccount user)
 {
@@ -9,6 +10,8 @@ void UserOperations::check_balance(UserAccount user)
 
     p.write(sockfd);
     p.read(sockfd);
+    if(p.getCommand() != "CURRENT-BALANCE") throw runtime_error("Balance Check Failed!");
+    cout <<"Your Current Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
 }
 
 void UserOperations::deposit(UserAccount user)
@@ -27,6 +30,10 @@ void UserOperations::deposit(UserAccount user)
 
     p.write(sockfd);
     p.read(sockfd);
+
+    if(p.getCommand() != "DEPOSIT-SUCCESS") throw runtime_error("Deposit Failed!");
+    cout <<"Deposit Succes! " <<amount <<"BDT was deposited!" <<endl;
+    cout <<"Your New Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
 }
 
 void UserOperations::withdraw(UserAccount user)
@@ -45,6 +52,17 @@ void UserOperations::withdraw(UserAccount user)
 
     p.write(sockfd);
     p.read(sockfd);
+
+    if(p.getCommand() == "INSUFFICIENT-BALANCE")
+    {
+        cout <<"Insufficient Balance! Withdrawal Failed!" <<endl <<endl;
+    }
+    else if(p.getCommand() == "WITHDRAW-SUCCESS")
+    {
+        cout <<"Withdrawal Succes! " <<amount <<"BDT was withdrawn!" <<endl;
+        cout <<"Your New Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
+    }
+    else throw runtime_error("Withdraw Failed!");
 }
 
 void UserOperations::transfer_money(UserAccount user)
