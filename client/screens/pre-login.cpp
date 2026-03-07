@@ -5,6 +5,7 @@
 #include "../../shared/classes/UserAccount.hpp"
 #include "../../shared/hash.hpp"
 #include "../../server/functions/database-handling.hpp"
+#include "homepage-screen.hpp"
 
 using namespace std;
 
@@ -105,6 +106,8 @@ void preloginScreens::user::login()
             clearScreen();
             cout << "Login Successful! Welcome, " << username << "!\n";
             // TODO: abtahi's post-login screen goes here
+            homepage_init(sockfd);
+            homepage_Menu(tempAccount);
             return;
         }
         else if (cmd == "USER-NOT-FOUND")
@@ -144,6 +147,8 @@ void preloginScreens::user::login()
                         clearScreen();
                         cout << "Login Successful! Welcome, " << username << "!\n";
                         // TODO: abtahi er post login
+                        homepage_init(sockfd);
+                        homepage_Menu(tempAccount);
                         return;
                     }
                     else

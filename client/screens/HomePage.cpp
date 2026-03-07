@@ -1,5 +1,5 @@
 #include <iostream>
-#include "home-page.hpp"
+#include "HomePage.hpp"
 #include "../shared/input.hpp"
 using namespace std;
 

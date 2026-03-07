@@ -6,7 +6,10 @@
 
 #include <string>
 #include <vector>
-#include <libpq-fe.h>   
+// in Ubuntu, the include directory of libpq-fe is:            
+// #include <postgresql/libpq-fe.h>
+// in Arch, the include directory of libpq-fe is:
+#include <libpq-fe.h> 
 
 
 

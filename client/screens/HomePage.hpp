@@ -1,3 +1,4 @@
+#pragma once
 #include "../shared/classes/UserAccount.hpp"
 #include "../client/classes/user-operations.hpp"
 
