@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+using namespace std;
 
 // in Ubuntu, the include directory of libpq-fe is:
 // #include <postgresql/libpq-fe.h>
@@ -402,7 +403,205 @@ bool User_Queries::checkUniqueUsername(const string &username)
     PQclear(res);
     return isUnique;
 }
-void User_Queries::addUser(const UserAccount_server &user)
+bool User_Queries::checkUniqueAccountNo(const std::string& accNo)
+{
+    if (!PG_Guard::ensure_conn(conn, "checkUniqueAccountNo"))
+        return false;
+
+    const char *sql =
+        "SELECT 1 FROM client_personal_info WHERE account_no = $1 LIMIT 1;";
+    
+    const char *values[1] = {accNo.c_str()};
+
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_tuples(conn, res, "checkUniqueAccountNo SELECT failed"))
+        return false;
+
+    bool isUnique = (PQntuples(res) == 0);
+    PQclear(res);
+    return isUnique;
+}
+bool User_Queries::hasEnoughBalance(const string &username, double amount)
+{
+    if (!PG_Guard::ensure_conn(conn, "hasEnoughBalance"))
+    return false;
+    
+    const char *sql =
+    "SELECT cas.balance "
+    "FROM client_account_status cas "
+    "JOIN client_personal_info cpi "
+    "ON cas.client_ID = cpi.client_ID "
+    "WHERE cpi.username = $1;";
+    
+    const char *values[1] = {username.c_str()};
+    
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_tuples(conn, res, "hasEnoughBalance SELECT failed"))
+    return false;
+    
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return false;
+    }
+    
+    double balance = atof(PQgetvalue(res, 0, 0));
+    PQclear(res);
+    return balance >= amount;
+}
+std::string User_Queries::getUsernameByAccountNo(const std::string& accNo)
+{
+    if (!PG_Guard::ensure_conn(conn, "getUsernameByAccountNo"))
+        return "";
+
+    const char *sql =
+        "SELECT username FROM client_personal_info WHERE account_no = $1 LIMIT 1;";
+    const char *values[1] = {accNo.c_str()};
+
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_tuples(conn, res, "getUsernameByAccountNo SELECT failed"))
+        return "";
+
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return "";
+    }
+
+    string username = PQgetvalue(res, 0, 0);
+    PQclear(res);
+    return username;
+}
+bool DatabaseUpdates::updateBalance(const string &username, double newBalance)
+{
+    if (!PG_Guard::ensure_conn(conn, "updateBalance"))
+    return false;
+    
+    const char *sql =
+    "UPDATE client_account_status cas "
+    "SET balance = $1 "
+    "FROM client_personal_info cpi "
+    "WHERE cas.client_ID = cpi.client_ID "
+    "AND cpi.username = $2;";
+    
+    string balStr = to_string(newBalance);
+    const char *values[2] = {balStr.c_str(), username.c_str()};
+    
+    PGresult *res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_command(conn, res, "updateBalance UPDATE failed"))
+    return false;
+    
+    PQclear(res);
+    return true;
+}
+UserAccount_server User_Queries::getUserAccount_server(const string &username)
+{
+    const char *sql = "SELECT name, username, password, DOB, account_no, favAni, balance "
+                      "FROM client_personal_info c "
+                      "JOIN client_account_status s ON c.client_ID = s.client_ID "
+                      "WHERE username = $1;";
+
+    const char *values[1] = {username.c_str()};
+
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return UserAccount();
+    }
+
+    string _ID = PQgetvalue(res, 0, 0);
+    string name = PQgetvalue(res, 0, 1);
+    string usr = PQgetvalue(res, 0, 2);
+    string pass = PQgetvalue(res, 0, 3);
+    string dob = PQgetvalue(res, 0, 4);
+    string acc = PQgetvalue(res, 0, 5);
+    string fav = PQgetvalue(res, 0, 6);
+    string salt = PQgetvalue(res, 0, 7);
+    PQclear(res);
+
+    Hexadecimal ID = Hexadecimal(_ID);
+    Date DOB(dob);
+
+    double balance = getBalance(username);
+
+    UserAccount userAccount(name, usr, pass, DOB, balance, acc, fav);
+    return UserAccount_server(ID, userAccount, salt);
+}
+
+double User_Queries::getBalance(const string &username)
+{
+    const char *sql =
+    "SELECT cas.balance "
+    "FROM client_account_status cas "
+    "JOIN client_personal_info cpi "
+    "ON cas.client_ID = cpi.client_ID "
+    "WHERE cpi.username = $1;";
+    
+    const char *values[1] = {username.c_str()};
+    
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return -1;
+    }
+    
+    double balance = atof(PQgetvalue(res, 0, 0));
+    PQclear(res);
+    
+    return balance;
+}
+string User_Queries::getSaltByUsername(const string &username)
+{
+    if (!PG_Guard::ensure_conn(conn, "getSaltByUsername"))
+        return "";
+
+    const char *sql =
+        "SELECT salt FROM client_personal_info WHERE username = $1 LIMIT 1;";
+    const char *values[1] = {username.c_str()};
+
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_tuples(conn, res, "getSaltByUsername SELECT failed"))
+        return "";
+
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return "";
+    }
+
+    string salt = PQgetvalue(res, 0, 0);
+    PQclear(res);
+    return salt;
+}
+string User_Queries::getPasswordByUsername(const string &username)
+{
+    if (!PG_Guard::ensure_conn(conn, "getPasswordByUsername"))
+        return "";
+
+    const char *sql =
+        "SELECT password FROM client_personal_info WHERE username = $1 LIMIT 1;";
+    const char *values[1] = {username.c_str()};
+
+    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
+    if (!PG_Guard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed"))
+        return "";
+
+    if (PQntuples(res) == 0)
+    {
+        PQclear(res);
+        return "";
+    }
+
+    string password = PQgetvalue(res, 0, 0);
+    PQclear(res);
+    return password;
+}
+DatabaseUpdates::DatabaseUpdates(PGconn *connection) : conn(connection) {}
+void DatabaseUpdates::addUser(const UserAccount_server &user)
 {
     if (!PG_Guard::ensure_conn(conn, "addUser"))
         return;
@@ -459,58 +658,6 @@ void User_Queries::addUser(const UserAccount_server &user)
 
     cout << "User successfully added.\n";
 }
-bool User_Queries::hasEnoughBalance(const string &username, double amount)
-{
-    if (!PG_Guard::ensure_conn(conn, "hasEnoughBalance"))
-        return false;
-
-    const char *sql =
-        "SELECT cas.balance "
-        "FROM client_account_status cas "
-        "JOIN client_personal_info cpi "
-        "ON cas.client_ID = cpi.client_ID "
-        "WHERE cpi.username = $1;";
-
-    const char *values[1] = {username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PG_Guard::expect_tuples(conn, res, "hasEnoughBalance SELECT failed"))
-        return false;
-
-    if (PQntuples(res) == 0)
-    {
-        PQclear(res);
-        return false;
-    }
-
-    double balance = atof(PQgetvalue(res, 0, 0));
-    PQclear(res);
-    return balance >= amount;
-}
-bool User_Queries::updateBalance(const string &username, double newBalance)
-{
-    if (!PG_Guard::ensure_conn(conn, "updateBalance"))
-        return false;
-
-    const char *sql =
-        "UPDATE client_account_status cas "
-        "SET balance = $1 "
-        "FROM client_personal_info cpi "
-        "WHERE cas.client_ID = cpi.client_ID "
-        "AND cpi.username = $2;";
-
-    string balStr = to_string(newBalance);
-    const char *values[2] = {balStr.c_str(), username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
-    if (!PG_Guard::expect_command(conn, res, "updateBalance UPDATE failed"))
-        return false;
-
-    PQclear(res);
-    return true;
-}
-
-DatabaseUpdates::DatabaseUpdates(PGconn *connection) : conn(connection) {}
 bool DatabaseUpdates::deleteUserByUsername(const string &username)
 {
     if (!PG_Guard::ensure_conn(conn, "deleteUserByUsername"))
@@ -529,70 +676,6 @@ bool DatabaseUpdates::deleteUserByUsername(const string &username)
     PQclear(res);
     return true;
 }
-
-
-
-UserAccount_server User_Queries::getUserAccount_server(const string &username)
-{
-    const char *sql = "SELECT name, username, password, DOB, account_no, favAni, balance "
-                      "FROM client_personal_info c "
-                      "JOIN client_account_status s ON c.client_ID = s.client_ID "
-                      "WHERE username = $1;";
-
-    const char *values[1] = {username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
-    if (PQntuples(res) == 0)
-    {
-        PQclear(res);
-        return UserAccount();
-    }
-
-    string _ID = PQgetvalue(res, 0, 0);
-    string name = PQgetvalue(res, 0, 1);
-    string usr = PQgetvalue(res, 0, 2);
-    string pass = PQgetvalue(res, 0, 3);
-    string dob = PQgetvalue(res, 0, 4);
-    string acc = PQgetvalue(res, 0, 5);
-    string fav = PQgetvalue(res, 0, 6);
-    string salt = PQgetvalue(res, 0, 7);
-    PQclear(res);
-
-    Hexadecimal ID = Hexadecimal(_ID);
-    Date DOB(dob);
-
-    double balance = getBalance(username);
-
-    UserAccount userAccount(name, usr, pass, DOB, balance, acc, fav);
-    return UserAccount_server(ID, userAccount, salt);
-}
-
-double User_Queries::getBalance(const string &username)
-{
-    const char *sql =
-        "SELECT cas.balance "
-        "FROM client_account_status cas "
-        "JOIN client_personal_info cpi "
-        "ON cas.client_ID = cpi.client_ID "
-        "WHERE cpi.username = $1;";
-
-    const char *values[1] = {username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
-    if (PQntuples(res) == 0)
-    {
-        PQclear(res);
-        return -1;
-    }
-
-    double balance = atof(PQgetvalue(res, 0, 0));
-    PQclear(res);
-
-    return balance;
-}
-
 bool DatabaseUpdates::updatePasswordByUsername(const string &username, const string &newPassword, const string &newSalt)
 {
     if (!PG_Guard::ensure_conn(conn, "updatePasswordByUsername"))
@@ -611,50 +694,4 @@ bool DatabaseUpdates::updatePasswordByUsername(const string &username, const str
 
     PQclear(res);
     return true;
-}
-string DatabaseUpdates::getSaltByUsername(const string &username)
-{
-    if (!PG_Guard::ensure_conn(conn, "getSaltByUsername"))
-        return "";
-
-    const char *sql =
-        "SELECT salt FROM client_personal_info WHERE username = $1 LIMIT 1;";
-    const char *values[1] = {username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PG_Guard::expect_tuples(conn, res, "getSaltByUsername SELECT failed"))
-        return "";
-
-    if (PQntuples(res) == 0)
-    {
-        PQclear(res);
-        return "";
-    }
-
-    string salt = PQgetvalue(res, 0, 0);
-    PQclear(res);
-    return salt;
-}
-string DatabaseUpdates::getPasswordByUsername(const string &username)
-{
-    if (!PG_Guard::ensure_conn(conn, "getPasswordByUsername"))
-        return "";
-
-    const char *sql =
-        "SELECT password FROM client_personal_info WHERE username = $1 LIMIT 1;";
-    const char *values[1] = {username.c_str()};
-
-    PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    if (!PG_Guard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed"))
-        return "";
-
-    if (PQntuples(res) == 0)
-    {
-        PQclear(res);
-        return "";
-    }
-
-    string password = PQgetvalue(res, 0, 0);
-    PQclear(res);
-    return password;
 }

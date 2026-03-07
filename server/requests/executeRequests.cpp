@@ -62,8 +62,7 @@ void requests::user::signup(Packet p)
     acc.setClientID(acc.generateClientID());
     acc.printAccountInfo(0);
 
-    
-    User_Queries db(connection);
+    DatabaseUpdates db(connection);
     db.addUser(acc);
 }
 
