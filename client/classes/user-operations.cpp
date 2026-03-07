@@ -86,6 +86,21 @@ void UserOperations::transfer_money(UserAccount user)
 
     p.write(sockfd);
     p.read(sockfd);
+
+    if(p.getCommand() == "RECEIVER-NOT-FOUND")
+    {
+        cout <<"Receiver Not Found! Transfer Failed!" <<endl <<endl;
+    }
+    else if(p.getCommand() == "INSUFFICIENT-BALANCE")
+    {
+        cout <<"Insufficient Balance! Transfer Failed!" <<endl <<endl;
+    }
+    else if(p.getCommand() == "TRANSFER-SUCCESS")
+    {
+        cout <<"Transfer Succes! BDT " <<amount <<" was Transferred to Account No: " <<accNo <<endl;
+        cout <<"Your New Balance is : " <<p.getBalance() <<" BDT" <<endl <<endl;
+    }
+    else throw runtime_error("Transfer Failed!");
 }
 
 void UserOperations::transaction_history(UserAccount user)

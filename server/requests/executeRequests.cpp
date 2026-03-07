@@ -187,19 +187,58 @@ void requests::user::withdraw(Packet packet)
 
 void requests::user::transfer_money(Packet packet)
 {
-    string sender = packet.getUsername(); // sender er username
-    string receiver = packet.getAccountNo(); // receiver er account no
+    string senderUserName = packet.getUsername(); // sender er username
+    string receiverAccNo = packet.getAccountNo(); // receiver er account no
     double amount = packet.getBalance(); // eita balance na, eita transfer amount
 
+    User_Queries db(connection);
+    DatabaseUpdates dbu(connection);
+
     // prothome check korbo receiver acc no valid kina
+    bool receiverDoesNotExist = db.checkUniqueAccountNo(receiverAccNo);
+    if(receiverDoesNotExist)
+    {
+        UserAccount user;
+        Packet p("RECEIVER-NOT-FOUND", user);
+        p.write(sockfd);
+        return;
+    }
 
     // erpor check korbo sender er enough balance ase kina
+    bool senderHasEnoughBalance = db.hasEnoughBalance(senderUserName, amount);
+    if(!senderHasEnoughBalance)
+    {
+        UserAccount user;
+        Packet p("INSUFFICIENT-BALANCE", user); 
+        p.write(sockfd);
+        return;
+    }
 
-    // sender theke deduct kore, receiver e add korbo 
+    // sender theke deduct kore, receiver e add korbo, database e update korbo
+    string receiverUserName = db.getUsernameByAccountNo(receiverAccNo);
 
-    // database e balance update korbo
+    double senderBalance = db.getBalance(senderUserName);
+    double receiverBalance = db.getBalance(receiverUserName);
+
+    double senderNewBalance = senderBalance - amount;
+    double receiverNewBalance = receiverBalance + amount;
+
+    bool senderUpdated = dbu.updateBalance(senderUserName, senderNewBalance);
+    while(!senderUpdated)
+    {
+        senderUpdated = dbu.updateBalance(senderUserName, senderNewBalance);
+    }
     
-    // success or fail msg return korbo
+    bool receiverUpdated = dbu.updateBalance(receiverUserName, receiverNewBalance);
+    while(!receiverUpdated)
+    {
+        receiverUpdated = dbu.updateBalance(receiverUserName, receiverNewBalance);
+    }
+    
+    UserAccount user;
+    user.setBalance(senderNewBalance);
+    Packet p("TRANSFER-SUCCESS", user);
+    p.write(sockfd);
 }
 
 void requests::user::transaction_history(Packet packet)

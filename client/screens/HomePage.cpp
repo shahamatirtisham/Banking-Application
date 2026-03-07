@@ -1,6 +1,7 @@
 #include <iostream>
 #include "HomePage.hpp"
 #include "../shared/input.hpp"
+#include <stdexcept>
 using namespace std;
 
 HomePage::HomePage(UserAccount user)
@@ -48,10 +49,70 @@ int HomePage::getChoice()
 
 void HomePage::userOperation(int choice)
 {
-    if(choice == 1) operation.check_balance(user);
-    else if(choice == 2) operation.deposit(user);
-    else if(choice == 3) operation.withdraw(user);
-    else if(choice == 4) operation.transfer_money(user);
-    else if(choice == 5) operation.transaction_history(user);
-    else if(choice == 6) operation.logout(user);
+    if(choice == 1) 
+    {
+        try
+        {
+            operation.check_balance(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
+    else if(choice == 2) 
+    {
+        try
+        {
+            operation.deposit(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
+    else if(choice == 3) 
+    {
+        try
+        {
+            operation.withdraw(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
+    else if(choice == 4) 
+    {
+        try
+        {
+            operation.transfer_money(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
+    else if(choice == 5) 
+    {
+        try
+        {
+            operation.transaction_history(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
+    else if(choice == 6) 
+    {
+        try
+        {
+            operation.logout(user);
+        }
+        catch(const exception &e)
+        {
+            cout <<"Error Occured : " <<e.what() <<endl;
+        }
+    }
 }
