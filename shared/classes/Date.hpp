@@ -22,7 +22,6 @@ public:
     int getMonth() const;
     int getYear() const;
     int getAge() const;
-    std::string to_str();
     void display() const;
 };
 

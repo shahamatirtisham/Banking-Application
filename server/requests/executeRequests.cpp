@@ -47,33 +47,22 @@ bool requests::user::checkUniqueUsername(string username)
 {
     Packet response;
     User_Queries query(connection);
-    return query.checkUniqueUsername(username);
-
-    // if (checkUniqueUsername(p.getUsername()) == true)
-    // {
-    //     cout << "username is unique\n";
-    //     return true;
-    // }
-    // else
-    // {
-    //     cout << "username is taken\n";
-    //     return false;
-    // }
-    
+    return query.checkUniqueUsername(username);    
 }
 
 void requests::user::signup(Packet p)
 {
 
+    // overloaded the UserAccount class to support assignment operations with Packet class
     UserAccount_server acc;
-    acc = p;        // overloaded the UserAccount class to support ' = ' operations with Packet class
+    acc = p;
     acc.printAccountInfo(0);
     acc.setAccountNo(generateAccountNo());
     cout << "generated acc no \n";
     acc.setClientID(acc.generateClientID());
     acc.printAccountInfo(0);
 
-    // enter dbms signup code here
+    
     User_Queries db(connection);
     db.addUser(acc);
 }
