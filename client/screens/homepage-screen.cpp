@@ -9,6 +9,7 @@ void homepage_init(int passed_sockfd)
 {
     if (passed_sockfd >= 0)
     {
+        cout << "homepage initialized\n";
         sockfd = passed_sockfd;
     }
     else
@@ -17,12 +18,13 @@ void homepage_init(int passed_sockfd)
     }
 }
 
-void homepage_Menu(UserAccount user)
+void homepage_Menu(const UserAccount& user)
 {
-    useroperation_init(sockfd);
-    cout <<"=========== sockfd " <<sockfd;
+    cout <<"sockfd in homepage: " <<sockfd << endl;
+    // useroperation_init(sockfd);
 
-    HomePage hp(user);
+    HomePage hp(sockfd, user);
+    
     
     hp.display();
     int choice = hp.getChoice();

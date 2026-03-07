@@ -5,6 +5,7 @@ class UserOperations
 {
     int sockfd;
     public:
+    UserOperations(int sockfd);
     void check_balance(UserAccount user);
     void deposit(UserAccount user);
     void withdraw(UserAccount user);

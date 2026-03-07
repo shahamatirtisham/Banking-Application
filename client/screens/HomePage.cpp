@@ -4,7 +4,7 @@
 #include <stdexcept>
 using namespace std;
 
-HomePage::HomePage(UserAccount user)
+HomePage::HomePage(int sockfd, UserAccount user) : sockfd(sockfd), operation(sockfd)
 {
     this->user = user;
 }
@@ -14,7 +14,7 @@ void HomePage::printHeader()
     cout <<"====================================================" <<endl;
     cout <<"                 USER DASHBOARD" <<endl;
     cout <<"====================================================" <<endl <<endl;
-    cout <<"Welcome, " <<user.getName() <<"!" <<endl;
+    cout <<"Welcome, " <<user.getUsername() <<"!" <<endl;
     cout <<"Account Number: " <<user.getAccountNo() <<endl <<endl;
 }
 
@@ -30,7 +30,7 @@ void HomePage::printMenu()
 
 void HomePage::display()
 {
-    system("clear");
+    // system("clear");
     printHeader();
     printMenu();
 }
