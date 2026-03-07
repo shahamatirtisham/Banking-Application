@@ -10,7 +10,7 @@ private:
 
 public:
     Date(int d, int m, int y);
-    Date(const string& date_str);
+    Date(const std::string& date_str);
     Date();
 
     void setDate(int d);

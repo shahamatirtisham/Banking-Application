@@ -2,7 +2,7 @@
 2. install libpq packages
 3. Run the following commands
 
-    sudo postgres -u psql
+    sudo -u postgres psql
     CREATE USER myuser WITH PASSWORD 'mypass';
     GRANT ALL PRIVILEGES ON DATABASE postgres TO myuser;
     \c postgres
@@ -13,4 +13,4 @@
 
 4. From then on connect to the database using this command
 
-    sudo postgres -u psql
+    sudo -u postgres psql

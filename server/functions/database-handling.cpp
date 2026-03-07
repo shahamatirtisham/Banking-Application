@@ -551,7 +551,7 @@ UserAccount_server User_Queries::getUserAccount_server(const string &username)
 
     string _ID = PQgetvalue(res, 0, 0);
     string name = PQgetvalue(res, 0, 1);
-    string username = PQgetvalue(res, 0, 2);
+    string usr = PQgetvalue(res, 0, 2);
     string pass = PQgetvalue(res, 0, 3);
     string dob = PQgetvalue(res, 0, 4);
     string acc = PQgetvalue(res, 0, 5);
@@ -564,7 +564,7 @@ UserAccount_server User_Queries::getUserAccount_server(const string &username)
 
     double balance = getBalance(username);
 
-    UserAccount userAccount(name, username, pass, DOB, balance, acc, fav);
+    UserAccount userAccount(name, usr, pass, DOB, balance, acc, fav);
     return UserAccount_server(ID, userAccount, salt);
 }
 

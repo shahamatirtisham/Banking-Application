@@ -105,7 +105,7 @@ public:
 
     UserAccount_server getUserAccount_server(const string &username);
 
-    double User_Queries::getBalance(const string &username);
+    double getBalance(const std::string &username);
 };
 
 

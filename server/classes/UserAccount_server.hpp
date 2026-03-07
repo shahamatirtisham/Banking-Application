@@ -10,6 +10,7 @@ private:
     std::string salt; 
 public:
     UserAccount_server(UserAccount userAccount);
+    UserAccount_server(Hexadecimal clientID, UserAccount userAccount, std::string salt);
     UserAccount_server();
     void setClientID(Hexadecimal clientID);
     void setSalt(std::string salt);
