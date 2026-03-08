@@ -4,8 +4,8 @@
 #include "../../shared/classes/Packet.hpp"
 #include "../../shared/classes/UserAccount.hpp"
 #include "../../shared/hash.hpp"
-//#include "../../server/functions/database-handling.hpp"
-#include "../../shared/classes/Colors.hpp"
+#include "../../server/functions/database-handling.hpp"
+#include "homepage-screen.hpp"
 
 using namespace std;
 
@@ -83,10 +83,10 @@ void preloginScreens::user::login()
     {
         cout << " -------- LOGIN -------- \n";
 
-        cout << "Enter your username: ";
+        // cout << "Enter your username: ";
         username = acceptUsername();
 
-        cout << "Enter your password: ";
+        // cout << "Enter your password: ";
         password = acceptPassword();
 
         // Build and send login packet
@@ -103,20 +103,15 @@ void preloginScreens::user::login()
 
         string cmd = response.getCommand();
 
-        if (cmd == "LOGIN-SUCCESS")
+        if (cmd == "POSITIVE")
         {
             clearScreen();
             cout << "Login Successful! Welcome, " << username << "!\n";
-            // TODO: abtahi's post-login screen goes here
+            homepage_init(sockfd);
+            homepage_Menu(tempAccount);
             return;
         }
-        else if (cmd == "USER-NOT-FOUND")
-        {
-            clearScreen();
-            cout << "Username \"" << username << "\" not found. Try again.\n";
-            continue;
-        }
-        else if (cmd == "LOGIN-FAIL")
+        else if (cmd == "NEGATIVE")
         {
             while (true)
             {
@@ -133,25 +128,23 @@ void preloginScreens::user::login()
 
                 else if (choice == 1)
                 {
-                    cout << "Enter password: ";
+                    // cout << "Enter password: ";
                     password = acceptPassword();
-
                     tempAccount.setPassword(password);
                     Packet retryPacket("LOGIN", tempAccount);
                     retryPacket.write(sockfd);
 
                     response.read(sockfd);
+                    cmd = response.getCommand();
+                    
 
-                    if (response.getCommand() == "LOGIN-SUCCESS")
+                    if (cmd == "POSITIVE")
                     {
-                        clearScreen();
+                        // clearScreen();
                         cout << "Login Successful! Welcome, " << username << "!\n";
-                        // TODO: abtahi er post login
+                        homepage_init(sockfd);
+                        homepage_Menu(tempAccount);
                         return;
-                    }
-                    else
-                    {
-                        cout << "Wrong password again.\n";
                     }
                 }
                 else if (choice == 2)
@@ -172,7 +165,7 @@ void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
-    // Packet packet(sockfd);
+    
     name = acceptName();
     while(1)
     {
@@ -183,7 +176,7 @@ void preloginScreens::user::signup()
         p.display();
         p.write(sockfd);
         p.read(sockfd);
-        // p.display();
+
 
         if(p.getCommand() != "POSITIVE")
         {
@@ -192,7 +185,6 @@ void preloginScreens::user::signup()
         }
         else
         {
-            //cout << "Username is unique. Moving on\n";
             break;
         }
     }
@@ -221,58 +213,53 @@ void preloginScreens::user::forgotPassword(string username)
 
     UserAccount tempAccount;
     tempAccount.setUsername(username);
-    Packet requestPacket("FORGOT-PASS", tempAccount);
-    requestPacket.write(sockfd);
+
+    cout << "Security Question 1:\n";
+    Date DOB = acceptDOB();
+
+    cout << "Security Question 2:\n";
+    string favAni = acceptFavAni();
+
+    tempAccount.setDOB(DOB);
+    tempAccount.setFavAni(favAni);
+
+    Packet verifyPacket("FORGOT-PASS", tempAccount);
+    verifyPacket.write(sockfd);
 
     Packet response;
     response.read(sockfd);
 
-    if(response.getCommand() == "USER-NOT-FOUND")
-    {
-        cout << "Username not found.\n";
-        return;
-    }
-
-    cout << "Security Question: What is your favourite animal?\n";
-    cout << "Answer: ";
-    string favAni;
-    cin >> favAni;
-
-    UserAccount answerAccount;
-    answerAccount.setUsername(username);
-    answerAccount.setFavAni(favAni);
-    Packet verifyPacket("VERIFY-FAVANI", answerAccount);
-    verifyPacket.write(sockfd);
-
-    response.read(sockfd);
-
-    if(response.getCommand() == "WRONG-ANSWER")
+    if(response.getCommand() == "NEGATIVE")
     {
         clearScreen();
         cout << "Wrong answer. Returning to login.\n";
         return;
     }
-
-    clearScreen();
-    cout << "Identity verified!\n";
-    cout << "Enter new password: ";
-    string newPassword = acceptPassword();
-
-    UserAccount changeAccount;
-    changeAccount.setUsername(username);
-    changeAccount.setPassword(newPassword);
-    Packet changePacket("CHANGE-PASS", changeAccount);
-    changePacket.write(sockfd);
-
-    response.read(sockfd);
-
-    if(response.getCommand() == "PASS-CHANGED")
-    {
-        clearScreen();
-        cout << "Password changed successfully! Please login with your new password.\n";
-    }
     else
     {
-        cout << "Something went wrong. Try again later.\n";
+        clearScreen();
+        cout << "Identity verified!\n";
+        cout << "Enter new password\n";
+        string newPassword = acceptPassword();
+    
+        UserAccount changeAccount;
+        changeAccount.setUsername(username);
+        changeAccount.setPassword(newPassword);
+        Packet changePacket("CHANGE-PASS", changeAccount);
+        changePacket.write(sockfd);
+    
+        response.read(sockfd);
+        if(response.getCommand() == "POSITIVE")
+        {
+            clearScreen();
+            cout << "Password changed successfully! Please login with your new password.\n";
+        }
+        else
+        {
+            cout << "Something went wrong. Try again later.\n";
+        }
+
     }
+
+
 }
