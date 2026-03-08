@@ -43,6 +43,7 @@ add_executable(client
     client/classes/user-operations.cpp
 	client/screens/HomePage.cpp
 	client/screens/homepage-screen.cpp
+	client/classes/TextBox.cpp
     shared/hash.cpp
     shared/input.cpp
     shared/classes/UserAccount.cpp

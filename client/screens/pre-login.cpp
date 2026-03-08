@@ -6,6 +6,7 @@
 #include "../../shared/hash.hpp"
 #include "../../server/functions/database-handling.hpp"
 #include "homepage-screen.hpp"
+#include "../classes/TextBox.hpp"
 
 using namespace std;
 
@@ -37,17 +38,22 @@ void screens_init(int passed_sockfd)
 
 void mainMenu()
 {
-    clearScreen();
-    cout << "Welcome to Londu Bank!\n\n";
-
     while(1)
     {
-        cout << "1. Login as existing user.\n"
-               "2. Signup as new user.\n"
-               "3. Register as an admin.\n"
-               "4. Login as admin.\n"
-               "Please select your desired option (1-4): ";
-        int choice = readInt();
+        clearScreen();
+        TextBox welcomeBox("WELCOME TO LONDU BANK", 38);
+        // cout << "constructor\n";
+        cout << welcomeBox.generateBox();
+        // cout << "genned one\n";
+        vector<string> lines(2);
+        lines[0] = "1. Login as an existing user";
+        lines[1] = "2. Signup as a new user";
+
+        TextBox options(lines, 0, false, 3);
+        cout << options.generateBox();
+        int choice;
+        cout << "▶ choice: ";
+        cin >> choice;
 
         switch(choice)
         {

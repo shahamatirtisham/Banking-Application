@@ -7,9 +7,9 @@
 using namespace std;
 
 // in Ubuntu, the include directory of libpq-fe is:
-#include <postgresql/libpq-fe.h>
+// #include <postgresql/libpq-fe.h>
 // in Arch, the include directory of libpq-fe is:
-// #include <libpq-fe.h>
+#include <libpq-fe.h>
 
 bool PG_Guard::ensure_conn(PGconn *c, const char *context)
 {
