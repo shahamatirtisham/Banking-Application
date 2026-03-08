@@ -20,7 +20,10 @@ public:
     TextBox(const vector<string>& lines, int width=0, bool center=true, int padding=0);
     TextBox(const string& line, int width=0, bool center=true, int padding=0);
     string generateBox() const;
+
+    friend void operator << (ostream& out, const TextBox& tb);
 };
+
 
 
 

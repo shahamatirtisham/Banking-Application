@@ -41,7 +41,7 @@ void mainMenu()
     while(1)
     {
         clearScreen();
-        TextBox welcomeBox("WELCOME TO LONDU BANK", 38);
+        TextBox welcomeBox("WELCOME TO AOZORA BANK", 40);
         // cout << "constructor\n";
         cout << welcomeBox.generateBox();
         // cout << "genned one\n";
@@ -49,7 +49,7 @@ void mainMenu()
         lines[0] = "1. Login as an existing user";
         lines[1] = "2. Signup as a new user";
 
-        TextBox options(lines, 0, false, 3);
+        TextBox options(lines, 40, false, 3);
         cout << options.generateBox();
         int choice;
         cout << "▶ choice: ";
@@ -85,12 +85,15 @@ void preloginScreens::user::login()
 
     while (true)
     {
-        cout << " -------- LOGIN -------- \n";
+        // cout << " -------- LOGIN -------- \n";
 
-        // cout << "Enter your username: ";
+        TextBox login("LOGIN", 40);
+        cout << login;
+
+        cout << "▶ Enter your username: ";
         username = acceptUsername();
 
-        // cout << "Enter your password: ";
+        cout << "▶ Enter your password: ";
         password = acceptPassword();
 
         // Build and send login packet
@@ -169,15 +172,20 @@ void preloginScreens::user::signup()
 {
     string name, username, password, favAni;
     Date DOB;
-    
+    TextBox signup("SIGNUP", 40);
+    cout << signup;
+
+    cout << "▶ Set name: ";
     name = acceptName();
+
     while(1)
     {
+        cout << "▶ Set username: ";
         username = acceptUsername();
         UserAccount account;
         account.setUsername(username);
         Packet p("UNIQUE-USERNAME-CHECK", account);
-        p.display();
+        // p.display();
         p.write(sockfd);
         p.read(sockfd);
 
@@ -192,14 +200,17 @@ void preloginScreens::user::signup()
             break;
         }
     }
+    cout << "▶ Set password: ";
     password = acceptPassword();
+    cout << "▶ Set date of birth (DD-MM-YYY): ";
     DOB = acceptDOB();
+    cout << "▶ Set favorite animal: ";
     favAni = acceptFavAni();
 
     UserAccount user(name, username, password, DOB, 0, "", favAni);
     user.printAccountInfo(0);
     Packet packet("SIGNUP", user);
-    packet.display();
+    // packet.display();
     packet.write(sockfd);
 }
 void preloginScreens::admin::signup()

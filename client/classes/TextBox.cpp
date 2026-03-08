@@ -50,12 +50,13 @@ TextBox::TextBox(const string &line, int width, bool center, int padding)
     lines.assign(1, line);
 
     if (width == 0)
-        width = line.size() + 10;
+        this->width = line.size() + 10;
     else
         this->width = width;
 }
 string TextBox::generateBox() const
 {
+    // cout << "printing box with width: " << this->width << endl;
     stringstream ss;
     // cout << "step 1\n";
     ss << "╭" << constructLine("─", width) << "╮" << endl;
@@ -82,6 +83,12 @@ string TextBox::generateBox() const
     return ss.str();
 }
 
+void operator << (ostream& out, const TextBox& tb)
+{
+    out << tb.generateBox();
+}
+
+
 
 // ╭───────────────────────────────────╮
 // │                                   │
@@ -93,18 +100,21 @@ string TextBox::generateBox() const
 // int main()
 // {
    
-//     TextBox welcomeBox("WELCOME TO LONDU BANK", 38);
+//     TextBox welcomeBox("WELCOME TO LONDU BANK", 40);
 //     // cout << "constructor\n";
 //     cout << welcomeBox.generateBox();
 //     // cout << "genned one\n";
 //     vector<string> lines(2);
 //     lines[0] = "1. Login as an existing user";
 //     lines[1] = "2. Signup as a new user";
-//     TextBox options(lines, 0, false, 3);
+//     TextBox options(lines, 40, false, 3);
 //     cout << options.generateBox();
 
+//     TextBox signup("SIGNUP", 40);
+//     cout << signup;
+
 //     int choice;
-//     cout << "▶ choice: ";
+//     cout << "▶ Enter username: ";
 //     cin >> choice;
 
 //     return 0;

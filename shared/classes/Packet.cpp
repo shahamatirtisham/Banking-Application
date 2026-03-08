@@ -119,7 +119,7 @@ Hexadecimal Packet::getID() const
 }
 void Packet::write(int sockfd)
 {
-    cout << "writing on sockfd = " << sockfd << endl;
+    // cout << "writing on sockfd = " << sockfd << endl;
     
     ::write(sockfd, this->command.c_str(), 31);
     ::write(sockfd, this->account.getName().c_str(), 31);
@@ -141,11 +141,11 @@ void Packet::write(int sockfd)
     double balance = account.getBalance();
     ::write(sockfd, &balance, sizeof(double));
     
-    cout << "writing complete..\n";
+    // cout << "writing complete..\n";
 }
 void Packet:: read(int sockfd)
 { 
-    cout << "reading on sockfd = " << sockfd << endl;
+    // cout << "reading on sockfd = " << sockfd << endl;
     int day;
     int month;
     int year; 
@@ -162,26 +162,26 @@ void Packet:: read(int sockfd)
     
     
     ::read(sockfd, _command, 31);
-    cout << "read command ";
+    // cout << "read command ";
     ::read(sockfd, _name, 31);
-    cout << "read name ";
+    // cout << "read name ";
     ::read(sockfd, _username, 65);
-    cout << "read username ";
+    // cout << "read username ";
     ::read(sockfd, _password, 65);
-    cout << "read password ";
+    // cout << "read password ";
     ::read(sockfd, _accountNo, 14);
-    cout << "read accNO ";
+    // cout << "read accNO ";
     ::read(sockfd, _favAni, 31);
-    cout << "read favAni ";
+    // cout << "read favAni ";
     ::read(sockfd, _salt, 17);
-    cout << "read salt ";
+    // cout << "read salt ";
     ::read(sockfd, &ID_decimal, sizeof(int));
-    cout << "read id ";
+    // cout << "read id ";
     ::read(sockfd, &day, sizeof(int));
     ::read(sockfd, &month, sizeof(int));
     ::read(sockfd, &year, sizeof(int));
     ::read(sockfd, &_balance, sizeof(double));
-    cout << "read data & balance\n";
+    // cout << "read data & balance\n";
     
     
     command = _command;
@@ -199,19 +199,19 @@ void Packet:: read(int sockfd)
     
     
     
-    cout << "reading complete..\n";
+    // cout << "reading complete..\n";
     
 }
 
 void Packet::display() const
 {
-    cout << "------------------Displaying Packet------------------\n";
-    //cout << "Sockfd: " << sockfd << endl;
-    cout << "Command: " << command << endl;
-    cout << "ID: " << ID << endl;
+    // cout << "------------------Displaying Packet------------------\n";
+    //// cout << "Sockfd: " << sockfd << endl;
+    // cout << "Command: " << command << endl;
+    // cout << "ID: " << ID << endl;
     account.printAccountInfo(0);
-    cout << "Salt: " << salt << endl;
-    cout << "-----------------------------------------------------\n";
+    // cout << "Salt: " << salt << endl;
+    // cout << "-----------------------------------------------------\n";
 }
 
 

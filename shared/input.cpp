@@ -147,7 +147,7 @@ Date acceptDOB()
     string str_dob;
     while(1)
     {
-        cout << "Set date of birth (DD-MM-YYYY): ";
+        // cout << "Set date of birth (DD-MM-YYYY): ";
         getline(cin, str_dob);
         //cin.ignore();
 
@@ -190,7 +190,7 @@ string acceptFavAni()
     string favAni;
     while(1)
     {
-        cout << "Enter favorite animal: ";
+        // cout << "Enter favorite animal: ";
         getline(cin, favAni);
         //cin.ignore();
         if(favAni.size() > 30)
@@ -209,7 +209,7 @@ string acceptName()
     string name;
     while(1)
     {
-        cout << "Enter name: ";
+        // cout << "Enter name: ";
         getline(cin, name);
         //cin.ignore();
         if(name.size() > 30)
@@ -314,7 +314,7 @@ string acceptUsername()
     string username; 
     while(1)
     {
-        cout << "Enter username: ";
+        // cout << "Enter username: ";
         getline(cin, username);
         //cin.ignore();
         if(checkValidUsername(username) == true)
@@ -331,7 +331,7 @@ string acceptPassword()
     string password; 
     while(1)
     {
-        cout << "Enter password: ";
+        // cout << "Enter password: ";
 
         getline(cin, password);
         //cin.ignore();
