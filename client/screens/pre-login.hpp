@@ -13,8 +13,8 @@ namespace preloginScreens::user
 
 namespace preloginScreens::admin
 {
-    static void signup();
-    static void login();
+    void signup();
+    void login();
 }
 
 void screens_init(int passed_sockfd);

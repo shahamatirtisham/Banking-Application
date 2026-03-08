@@ -1,9 +1,15 @@
 #include <iostream>
+#include <string>
 #include "Hexadecimal.hpp"
 using namespace std;
 
 Hexadecimal::Hexadecimal(int decimalVal)
 {
+    setValue(decimalVal);
+}
+Hexadecimal::Hexadecimal(const string& hex_str)
+{
+    int decimalVal = stoll(hex_str, nullptr, 16);
     setValue(decimalVal);
 }
 string Hexadecimal::decToHex(int decimalVal) const

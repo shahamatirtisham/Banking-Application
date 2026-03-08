@@ -94,33 +94,31 @@ void Server::handleClient(int clientSocket)
 {
     std::cout << "Handling client\n";
     exeRequests_init(clientSocket, connection);
-    // cout << "check1\n";
     while (1)
     {
-        // cout << "check2\n";
         Packet p;
-        // cout << "check3\n";
         p.read(clientSocket);
 
-        // packet.display();
         string command = p.getCommand();
         p.display();
 
         if (command == "LOGIN")
         {
-            //requests::user::login(p);
+            requests::user::login(p);
         }
 
         else if (command == "SIGNUP")
         {
             requests::user::signup(p);
         }
-
         else if (command == "FORGOT-PASS")
         {
             requests::user::forgotPassword(p);
         }
-
+        else if (command == "CHANGE-PASS")
+        {
+            requests::user::changePassword(p);
+        }
         else if (command == "UNIQUE-USERNAME-CHECK")
         {
             bool response = requests::user::checkUniqueUsername(p.getUsername());

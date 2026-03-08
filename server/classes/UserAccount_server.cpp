@@ -7,15 +7,14 @@
 using namespace std;
 
 UserAccount_server::UserAccount_server(UserAccount userAccount)
-: UserAccount(userAccount), clientID(Hexadecimal(0))
-{
-    setSalt("");
-}
+: UserAccount(userAccount), clientID(Hexadecimal(0)), salt("") {}
+
+UserAccount_server::UserAccount_server(Hexadecimal clientID, UserAccount userAccount, std::string salt) 
+    : clientID(clientID), UserAccount(userAccount), salt(salt) {}
+
 UserAccount_server::UserAccount_server()
-: UserAccount(UserAccount()), clientID(Hexadecimal(0))
-{
-    setSalt("");
-}
+: UserAccount(UserAccount()), clientID(Hexadecimal(0)), salt("") {}
+
 void UserAccount_server::setClientID(Hexadecimal clientID)
 {
     this->clientID = clientID;

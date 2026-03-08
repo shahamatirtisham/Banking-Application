@@ -6,7 +6,10 @@
 
 #include <string>
 #include <vector>
-#include <libpq-fe.h>   
+// in Ubuntu, the include directory of libpq-fe is:            
+#include <postgresql/libpq-fe.h>
+// in Arch, the include directory of libpq-fe is:
+// #include <libpq-fe.h> 
 
 
 
@@ -91,34 +94,30 @@ private:
 
 public:
     explicit User_Queries(PGconn* c);
-
     bool checkUniqueUsername(const std::string& username);
-
-    void addUser(const UserAccount_server& user);
-
+    bool checkUniqueAccountNo(const std::string& accNo);
     bool hasEnoughBalance(const std::string& username, double amount);
-
-    bool updateBalance(const std::string& username, double newBalance);
+    UserAccount_server getUserAccount_server(const string &username);
+    double getBalance(const std::string &username);
+    std::string getSaltByUsername(const std::string& username);
+    std::string getPasswordByUsername(const std::string& username);
+    std::string getUsernameByAccountNo(const std::string& accNo);
 };
 
 
 class DatabaseUpdates 
 {
-private:
+    private:
     PGconn* conn;
-
-public:
+    
+    public:
+    bool updateBalance(const std::string& username, double newBalance);
     explicit DatabaseUpdates(PGconn* connection);
-
+    void addUser(const UserAccount_server& user);
     bool deleteUserByUsername(const std::string& username);
-
     bool updatePasswordByUsername(const std::string& username,
                                   const std::string& newPassword,
                                   const std::string& newSalt);
-
-    std::string getSaltByUsername(const std::string& username);
-
-    std::string getPasswordByUsername(const std::string& username);
 };
 
 #endif 

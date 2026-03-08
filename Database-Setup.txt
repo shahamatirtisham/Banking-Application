@@ -2,15 +2,15 @@
 2. install libpq packages
 3. Run the following commands
 
-    sudo postgres -u psql
-    psql -h localhost -p 5432 -U postgres -d postgres
+    sudo -u postgres psql
     CREATE USER myuser WITH PASSWORD 'mypass';
-    CREATE DATABASE bankdb OWNER myuser;
-    \c bankdb
-    GRANT ALL PRIVILEGES ON DATABASE bankdb TO myuser;
-    \q
+    GRANT ALL PRIVILEGES ON DATABASE postgres TO myuser;
+    \c postgres
+    GRANT ALL ON SCHEMA public TO myuser;
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO myuser;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON TABLES TO myuser;
 
-4. From then on connect to the database using these commands
+4. From then on connect to the database using this command
 
-    sudo postgres -u psql
-    psql -h localhost -p 5432 -U postgres -d bankdb
+    sudo -u postgres psql

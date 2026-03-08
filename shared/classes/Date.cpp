@@ -11,6 +11,20 @@ Date::Date(int d, int m, int y)
     setYear(y);
     
 }
+
+Date::Date(const string& date_str)
+{
+    stringstream ss(date_str);
+    string _year, _month, _date;
+    getline(ss, _year, '-');
+    getline(ss, _month, '-');
+    getline(ss, _date, '-');
+
+    date = stoi(_date);
+    month = stoi(_month);
+    year = stoi(_year);
+}
+
 Date::Date()
 {
     setDate(0);
@@ -116,10 +130,6 @@ int Date::getAge() const
 
     return year;    
 }
-string Date::to_str() 
-{
-    return to_string(date) + "-" + to_string(month) + "-" + to_string(year);
-}
 void Date::display() const
 {
     cout << date << "-" << month << "-" << year;
@@ -146,4 +156,10 @@ Date stringToDate(const string &str_date)
         multiplier /= 10;
     }
     return Date(birth_date, birth_month, birth_year);
+}
+bool Date::operator == (const Date& other) const
+{
+    return this->date  == other.date &&
+           this->month == other.month && 
+           this->year  == other.year; 
 }
