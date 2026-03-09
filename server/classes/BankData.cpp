@@ -5,7 +5,7 @@ using namespace std;
 
 BankData::BankData()
 {
-    FILE *fp = fopen("../server/data/bankData.bin", "rb");
+    FILE *fp = fopen("server/data/bankData.bin", "rb");
     if(fp == NULL)
     {
         this->accountsCreated = 0;
@@ -22,7 +22,7 @@ BankData::BankData()
 
 void BankData::write()
 {   
-    FILE* fp = fopen("../server/data/bankData.bin", "wb");
+    FILE* fp = fopen("server/data/bankData.bin", "wb");
     if(fp == NULL)
     {
         cout << "Failed opening bankData.bin for writing"<< endl;
@@ -36,7 +36,7 @@ void BankData::write()
 }
 void BankData::read()
 {
-    FILE *fp =  fopen("../server/data/bankData.bin", "rb");
+    FILE *fp =  fopen("server/data/bankData.bin", "rb");
     if(fp == NULL)
     {
         cout << "Failed opening bankData.bin for reading"<< endl;
