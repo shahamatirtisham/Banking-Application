@@ -23,6 +23,7 @@ add_executable(server
     server/functions/database-handling.cpp
     server/classes/UserAccount_server.cpp
     server/classes/BankData.cpp
+    server/functions/logger.cpp
 )
 
 target_include_directories(server PRIVATE
@@ -51,6 +52,7 @@ add_executable(client
     shared/classes/Account.cpp
     shared/classes/Date.cpp
     shared/classes/Hexadecimal.cpp
+    shared/classes/Colors.cpp 
 )
 
 target_include_directories(client PRIVATE

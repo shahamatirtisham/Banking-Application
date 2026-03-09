@@ -3,23 +3,25 @@
 #include "../classes/UserAccount_server.hpp"
 #include <iostream>
 #include <string>
+#include "../functions/logger.hpp"
+
 using namespace std;
 
 static int sockfd = -1;
-static PGconn* connection = NULL;
+static PGconn *connection = NULL;
 
-void exeRequests_init(int passed_sockfd, PGconn* passed_connection)
+void exeRequests_init(int passed_sockfd, PGconn *passed_connection)
 {
     sockfd = passed_sockfd;
     connection = passed_connection;
 }
 
-void requests::user::login(const Packet& packet)
+void requests::user::login(const Packet &packet)
 {
     string username = packet.getUsername();
     string password = packet.getPassword();
 
-     User_Queries q(connection);
+    User_Queries q(connection);
 
     Packet response;
 
@@ -29,26 +31,28 @@ void requests::user::login(const Packet& packet)
     usernameExists ? cout << "Username exists\n" : cout << "Username does not exist\n";
     cout << "Password in DB of the relevant username: " << db_password << endl;
 
-    if (usernameExists &&  db_password == password)
+    if (usernameExists && db_password == password)
     {
         response = Packet("POSITIVE");
+        ActivityLogger aLogger;
+        aLogger.logLogin(username);
     }
     else
     {
         response = Packet("NEGATIVE");
     }
-    
+
     response.write(sockfd);
 }
 
-bool requests::user::checkUniqueUsername(const string& username)
+bool requests::user::checkUniqueUsername(const string &username)
 {
     Packet response;
     User_Queries query(connection);
-    return query.checkUniqueUsername(username);    
+    return query.checkUniqueUsername(username);
 }
 
-void requests::user::signup(const Packet& p)
+void requests::user::signup(const Packet &p)
 {
 
     // overloaded the UserAccount class to support assignment operations with Packet class
@@ -62,9 +66,11 @@ void requests::user::signup(const Packet& p)
 
     DatabaseUpdates db(connection);
     db.addUser(acc);
+    ActivityLogger aLogger;
+    aLogger.logSignup(acc.getUsername());
 }
 
-void requests::user::forgotPassword(const Packet& packet)
+void requests::user::forgotPassword(const Packet &packet)
 {
     string username = packet.getUsername();
     Date DOB = packet.getDOB();
@@ -74,7 +80,7 @@ void requests::user::forgotPassword(const Packet& packet)
     User_Queries q(connection);
     bool userExists = !q.checkUniqueUsername(username);
 
-    if(!userExists)  
+    if (!userExists)
     {
         Packet response("NEGATIVE");
         response.write(sockfd);
@@ -86,26 +92,33 @@ void requests::user::forgotPassword(const Packet& packet)
     Date db_DOB = db_user.getDOB();
     string db_favAni = db_user.getFavAni();
 
-    if(DOB == db_DOB && favAni == db_favAni)
+    if (DOB == db_DOB && favAni == db_favAni)
     {
+        ActivityLogger aLogger;
+        aLogger.logForgotPassword(username);
         Packet verification("POSITIVE");
         verification.write(sockfd);
         return;
     }
     else
-    {   
+    {
         Packet verification("NEGATIVE");
         verification.write(sockfd);
         return;
     }
 }
-void requests::user::changePassword(const Packet& packet)
+void requests::user::changePassword(const Packet &packet)
 {
     DatabaseUpdates dbu(connection);
     string username = packet.getUsername();
     string password = packet.getPassword();
     bool success = dbu.updatePasswordByUsername(username, password, "");
     success ? cout << "Password changed successfully\n" : cout << "Password change failed\n";
+    if (success)
+    {
+        ActivityLogger aLogger;
+        aLogger.logPasswordChange(username);
+    }
     Packet response;
     success ? response = Packet("POSITIVE") : response = Packet("NEGATIVE");
     response.write(sockfd);
@@ -127,7 +140,7 @@ void requests::user::getAccAndBal(const Packet&p)
 void requests::user::check_balance(const Packet& packet)
 {
     string username = packet.getUsername();
-    
+
     User_Queries db(connection);
     double balance = db.getBalance(username); // database theke current balance pailam
 
@@ -137,30 +150,32 @@ void requests::user::check_balance(const Packet& packet)
     p.write(sockfd);
 }
 
-void requests::user::deposit(const Packet& packet)
+void requests::user::deposit(const Packet &packet)
 {
     string username = packet.getUsername();
     double amount = packet.getBalance(); // eita balance na, eita deposit amount
 
     User_Queries db(connection);
     DatabaseUpdates dbu(connection);
-    
+
     double balance = db.getBalance(username); // database theke current balance pailam
-    double newBalance = balance + amount; // amount deposit korlam
-    
+    double newBalance = balance + amount;     // amount deposit korlam
+
     bool success = dbu.updateBalance(username, newBalance); // database e balance update korlam
-    while(!success) 
+    while (!success)
     {
-        success = dbu.updateBalance(username, newBalance); 
+        success = dbu.updateBalance(username, newBalance);
     }
 
     UserAccount user;
     user.setBalance(newBalance); // packet er moddhe  newBalance set korlam
     Packet p("DEPOSIT-SUCCESS", user);
     p.write(sockfd);
+    TransactionLogger tLogger;            
+    tLogger.logDeposit(username, amount); 
 }
 
-void requests::user::withdraw(const Packet& packet)
+void requests::user::withdraw(const Packet &packet)
 {
     string username = packet.getUsername();
     double amount = packet.getBalance(); // eita balance na, eita withdraw amount
@@ -168,44 +183,46 @@ void requests::user::withdraw(const Packet& packet)
     User_Queries db(connection);
     bool enoughBalance = db.hasEnoughBalance(username, amount);
 
-    if(enoughBalance)
+    if (enoughBalance)
     {
         DatabaseUpdates dbu(connection);
 
         double balance = db.getBalance(username); // database theke current balance pailam
-        double newBalance = balance - amount; // amount withdraw korlam
+        double newBalance = balance - amount;     // amount withdraw korlam
 
         bool success = dbu.updateBalance(username, newBalance); // database e balance update korlam
-        while(!success) 
+        while (!success)
         {
-            success = dbu.updateBalance(username, newBalance); 
+            success = dbu.updateBalance(username, newBalance);
         }
 
         UserAccount user;
         user.setBalance(newBalance); // packet er moddhe  newBalance set korlam
-        Packet p("WITHDRAW-SUCCESS", user); 
+        Packet p("WITHDRAW-SUCCESS", user);
         p.write(sockfd);
+        TransactionLogger tLogger;             
+        tLogger.logWithdraw(username, amount); 
     }
     else // jodi enough balance na thake taile...
     {
         UserAccount user;
-        Packet p("INSUFFICIENT-BALANCE", user); 
+        Packet p("INSUFFICIENT-BALANCE", user);
         p.write(sockfd);
     }
 }
 
-void requests::user::transfer_money(const Packet& packet)
+void requests::user::transfer_money(const Packet &packet)
 {
     string senderUserName = packet.getUsername(); // sender er username
     string receiverAccNo = packet.getAccountNo(); // receiver er account no
-    double amount = packet.getBalance(); // eita balance na, eita transfer amount
+    double amount = packet.getBalance();          // eita balance na, eita transfer amount
 
     User_Queries db(connection);
     DatabaseUpdates dbu(connection);
 
     // prothome check korbo receiver acc no valid kina
     bool receiverDoesNotExist = db.checkUniqueAccountNo(receiverAccNo);
-    if(receiverDoesNotExist)
+    if (receiverDoesNotExist)
     {
         UserAccount user;
         Packet p("RECEIVER-NOT-FOUND", user);
@@ -215,10 +232,10 @@ void requests::user::transfer_money(const Packet& packet)
 
     // erpor check korbo sender er enough balance ase kina
     bool senderHasEnoughBalance = db.hasEnoughBalance(senderUserName, amount);
-    if(!senderHasEnoughBalance)
+    if (!senderHasEnoughBalance)
     {
         UserAccount user;
-        Packet p("INSUFFICIENT-BALANCE", user); 
+        Packet p("INSUFFICIENT-BALANCE", user);
         p.write(sockfd);
         return;
     }
@@ -233,30 +250,34 @@ void requests::user::transfer_money(const Packet& packet)
     double receiverNewBalance = receiverBalance + amount;
 
     bool senderUpdated = dbu.updateBalance(senderUserName, senderNewBalance);
-    while(!senderUpdated)
+    while (!senderUpdated)
     {
         senderUpdated = dbu.updateBalance(senderUserName, senderNewBalance);
     }
-    
+
     bool receiverUpdated = dbu.updateBalance(receiverUserName, receiverNewBalance);
-    while(!receiverUpdated)
+    while (!receiverUpdated)
     {
         receiverUpdated = dbu.updateBalance(receiverUserName, receiverNewBalance);
     }
-    
+
     UserAccount user;
     user.setBalance(senderNewBalance);
     Packet p("TRANSFER-SUCCESS", user);
     p.write(sockfd);
+    TransactionLogger tLogger;                                  
+    tLogger.logTransfer(senderUserName, receiverUserName, amount); 
 }
 
-void requests::user::transaction_history(const Packet& packet)
+void requests::user::transaction_history(const Packet &packet)
 {
     string username = packet.getUsername();
     // database theke vector return korbo
 }
 
-void requests::user::logout(const Packet& packet)
+void requests::user::logout(const Packet &packet)
 {
     // eita baki roilo
+    ActivityLogger aLogger;                  
+    aLogger.logLogout(packet.getUsername()); 
 }
