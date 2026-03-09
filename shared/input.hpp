@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include "classes/Date.hpp"
+#include <thread>
+#include <chrono>
 
 
 int readInt();
@@ -18,3 +20,4 @@ std::string acceptUsername();
 std::string acceptPassword();
 
 void clearScreen();
+void sleep(int ms);

@@ -21,7 +21,7 @@ public:
     TextBox(const string& line, int width=0, bool center=true, int padding=0);
     string generateBox() const;
 
-    friend void operator << (ostream& out, const TextBox& tb);
+    friend ostream& operator << (ostream& out, const TextBox& tb);
 };
 
 

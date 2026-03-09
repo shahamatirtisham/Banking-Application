@@ -1,31 +1,66 @@
 #include <iostream>
+#include "../../shared/classes/UserAccount.hpp"
+#include "../../shared/classes/Packet.hpp"
 #include "HomePage.hpp"
 #include "../shared/input.hpp"
+#include "../classes/TextBox.hpp"
 #include <stdexcept>
+#include <iomanip>
+#include <vector>
 using namespace std;
 
 HomePage::HomePage(int sockfd, UserAccount user) : sockfd(sockfd), operation(sockfd)
 {
     this->user = user;
+    
+    Packet p("GET-ACC&BAL", user);
+    // cout << "writing to get bal\n";
+    p.write(this->sockfd);
+    // cout << "reading to get bal\n";
+    p.read(this->sockfd);
+    // cout << "done reading to get bal\n";
+    string accNo = p.getAccountNo();
+    this->user.setAccountNo(accNo);
+    double balance = p.getBalance();
+    this->user.setBalance(balance);
+    
 }
 
 void HomePage::printHeader()
 {
-    cout <<"====================================================" <<endl;
-    cout <<"                 USER DASHBOARD" <<endl;
-    cout <<"====================================================" <<endl <<endl;
-    cout <<"Welcome, " <<user.getUsername() <<"!" <<endl;
-    cout <<"Account Number: " <<user.getAccountNo() <<endl <<endl;
+
+    // TextBox tb_homepage("USER DASHBOARD", 40);
+
+    stringstream _balance;
+    _balance << fixed << setprecision(2) << user.getBalance();
+
+    vector<string> strs = 
+    {
+        "USER DASHBOARD"
+        "Welcome " + user.getUsername() + "!",
+        "Account number: " + user.getAccountNo(),
+        "Balance: Tk" + _balance.str()
+    };
+
+    TextBox tb_header(strs, 40);
+
+    // cout <<"Welcome, " <<user.getUsername() <<"!" <<endl;
+    // cout <<"Account Number: " <<user.getAccountNo() <<endl <<endl;
 }
 
 void HomePage::printMenu()
 {
-    cout <<"1. Check Balance" <<endl;
-    cout <<"2. Deposit" <<endl;
-    cout <<"3. Withdraw" <<endl;
-    cout <<"4. Transfer Money" <<endl;
-    cout <<"5. Transaction History" <<endl;
-    cout <<"6. Logout" <<endl <<endl;       
+    vector<string> strs = 
+    {
+        "1. Check Balance",
+        "2. Deposit",
+        "3. Withdraw",
+        "4. Transfer Money",
+        "5. Transaction History",
+        "6. Logout"       
+    };
+
+    TextBox tb_options(strs, 40, false, 3);
 }
 
 void HomePage::display()
@@ -40,7 +75,7 @@ int HomePage::getChoice()
     int choice; 
     while(true)
     {
-        cout <<"Enter Choice: "; choice = readInt();
+        cout <<"▶ Enter Choice: "; choice = readInt();
         if(choice <= 6 && choice >= 1) break;
         else cout <<"Invalid Choice. Try Again." <<endl;
     }

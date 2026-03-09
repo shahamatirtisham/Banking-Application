@@ -19,6 +19,7 @@ namespace requests::user
     void transfer_money(const Packet& packet);
     void transaction_history(const Packet& packet);
     void logout(const Packet& packet);
+    void getAccAndBal(const Packet&p);
 } 
 namespace requests::admin
 {

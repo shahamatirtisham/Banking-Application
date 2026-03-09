@@ -9,7 +9,7 @@ void homepage_init(int passed_sockfd)
 {
     if (passed_sockfd >= 0)
     {
-        cout << "homepage initialized\n";
+        // cout << "homepage initialized\n";
         sockfd = passed_sockfd;
     }
     else
@@ -20,10 +20,12 @@ void homepage_init(int passed_sockfd)
 
 void homepage_Menu(const UserAccount& user)
 {
-    cout <<"sockfd in homepage: " <<sockfd << endl;
+    // cout <<"sockfd in homepage: " <<sockfd << endl;
     // useroperation_init(sockfd);
 
     HomePage hp(sockfd, user);
+
+    
     
     int choice = 0;
 

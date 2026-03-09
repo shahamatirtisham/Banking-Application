@@ -1,5 +1,8 @@
 #include "TextBox.hpp"
+// #include "../../shared/input.hpp"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <iomanip>
 #include <sstream>
 #include <vector>
@@ -30,19 +33,29 @@ string TextBox::constructLine(const string &ch, int width) const
 TextBox::TextBox(const vector<string> &lines, int width, bool center, int padding)
     : lines(lines), padding(padding), center(center)
 {
-    if (width == 0)
+   
+    int maxTextWidth = 0;
+    for (auto line : lines)
     {
-        int maxTextWidth = 0;
-        for (auto line : lines)
-        {
-            maxTextWidth = max(maxTextWidth, static_cast<int>(line.size()));
-        }
+        maxTextWidth = max(maxTextWidth, static_cast<int>(line.size()));
+    }    
+    if(width == 0)
+    {
         this->width = maxTextWidth + 10;
     }
     else
     {
-        this->width = width;
+        if(width < maxTextWidth)
+        {
+            this->width = maxTextWidth + 10;
+        }
+        else
+        {
+            this->width = width;
+        }
     }
+    
+    cout << *this;
 }
 TextBox::TextBox(const string &line, int width, bool center, int padding)
     : padding(padding), center(center)
@@ -53,6 +66,8 @@ TextBox::TextBox(const string &line, int width, bool center, int padding)
         this->width = line.size() + 10;
     else
         this->width = width;
+
+    cout << *this;
 }
 string TextBox::generateBox() const
 {
@@ -83,9 +98,10 @@ string TextBox::generateBox() const
     return ss.str();
 }
 
-void operator << (ostream& out, const TextBox& tb)
+ostream& operator << (ostream& out, const TextBox& tb)
 {
     out << tb.generateBox();
+    return out;
 }
 
 
@@ -96,26 +112,48 @@ void operator << (ostream& out, const TextBox& tb)
 // ─ │ ┌ ┐ └ ┘
 // █ ▓ ▒ 
 // > ▶
+// ✔ ✖
+// ● ○
+// ■ □
+// ▲ ▼
+
+// void sleep(int ms)
+// {
+//     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+// }
 
 // int main()
-// {
+// {cout << "Please login with your new password.\n";
    
-//     TextBox welcomeBox("WELCOME TO LONDU BANK", 40);
-//     // cout << "constructor\n";
-//     cout << welcomeBox.generateBox();
-//     // cout << "genned one\n";
-//     vector<string> lines(2);
-//     lines[0] = "1. Login as an existing user";
-//     lines[1] = "2. Signup as a new user";
-//     TextBox options(lines, 40, false, 3);
-//     cout << options.generateBox();
+    // TextBox welcomeBox("WELCOME TO LONDU BANK", 40);
+    // sleep(500);
+    // // cout << "constructor\n";
+    // // cout << welcomeBox.generateBox();
+    // // cout << "genned one\n";
+    // vector<string> lines(2);
+    // lines[0] = "1. Login as an existing user";
+    // lines[1] = "2. Signup as a new user";
+    // TextBox options(lines, 40, false, 3);
+    // // cout << options.generateBox();
 
-//     TextBox signup("SIGNUP", 40);
-//     cout << signup;
+    // TextBox signup("SIGNUP", 40);
+    // cout << signup;
 
-//     int choice;
-//     cout << "▶ Enter username: ";
-//     cin >> choice;
+    // int choice;
+    // cout << "| ▶ Enter username: ";
+    // cin >> choice;
+    // sleep(2000);
 
-//     return 0;
+    // cout << "✔ Login Success\n";
+    // cout << "✖ Login Failed\n";
+
+    // clearScreen();
+    // vector<string> strs(4);
+    // strs[0] = "Username and password combination doesn't exist :(";
+    // strs[1] = "1. Retry password";
+    // strs[2] = "2. Forgot password";
+    // strs[3] = "0. Back to main menu";
+    // TextBox tb_forgotPassword(strs, 40, false, 3);
+
+    // return 0;
 // }

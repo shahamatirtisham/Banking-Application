@@ -111,8 +111,19 @@ void requests::user::changePassword(const Packet& packet)
     response.write(sockfd);
 }
 
+void requests::user::getAccAndBal(const Packet&p)
+{
+    User_Queries q(connection);
+    UserAccount_server db_user = q.getUserAccount_server(p.getUsername());
 
 
+
+    UserAccount usr;
+    usr.setAccountNo(db_user.getAccountNo());
+    usr.setBalance(db_user.getBalance());
+    Packet response("REPLY", usr);
+    response.write(sockfd);
+}
 void requests::user::check_balance(const Packet& packet)
 {
     string username = packet.getUsername();

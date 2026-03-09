@@ -125,6 +125,11 @@ void Server::handleClient(int clientSocket)
             response ? p = Packet("POSITIVE") : p = Packet("NEGATIVE");
             p.write(clientSocket);
         }
+        else if (command == "GET-ACC&BAL")
+        {
+            // cout << "Packet received\n";
+            requests::user::getAccAndBal(p);
+        }
         else if(command == "CHECK-BALANCE")
         {
             requests::user::check_balance(p);
@@ -144,7 +149,6 @@ void Server::handleClient(int clientSocket)
             requests::user::transfer_money(p);
             // ekhane amount er kaj baki ase
             // ekhane receiver account er kaj baki ase
-
         }
         else if(command == "TRANSACTION-HISTORY")
         {

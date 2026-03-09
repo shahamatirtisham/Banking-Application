@@ -41,16 +41,14 @@ void mainMenu()
     while(1)
     {
         clearScreen();
-        TextBox welcomeBox("WELCOME TO AOZORA BANK", 40);
-        // cout << "constructor\n";
-        cout << welcomeBox.generateBox();
-        // cout << "genned one\n";
+        TextBox tb_welcome("WELCOME TO AOZORA BANK", 40);
+                
         vector<string> lines(2);
         lines[0] = "1. Login as an existing user";
         lines[1] = "2. Signup as a new user";
 
         TextBox options(lines, 40, false, 3);
-        cout << options.generateBox();
+
         int choice;
         cout << "▶ choice: ";
         cin >> choice;
@@ -85,10 +83,7 @@ void preloginScreens::user::login()
 
     while (true)
     {
-        // cout << " -------- LOGIN -------- \n";
-
-        TextBox login("LOGIN", 40);
-        cout << login;
+        TextBox tb_login("LOGIN", 40);
 
         cout << "▶ Enter your username: ";
         username = acceptUsername();
@@ -101,8 +96,12 @@ void preloginScreens::user::login()
         tempAccount.setUsername(username);
         tempAccount.setPassword(password);
 
+        // cout << "temp acc loaded\n";
+
         Packet loginPacket("LOGIN", tempAccount);
+        // cout << "packet loaded\n";
         loginPacket.write(sockfd);
+        // cout << "packet written\n";
 
         // Read server response
         Packet response;
@@ -112,8 +111,9 @@ void preloginScreens::user::login()
 
         if (cmd == "POSITIVE")
         {
+            cout << "✔ Login Successful! Loading homepage...\n";
+            sleep(1000);
             clearScreen();
-            cout << "Login Successful! Welcome, " << username << "!\n";
             homepage_init(sockfd);
             homepage_Menu(tempAccount);
             return;
@@ -123,11 +123,14 @@ void preloginScreens::user::login()
             while (true)
             {
                 clearScreen();
-                cout << "Incorrect password for: " << username << "\n\n";
-                cout << "1. Retry password\n";
-                cout << "2. Forgot password\n";
-                cout << "0. Back to main menu\n";
-                cout << "Select: ";
+                vector<string> strs(4);
+                strs[0] = "Username and password combination doesn't exist :(";
+                strs[1] = "1. Retry password";
+                strs[2] = "2. Forgot password";
+                strs[3] = "0. Back to main menu";
+                TextBox tb_forgotPassword(strs, 40, false, 3);
+
+                cout << "▶ Select: ";
                 int choice = readInt();
 
                 if (choice == 0)
@@ -135,7 +138,7 @@ void preloginScreens::user::login()
 
                 else if (choice == 1)
                 {
-                    // cout << "Enter password: ";
+                    cout << "▶ Enter your password: ";
                     password = acceptPassword();
                     tempAccount.setPassword(password);
                     Packet retryPacket("LOGIN", tempAccount);
@@ -147,8 +150,9 @@ void preloginScreens::user::login()
 
                     if (cmd == "POSITIVE")
                     {
-                        // clearScreen();
-                        cout << "Login Successful! Welcome, " << username << "!\n";
+                        cout << "✔ Login Successful! Loading homepage...\n";
+                        sleep(1000);
+                        clearScreen();
                         homepage_init(sockfd);
                         homepage_Menu(tempAccount);
                         return;
@@ -157,7 +161,6 @@ void preloginScreens::user::login()
                 else if (choice == 2)
                 {
                     forgotPassword(username);
-                    cout << "Please login with your new password.\n";
                     break;
                 }
                 else
@@ -173,7 +176,7 @@ void preloginScreens::user::signup()
     string name, username, password, favAni;
     Date DOB;
     TextBox signup("SIGNUP", 40);
-    cout << signup;
+
 
     cout << "▶ Set name: ";
     name = acceptName();
@@ -192,7 +195,7 @@ void preloginScreens::user::signup()
 
         if(p.getCommand() != "POSITIVE")
         {
-            cout << "Username already taken\n";
+            cout << "✖ Username already taken, try a different one\n";
             continue;
         }
         else
@@ -224,15 +227,16 @@ void preloginScreens::admin::login()
 
 void preloginScreens::user::forgotPassword(string username)
 {
-    cout << " -------- FORGOT PASSWORD -------- \n";
+
+    // TextBox tb_forgotPass("RESET PASSWORD", 40);
 
     UserAccount tempAccount;
     tempAccount.setUsername(username);
 
-    cout << "Security Question 1:\n";
+    cout << "▶ Security Question 1, enter your date of birth: ";
     Date DOB = acceptDOB();
 
-    cout << "Security Question 2:\n";
+    cout << "▶ Security Question 1, enter your favorite animal: ";
     string favAni = acceptFavAni();
 
     tempAccount.setDOB(DOB);
@@ -246,15 +250,20 @@ void preloginScreens::user::forgotPassword(string username)
 
     if(response.getCommand() == "NEGATIVE")
     {
+        cout << "✖ Login failed, returning to homescreen...";
+        sleep(1000);
         clearScreen();
-        cout << "Wrong answer. Returning to login.\n";
         return;
     }
     else
     {
+        cout << "✔ Identity verified! Login with your new password\n";
+        sleep(2000);
         clearScreen();
-        cout << "Identity verified!\n";
-        cout << "Enter new password\n";
+
+        TextBox resetPass("RESET PASSWORD", 40);
+        
+        cout << "▶ Enter new password: ";
         string newPassword = acceptPassword();
     
         UserAccount changeAccount;
@@ -266,12 +275,13 @@ void preloginScreens::user::forgotPassword(string username)
         response.read(sockfd);
         if(response.getCommand() == "POSITIVE")
         {
+            cout << "✔ Password changed successfully! Please login with your new password.\n";
+            sleep(1000);
             clearScreen();
-            cout << "Password changed successfully! Please login with your new password.\n";
         }
         else
         {
-            cout << "Something went wrong. Try again later.\n";
+            cout << "✖ Something went wrong. Try again later.\n";
         }
 
     }
