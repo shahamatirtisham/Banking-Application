@@ -1,2 +1,9 @@
 [08-03-2026 14:25:24:431] TRXID: D-aluvaji-20260308142524431    | Type: DEPOSIT    | username: aluvaji              | Amount: 69000.00
 [08-03-2026 14:25:52:749] TRXID: W-aluvaji-20260308142552749    | Type: WITHDRAW   | username: aluvaji              | Amount: 6000.00
+[09-03-2026 22:30:59:235] TRXID: D-irtisham-20260309223059235   | Type: DEPOSIT    | username: irtisham             | Amount: 90909.00
+[09-03-2026 22:31:10:052] TRXID: W-irtisham-20260309223110052   | Type: WITHDRAW   | username: irtisham             | Amount: 9.00
+[09-03-2026 22:31:17:147] TRXID: W-irtisham-20260309223117147   | Type: WITHDRAW   | username: irtisham             | Amount: 900.00
+[09-03-2026 22:48:25:983] TRXID: D-tawfiq-20260309224825983     | Type: DEPOSIT    | username: tawfiq               | Amount: 50000.00
+[09-03-2026 22:49:00:774] TRXID: T-tawfiq-20260309224900774     | Type: TRANSFER   | sender: tawfiq               | receiver_acc: 7590758280255  | Amount: 40000.00
+[09-03-2026 22:51:59:744] TRXID: T-tawfiq-20260309225159744     | Type: TRANSFER   | sender: tawfiq               | receiver_acc: 7590758280255    | Amount: 2000.00
+[09-03-2026 22:53:50:436] TRXID: T-tawfiq-20260309225350436     | Type: TRANSFER   | sender: tawfiq                 | receiver_acc: 7590758280255    | Amount: 1000.00

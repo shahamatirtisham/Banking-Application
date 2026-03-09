@@ -192,8 +192,8 @@ void TransactionLogger::logTransfer(const string &senderUsername, const string &
     oss << getTimestamp()
         << " TRXID: " << setw(30) << left << trxid
         << " | Type: TRANSFER  "
-        << " | sender: " << setw(20) << left << senderUsername
-        << " | receiver_acc: " << setw(14) << left << receiverAccNo
+        << " | sender: " << setw(22) << left << senderUsername
+        << " | receiver_acc: " << setw(16) << left << receiverAccNo
         << " | Amount: " << fixed << setprecision(2) << amount;
     writeLine(oss.str());
     cout << "Transaction logged: TRANSFER - " << senderUsername

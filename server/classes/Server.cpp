@@ -72,7 +72,7 @@ void Server::acceptLoop()
 
 void Server::setupDatabase()
 {
-    connection = config_info.connect();
+    connection = config_info.connect("bankdb");
     if(!connection)
     {
         cout << "Connection to the database failed, exiting program\n";

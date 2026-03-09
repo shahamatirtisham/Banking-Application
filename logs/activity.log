@@ -1,2 +1,10 @@
 [08-03-2026 14:24:53:852] SIGNUP          | username: aluvaji
 [08-03-2026 14:25:01:323] LOGIN           | username: aluvaji
+[09-03-2026 22:30:33:783] FORGOT_PASSWORD | username: irtisham
+[09-03-2026 22:30:40:370] PASSWORD_CHANGE | username: irtisham
+[09-03-2026 22:30:47:475] LOGIN           | username: irtisham
+[09-03-2026 22:47:43:106] SIGNUP          | username: abtahi
+[09-03-2026 22:48:08:325] SIGNUP          | username: tawfiq
+[09-03-2026 22:48:19:826] LOGIN           | username: tawfiq
+[09-03-2026 22:51:29:265] LOGIN           | username: tawfiq
+[09-03-2026 22:53:24:114] LOGIN           | username: tawfiq
