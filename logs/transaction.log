@@ -7,3 +7,6 @@
 [09-03-2026 22:49:00:774] TRXID: T-tawfiq-20260309224900774     | Type: TRANSFER   | sender: tawfiq               | receiver_acc: 7590758280255  | Amount: 40000.00
 [09-03-2026 22:51:59:744] TRXID: T-tawfiq-20260309225159744     | Type: TRANSFER   | sender: tawfiq               | receiver_acc: 7590758280255    | Amount: 2000.00
 [09-03-2026 22:53:50:436] TRXID: T-tawfiq-20260309225350436     | Type: TRANSFER   | sender: tawfiq                 | receiver_acc: 7590758280255    | Amount: 1000.00
+09-03-2026 23:26:10:538 | T-tawfiq-20260309232610538 | T | tawfiq          | 7590758280255  | Amount: 200.00
+09-03-2026 23:26:51:820 | D-tawfiq-20260309232651820 | D | tawfiq          |  | Amount: 80000.00
+09-03-2026 23:36:40:271|T-tawfiq-20260309233640271|T|tawfiq|abtahi|6000.00

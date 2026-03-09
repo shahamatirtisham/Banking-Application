@@ -38,7 +38,7 @@ string Logger::getTimestamp() const
 
     char buf[30];
     snprintf(buf, sizeof(buf),
-             "[%02d-%02d-%04d %02d:%02d:%02d:%03d]",
+             "%02d-%02d-%04d %02d:%02d:%02d:%03d",
              t->tm_mday,
              t->tm_mon + 1,     // month er saathe ek jog korsi karon month 0-11 te store kora
              t->tm_year + 1900, // 1900 jog korsi karon current time to 1900, Jan 1 theke shuru hoise .. actual time ta janar jonne
@@ -93,38 +93,37 @@ void Logger::writeLine(const string &line)
 // ─────────────────────────────────────────────
 
 ActivityLogger::ActivityLogger(const string &logFilePath) : Logger(logFilePath) {} // calls base class constructor
-
 void ActivityLogger::logLogin(const string &username)
 {
-    string line = getTimestamp() + " LOGIN           | username: " + username;
-    writeLine(line); // log e likhtese
+    string line = getTimestamp() + " | LOGIN           | username: " + username;
+    writeLine(line);
     cout << "Activity logged: LOGIN - " << username << "\n";
 }
 
 void ActivityLogger::logLogout(const string &username)
 {
-    string line = getTimestamp() + " LOGOUT          | username: " + username;
+    string line = getTimestamp() + " | LOGOUT          | username: " + username;
     writeLine(line);
     cout << "Activity logged: LOGOUT - " << username << "\n";
 }
 
 void ActivityLogger::logSignup(const string &username)
 {
-    string line = getTimestamp() + " SIGNUP          | username: " + username;
+    string line = getTimestamp() + " | SIGNUP          | username: " + username;
     writeLine(line);
     cout << "Activity logged: SIGNUP - " << username << "\n";
 }
 
 void ActivityLogger::logPasswordChange(const string &username)
 {
-    string line = getTimestamp() + " PASSWORD_CHANGE | username: " + username;
+    string line = getTimestamp() + " | PASSWORD_CHANGE | username: " + username;
     writeLine(line);
     cout << "Activity logged: PASSWORD_CHANGE - " << username << "\n";
 }
 
 void ActivityLogger::logForgotPassword(const string &username)
 {
-    string line = getTimestamp() + " FORGOT_PASSWORD | username: " + username;
+    string line = getTimestamp() + " | FORGOT_PASSWORD | username: " + username;
     writeLine(line);
     cout << "Activity logged: FORGOT_PASSWORD - " << username << "\n";
 }
@@ -155,18 +154,18 @@ TransactionLogger::TransactionLogger(const string &logFilePath)
 
 string TransactionLogger::generateTrxID(const string &username, char typeChar) const
 {
-    // ekta character return kore string(1, typchar) - deposit hoile D, withdraw hoile w 
+    // ekta character return kore string(1, typchar) - deposit hoile D, withdraw hoile w
     return string(1, typeChar) + "-" + username + "-" + getTimestampForID();
 }
-
 void TransactionLogger::logDeposit(const string &username, double amount)
 {
     string trxid = generateTrxID(username, 'D');
     ostringstream oss;
     oss << getTimestamp()
-        << " TRXID: " << setw(30) << left << trxid
-        << " | Type: DEPOSIT   "
-        << " | username: " << setw(20) << left << username
+        << " | " << setw(20) << left << trxid
+        << " | D"
+        << " | " << setw(15) << left << username
+        << " | " // receiver empty for deposit 
         << " | Amount: " << fixed << setprecision(2) << amount;
     writeLine(oss.str());
     cout << "Transaction logged: DEPOSIT - " << username << " - " << amount << "\n";
@@ -177,27 +176,28 @@ void TransactionLogger::logWithdraw(const string &username, double amount)
     string trxid = generateTrxID(username, 'W');
     ostringstream oss;
     oss << getTimestamp()
-        << " TRXID: " << setw(30) << left << trxid
-        << " | Type: WITHDRAW  "
-        << " | username: " << setw(20) << left << username
-        << " | Amount: " << fixed << setprecision(2) << amount;
+        << "|" << trxid
+        << "|W"
+        << "|" << setw(15) << left << username
+        << "|" // receiver empty for withdraw
+        << "|" << fixed << setprecision(2) << amount;
     writeLine(oss.str());
     cout << "Transaction logged: WITHDRAW - " << username << " - " << amount << "\n";
 }
 
-void TransactionLogger::logTransfer(const string &senderUsername, const string &receiverAccNo, double amount)
+void TransactionLogger::logTransfer(const string &senderUsername, const string &receiverUserName, double amount)
 {
     string trxid = generateTrxID(senderUsername, 'T');
     ostringstream oss;
     oss << getTimestamp()
-        << " TRXID: " << setw(30) << left << trxid
-        << " | Type: TRANSFER  "
-        << " | sender: " << setw(22) << left << senderUsername
-        << " | receiver_acc: " << setw(16) << left << receiverAccNo
-        << " | Amount: " << fixed << setprecision(2) << amount;
+        << "|" <<  trxid
+        << "|T"
+        << "|" <<  senderUsername
+        << "|" <<  receiverUserName
+        << "|" <<  fixed << setprecision(2) << amount;
     writeLine(oss.str());
     cout << "Transaction logged: TRANSFER - " << senderUsername
-         << " -> " << receiverAccNo << " - " << amount << "\n";
+         << " -> " << receiverUserName << " - " << amount << "\n";
 }
 
 void TransactionLogger::display() const

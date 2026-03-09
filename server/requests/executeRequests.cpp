@@ -253,7 +253,7 @@ void requests::user::transfer_money(const Packet &packet)
     Packet p("TRANSFER-SUCCESS", user);
     p.write(sockfd);
     TransactionLogger tLogger;                                  
-    tLogger.logTransfer(senderUserName, receiverAccNo, amount); 
+    tLogger.logTransfer(senderUserName, receiverUserName, amount); 
 }
 
 void requests::user::transaction_history(const Packet &packet)

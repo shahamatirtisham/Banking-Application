@@ -73,7 +73,7 @@ public:
 
     void logDeposit(const string &username, double amount);
     void logWithdraw(const string &username, double amount);
-    void logTransfer(const string &senderUsername, const string &receiverAccNo, double amount);
+    void logTransfer(const string &senderUsername, const string &receiverUserName, double amount);
 
     // Implements pure virtual from Logger
     void display() const override;
