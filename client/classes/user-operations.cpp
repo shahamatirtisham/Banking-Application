@@ -191,7 +191,7 @@ void UserOperations::transaction_history(const UserAccount& user)
         cout << "▶ Press q to return to dashboard: ";
         cin >> ch;
 
-        if(ch == tolower(ch))
+        if(tolower(ch) == 'q')
         {
             break;
         }
