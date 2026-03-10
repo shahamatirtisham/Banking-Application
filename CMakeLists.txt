@@ -25,6 +25,7 @@ add_executable(server
     server/classes/BankData.cpp
     server/functions/logger.cpp
     shared/classes/TransactionRecord.cpp
+    shared/classes/Packet_TR.cpp
 )
 
 target_include_directories(server PRIVATE
@@ -54,6 +55,8 @@ add_executable(client
     shared/classes/Date.cpp
     shared/classes/Hexadecimal.cpp
     shared/classes/Colors.cpp 
+    shared/classes/TransactionRecord.cpp
+    shared/classes/Packet_TR.cpp
 )
 
 target_include_directories(client PRIVATE

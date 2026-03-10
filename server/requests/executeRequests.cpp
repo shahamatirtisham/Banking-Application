@@ -1,7 +1,10 @@
 #include "executeRequests.hpp"
 #include "../functions/database-handling.hpp"
 #include "../classes/UserAccount_server.hpp"
+#include "../../shared/classes/TransactionRecord.hpp"
+#include "../../shared/classes/Packet_TR.hpp"
 #include <iostream>
+#include <vector>
 #include <string>
 #include "../functions/logger.hpp"
 
@@ -272,8 +275,18 @@ void requests::user::transfer_money(const Packet &packet)
 void requests::user::transaction_history(const Packet &packet)
 {
     string username = packet.getUsername();
-    string accNo = packet.getAccountNo();
+    
+    auto transactions = TransactionRecord::retrieveTransactions(username);
 
+    for(auto t : transactions)
+    {
+        Packet_TR p(t);
+        p.write(sockfd);
+    }
+
+    TransactionRecord r;
+    Packet_TR eof(r, true);
+    eof.write(sockfd);
 
     // Trasnac
 

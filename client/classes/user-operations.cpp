@@ -2,6 +2,10 @@
 #include "../shared/classes/Packet.hpp"
 #include "../client/classes/client.hpp"
 #include "../../shared/input.hpp"
+#include "../../shared/classes/TransactionRecord.hpp"
+#include "../../shared/classes/Packet_TR.hpp"
+#include <vector>
+#include "TextBox.hpp"
 #include <stdexcept>
 
 // static int sockfd = -1;
@@ -160,10 +164,39 @@ int UserOperations::transfer_money(UserAccount& user)
 
 void UserOperations::transaction_history(const UserAccount& user)
 {
+    clearScreen();
     Packet p("TRANSACTION-HISTORY", user);
-    
     p.write(sockfd);
-    p.read(sockfd);
+
+    TextBox trxhist("TRANSACTION HISTORY", 60);
+
+    vector<TransactionRecord> transactions;
+    while(1)
+    {
+        Packet_TR p;
+        p.read(sockfd);
+        if(p.getEOF() == true)
+            break;
+        transactions.push_back(p.getTransactionRecord());
+    }
+
+    for(auto t : transactions)
+    {
+        TextBox tb_trx(t.getTransactionVector(), 60, false, 2);
+    }
+
+    while(1)
+    {
+        char ch;
+        cout << "▶ Press q to return to dashboard: ";
+        cin >> ch;
+
+        if(ch == tolower(ch))
+        {
+            break;
+        }
+    }
+    clearScreen();
 
     // ekhane kaaj baki ase
 }

@@ -25,7 +25,10 @@ class TransactionRecord
     void set_trnxType(std::string); 
     void set_sender(std::string); 
     void set_receiver(std::string);
+    void set_amount(double amt);
 
-    static std::vector<TransactionRecord> retrieveTransactions();
+    std::vector<std::string> getTransactionVector() const;
+
+    static std::vector<TransactionRecord> retrieveTransactions(std::string username);
 
 };

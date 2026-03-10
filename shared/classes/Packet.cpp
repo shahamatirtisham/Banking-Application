@@ -205,13 +205,13 @@ void Packet:: read(int sockfd)
 
 void Packet::display() const
 {
-    // cout << "------------------Displaying Packet------------------\n";
-    //// cout << "Sockfd: " << sockfd << endl;
-    // cout << "Command: " << command << endl;
-    // cout << "ID: " << ID << endl;
+    cout << "------------------Displaying Packet------------------\n";
+    // cout << "Sockfd: " << sockfd << endl;
+    cout << "Command: " << command << endl;
+    cout << "ID: " << ID << endl;
     account.printAccountInfo(0);
-    // cout << "Salt: " << salt << endl;
-    // cout << "-----------------------------------------------------\n";
+    cout << "Salt: " << salt << endl;
+    cout << "-----------------------------------------------------\n";
 }
 
 
