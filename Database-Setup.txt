@@ -13,5 +13,4 @@ Run the following commands
 
 From then on connect to the database using these commands
 
-    sudo -u postgres psql
     psql -h localhost -p 5432 -U postgres -d bankdb

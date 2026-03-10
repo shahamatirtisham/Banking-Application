@@ -9,7 +9,15 @@
 #include <vector>
 using namespace std;
 
-HomePage::HomePage(int sockfd, UserAccount user) : sockfd(sockfd), operation(sockfd)
+
+// > ▶
+// ✔ ✖
+// ● ○
+// ■ □
+// ▲ ▼
+
+HomePage::HomePage(int sockfd, UserAccount user) 
+    : sockfd(sockfd), operation(sockfd), printBal(false), notice("")
 {
     this->user = user;
     
@@ -29,20 +37,35 @@ HomePage::HomePage(int sockfd, UserAccount user) : sockfd(sockfd), operation(soc
 void HomePage::printHeader()
 {
 
-    // TextBox tb_homepage("USER DASHBOARD", 40);
-
-    stringstream _balance;
-    _balance << fixed << setprecision(2) << user.getBalance();
-
-    vector<string> strs = 
+    
+    if(printBal)
     {
-        "USER DASHBOARD"
-        "Welcome " + user.getUsername() + "!",
-        "Account number: " + user.getAccountNo(),
-        "Balance: Tk" + _balance.str()
-    };
+        stringstream _balance;
+        _balance << fixed << setprecision(2) << user.getBalance();
+        vector<string> strs = 
+        {
+            "USER DASHBOARD",
+            "Welcome " + user.getUsername() + "!",
+            "Account number: " + user.getAccountNo(),
+            "Balance: Tk" + _balance.str()
+        };
+        TextBox tb_header(strs, 40);
+    }
+    else
+    {
+        vector<string> strs = 
+        {
+            "USER DASHBOARD",
+            "Welcome " + user.getUsername() + "!",
+            "Account number: " + user.getAccountNo()
+        };
+        TextBox tb_header(strs, 40);
+    }
 
-    TextBox tb_header(strs, 40);
+    if(printBal == true)
+        printBal = false;
+
+
 
     // cout <<"Welcome, " <<user.getUsername() <<"!" <<endl;
     // cout <<"Account Number: " <<user.getAccountNo() <<endl <<endl;
@@ -68,6 +91,11 @@ void HomePage::display()
     // system("clear");
     printHeader();
     printMenu();
+    if(notice != "")
+    {
+        cout << notice << endl;
+        notice = "";
+    }
 }
 
 int HomePage::getChoice()
@@ -88,7 +116,9 @@ void HomePage::userOperation(int choice)
     {
         try
         {
+            clearScreen();
             operation.check_balance(user);
+            printBal = true;
         }
         catch(const exception &e)
         {
@@ -99,7 +129,17 @@ void HomePage::userOperation(int choice)
     {
         try
         {
-            operation.deposit(user);
+            int res = operation.deposit(user);
+            switch (res)
+            {
+            case 0:    notice = "";
+
+            case -1:     notice = "✖ Insufficient balance, transfer failed";
+                        break;
+            case 1:     notice = "✔ Deposition success!";
+                        break;
+            default:    notice = "✖ Something went wrong, try again later\n";
+            }
         }
         catch(const exception &e)
         {
@@ -110,7 +150,20 @@ void HomePage::userOperation(int choice)
     {
         try
         {
-            operation.withdraw(user);
+            int res = operation.withdraw(user);
+
+            switch (res)
+            {
+            case 0:    notice = "";
+
+            case -1:     notice = "✖ Insufficient balance, transfer failed";
+                        break;
+            case 1:     notice = "✔ Withdrawal success!";
+                        break;
+            default:    notice = "✖ Something went wrong, try again later\n";
+            }
+            
+            
         }
         catch(const exception &e)
         {
@@ -121,7 +174,20 @@ void HomePage::userOperation(int choice)
     {
         try
         {
-            operation.transfer_money(user);
+            int res = operation.transfer_money(user);
+
+            switch (res)
+            {
+            case 0:    notice = "";
+
+            case -2:    notice = "✖ Account number not found";
+                        break;
+            case -1:     notice = "✖ Insufficient balance, transfer failed";
+                        break;
+            case 1:     notice = "✔ Transfer success!";
+                        break;
+            default:    notice = "✖ Something went wrong, try again later\n";
+            }
         }
         catch(const exception &e)
         {

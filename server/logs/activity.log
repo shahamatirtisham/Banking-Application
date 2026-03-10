@@ -1,0 +1,12 @@
+10-03-2026 13:34:17:325 | LOGIN           | username: toffeek
+10-03-2026 13:39:17:456 | LOGIN           | username: toffeek
+10-03-2026 13:47:36:229 | LOGIN           | username: toffeek
+10-03-2026 13:47:41:917 | LOGOUT          | username: toffeek
+10-03-2026 13:49:11:698 | LOGIN           | username: toffeek
+10-03-2026 13:49:16:348 | LOGOUT          | username: toffeek
+10-03-2026 13:49:26:553 | LOGIN           | username: toffeek
+10-03-2026 13:52:26:962 | LOGOUT          | username: toffeek
+10-03-2026 13:52:52:774 | SIGNUP          | username: smelly
+10-03-2026 13:53:01:237 | LOGIN           | username: smelly
+10-03-2026 14:01:29:038 | LOGOUT          | username: smelly
+10-03-2026 14:01:36:371 | LOGIN           | username: toffeek

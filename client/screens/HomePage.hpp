@@ -8,7 +8,9 @@ private:
     int sockfd;
     UserAccount user;
     UserOperations operation;
+    bool printBal;
     void printHeader();
+    string notice;
     void printMenu();
 public:
     HomePage(int sockfd, UserAccount user);

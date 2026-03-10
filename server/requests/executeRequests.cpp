@@ -272,12 +272,17 @@ void requests::user::transfer_money(const Packet &packet)
 void requests::user::transaction_history(const Packet &packet)
 {
     string username = packet.getUsername();
-    // database theke vector return korbo
+    string accNo = packet.getAccountNo();
+
+
+    // Trasnac
+
+
 }
 
 void requests::user::logout(const Packet &packet)
 {
-    // eita baki roilo
+    
     ActivityLogger aLogger;                  
     aLogger.logLogout(packet.getUsername()); 
 }

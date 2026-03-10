@@ -3,6 +3,7 @@
 #include "../requests/executeRequests.hpp"
 #include "../functions/database-handling.hpp"
 #include "../classes/BankData.hpp"
+#include "../functions/logger.hpp"
 #include <iostream>
 #include <strings.h>
 #include <unistd.h>

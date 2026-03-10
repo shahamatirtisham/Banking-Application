@@ -46,7 +46,7 @@ public:
 class ActivityLogger : public Logger
 {
 public:
-    explicit ActivityLogger(const string &logFilePath = "../logs/activity.log");
+    explicit ActivityLogger(const string &logFilePath = "server/logs/activity.log");
 
     void logLogin(const string &username);
     void logLogout(const string &username);
@@ -69,7 +69,7 @@ private:
     string generateTrxID(const string &username, char typeChar) const;
 
 public:
-    explicit TransactionLogger(const string &logFilePath = "../logs/transaction.log");
+    explicit TransactionLogger(const string &logFilePath = "server/logs/transaction.log");
 
     void logDeposit(const string &username, double amount);
     void logWithdraw(const string &username, double amount);
@@ -78,3 +78,5 @@ public:
     // Implements pure virtual from Logger
     void display() const override;
 };
+
+string long_to_base62(long int input);

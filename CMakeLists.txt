@@ -24,6 +24,7 @@ add_executable(server
     server/classes/UserAccount_server.cpp
     server/classes/BankData.cpp
     server/functions/logger.cpp
+    shared/classes/TransactionRecord.cpp
 )
 
 target_include_directories(server PRIVATE

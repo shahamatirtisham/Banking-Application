@@ -1,4 +1,5 @@
 #include "logger.hpp"
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -78,10 +79,13 @@ void Logger::writeLine(const string &line)
     // ios::app — adds to end of file, creates file if doesn't exist
     // logFile - the path to the file
 
+    // std::filesystem::create_directories("server/logs");
+
     ofstream file(logFile, ios::app);
-    if (!file.is_open())
+    if (!file.is_open() || file.fail())
     {
         cerr << "Logger: could not open " << logFile << "\n";
+        exit(1);
         return;
     }
     file << line << "\n";
@@ -155,18 +159,27 @@ TransactionLogger::TransactionLogger(const string &logFilePath)
 string TransactionLogger::generateTrxID(const string &username, char typeChar) const
 {
     // ekta character return kore string(1, typchar) - deposit hoile D, withdraw hoile w
-    return string(1, typeChar) + "-" + username + "-" + getTimestampForID();
+
+    string timestamp_id = getTimestampForID();
+
+    long int timestamp_b10 = strtol(timestamp_id.c_str(), NULL, 10); 
+
+    string trxid = long_to_base62(timestamp_b10);
+
+    // sprintf(trxid, "%c-%s-%s", type, timestamp_b62, shortened_username);
+
+    return string(1, typeChar) + "-" + username + "-" + trxid;
 }
 void TransactionLogger::logDeposit(const string &username, double amount)
 {
     string trxid = generateTrxID(username, 'D');
     ostringstream oss;
     oss << getTimestamp()
-        << " | " << setw(20) << left << trxid
-        << " | D"
-        << " | " << setw(15) << left << username
-        << " | " // receiver empty for deposit 
-        << " | Amount: " << fixed << setprecision(2) << amount;
+        << "|" << trxid
+        << "|D"
+        << "|" << username
+        << "|" // receiver empty for deposit 
+        << "|" << fixed << setprecision(2) << amount;
     writeLine(oss.str());
     cout << "Transaction logged: DEPOSIT - " << username << " - " << amount << "\n";
 }
@@ -178,7 +191,7 @@ void TransactionLogger::logWithdraw(const string &username, double amount)
     oss << getTimestamp()
         << "|" << trxid
         << "|W"
-        << "|" << setw(15) << left << username
+        << "|" << username
         << "|" // receiver empty for withdraw
         << "|" << fixed << setprecision(2) << amount;
     writeLine(oss.str());
@@ -215,3 +228,40 @@ void TransactionLogger::display() const
     cout << "---------------------------------\n";
     file.close();
 }
+
+string long_to_base62(long int input)
+{
+    const char chars[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    char temp[32];
+    int i = 0;
+
+
+    if (input == 0) 
+    {
+        return "0";
+    }
+
+    while (input > 0) 
+    {
+        temp[i++] = chars[input % 62];
+        input /= 62;
+    }
+
+    temp[i] = '\0';
+
+    string output(10, '\0');
+    
+    for (int j = 0; j < i; j++) 
+    {
+        output[j] = temp[i - j - 1];
+    }
+    output[i] = '\0';
+
+    return output;
+}
+
+// int main()
+// {
+//     ActivityLogger aLogger;
+//     aLogger.logSignup("tawfiq");
+// }
