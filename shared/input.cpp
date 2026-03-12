@@ -135,6 +135,11 @@ bool checkValidDOB(const string& dob)
             cout << "Invalid date/month.\n";
             return false;
         }
+        else if(DOB.getAge() < 0)
+        {
+            cout <<"Invalid Date of Birth." <<endl;
+            return false;
+        }
         else if (DOB.getAge() < 18)
         {
             // clearScreen();
@@ -151,7 +156,7 @@ Date acceptDOB()
     while(1)
     {
         // cout << "Set date of birth (DD-MM-YYYY): ";
-        getline(cin, str_dob);
+        getline(cin >>ws, str_dob);
         //cin.ignore();
 
         if(checkValidDOB(str_dob) == false)
@@ -167,7 +172,7 @@ Date acceptDOB()
     Date DOB = stringToDate(str_dob);
     if (DOB.getAge() < 18)
     {
-        clearScreen();
+        // clearScreen();
         cout << "You must be over 18 years old\n";
         acceptDOB();
     } 
