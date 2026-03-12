@@ -6,6 +6,8 @@
 using namespace std;
 
 
+
+
 int readInt()
 {
     while (true)
@@ -15,7 +17,8 @@ int readInt()
 
         try
         {
-            size_t pos;                        // pos tells you how many characters were successfully changed to number
+            // pos tells you how many characters were successfully changed to number
+            size_t pos;
             int value = std::stoi(line, &pos);
 
             // ensure whole line was a number
@@ -24,7 +27,7 @@ int readInt()
         }
         catch (...)
         {
-            // fall through
+
         }
 
         std::cout << "Invalid integer, try again: ";

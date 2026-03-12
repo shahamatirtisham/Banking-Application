@@ -5,6 +5,7 @@
 #include "../../shared/classes/TransactionRecord.hpp"
 #include "../../shared/classes/Packet_TR.hpp"
 #include <vector>
+#include <cctype>
 #include "TextBox.hpp"
 #include <stdexcept>
 
@@ -54,6 +55,7 @@ int UserOperations::deposit(UserAccount& user)
 
     if(amount == 0)
     {
+        clearScreen();
         return 0;
     }
 
@@ -85,7 +87,10 @@ int UserOperations::withdraw(UserAccount& user)
     double amount = readDouble();
 
     if(amount == 0)
+    {
+        clearScreen();
         return 0;
+    }
 
     while(amount < 0)
     {
@@ -127,7 +132,10 @@ int UserOperations::transfer_money(UserAccount& user)
     double amount = readDouble();
 
     if(amount == 0)
+    {
+        clearScreen();
         return 0;
+    }
 
     while(amount <= 0)
     {
@@ -187,9 +195,9 @@ void UserOperations::transaction_history(const UserAccount& user)
 
     while(1)
     {
-        char ch;
         cout << "▶ Press q to return to dashboard: ";
-        cin >> ch;
+        char ch = readChar();
+        
 
         if(tolower(ch) == 'q')
         {

@@ -132,9 +132,9 @@ void HomePage::userOperation(int choice)
             int res = operation.deposit(user);
             switch (res)
             {
-            case 0:    notice = "";
-
-            case -1:     notice = "✖ Insufficient balance, transfer failed";
+            case 0:     notice = "";
+                        break;
+            case -1:    notice = "✖ Insufficient balance, withdraw failed";
                         break;
             case 1:     notice = "✔ Deposition success!";
                         break;
@@ -154,9 +154,10 @@ void HomePage::userOperation(int choice)
 
             switch (res)
             {
-            case 0:    notice = "";
+            case 0:     notice = "";
+                        break;
 
-            case -1:     notice = "✖ Insufficient balance, transfer failed";
+            case -1:    notice = "✖ Insufficient balance, transfer failed";
                         break;
             case 1:     notice = "✔ Withdrawal success!";
                         break;
