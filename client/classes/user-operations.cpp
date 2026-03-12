@@ -59,7 +59,7 @@ int UserOperations::deposit(UserAccount& user)
         return 0;
     }
 
-    while(amount < 0)
+    while(amount <= 0)
     {
         cout <<"✖ Invalid Amount, Try Again!" <<endl;
         cout <<"Enter Deposit Amount : ";
@@ -92,7 +92,7 @@ int UserOperations::withdraw(UserAccount& user)
         return 0;
     }
 
-    while(amount < 0)
+    while(amount <= 0)
     {
         cout <<"✖ Invalid Amount, Try Again!" <<endl;
         cout <<"▶ Enter Withdraw Amount : ";
