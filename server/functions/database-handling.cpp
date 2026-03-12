@@ -126,8 +126,6 @@ PGconn *PG_Config_Info::connect(const string &dbname)
         return nullptr;
     }
 
-    // 1 PG GUARD THROW LAGBE
-
     return conn;
 }
 
@@ -156,9 +154,6 @@ Database::Database(PGconn *connx_in, bool status, string name)
     {
 
         PGconn *admin = connect(get_admin_db());
-
-        //2 Throw pg guard
-
         if (!admin)
         {
             it_exists = false;
@@ -166,12 +161,8 @@ Database::Database(PGconn *connx_in, bool status, string name)
             return;
         }
 
-
-
         if (!db_exists(admin, db_name))
         {
-
-            // THROW 3
             bool made = create_db(admin, db_name);
             if (made)
             {
@@ -201,8 +192,6 @@ Database::Database(PGconn *connx_in, bool status, string name)
             return;
         }
 
-        // THROW 4
-
         if (!init_schema())
         {
             cerr << "Schema init failed\n";
@@ -214,7 +203,6 @@ Database::Database(PGconn *connx_in, bool status, string name)
     {
         it_exists = true;
 
-        // THROW 5
         if (!init_schema())
         {
             cerr << "Schema init failed\n";
@@ -223,15 +211,11 @@ Database::Database(PGconn *connx_in, bool status, string name)
         }
     }
 }
-
-
 Database::~Database() {}
 bool Database::exec_cmd(PGconn *c, const string &sql)
 {
     if (!PG_Guard::ensure_conn(c, "exec_cmd"))
         return false;
-
-    // Throw 6
 
     PGresult *r = PQexec(c, sql.c_str());
     bool ok = PG_Guard::expect_ok(c, r, ("SQL failed: " + sql).c_str());
@@ -243,18 +227,13 @@ PGconn *Database::get_conn() const { return connx; }
 bool Database::exists() const { return it_exists; }
 bool Database::db_exists(PGconn *c, const string &dbname)
 {
-
-    //THROW 7
     if (!PG_Guard::ensure_conn(c, "db_exists"))
         return false;
-
-
 
     const char *sql = "SELECT 1 FROM pg_Database WHERE datname = $1;";
     const char *vals[1] = {dbname.c_str()};
 
     PGresult *r = PQexecParams(c, sql, 1, nullptr, vals, nullptr, nullptr, 0);
-    //THROW 8
     if (!PG_Guard::expect_tuples(c, r, "db_exists"))
         return false;
 
@@ -264,17 +243,12 @@ bool Database::db_exists(PGconn *c, const string &dbname)
 }
 bool Database::create_db(PGconn *c, const string &dbname)
 {
-    //THROW 9
     if (!PG_Guard::ensure_conn(c, "create_db"))
         return false;
 
     char *q = PQescapeIdentifier(c, dbname.c_str(), dbname.size());
-
-    //POTENTIAL THROW
-
     if (!q)
         return false;
-
 
     string sql = string("CREATE Database ") + q + ";";
     PQfreemem(q);
@@ -283,8 +257,6 @@ bool Database::create_db(PGconn *c, const string &dbname)
 }
 bool Database::init_schema()
 {
-
-    //THROW 10
     if (!PG_Guard::ensure_conn(connx, "init_schema"))
         return false;
 
@@ -385,8 +357,6 @@ bool Database::init_schema()
 
     for (const auto &sql : ddl)
     {
-
-        //THROW 11
         if (!exec_cmd(connx, sql))
         {
             exec_cmd(connx, "ROLLBACK;");
@@ -394,11 +364,8 @@ bool Database::init_schema()
         }
     }
 
-    //THROW 12
     if (!exec_cmd(connx, "COMMIT;"))
     {
-
-        //THROW 13
         exec_cmd(connx, "ROLLBACK;");
         return false;
     }
@@ -420,18 +387,14 @@ void User_Queries::clear_result(PGresult *r)
 }
 bool User_Queries::checkUniqueUsername(const string &username)
 {
-    // THROW 14
     if (!PG_Guard::ensure_conn(conn, "checkUniqueUsername"))
         return false;
-
 
     const char *sql =
         "SELECT 1 FROM client_personal_info WHERE username = $1 LIMIT 1;";
     const char *values[1] = {username.c_str()};
 
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
-    //THROW 15
     if (!PG_Guard::expect_tuples(conn, res, "checkUniqueUsername SELECT failed"))
         return false;
 
@@ -441,18 +404,13 @@ bool User_Queries::checkUniqueUsername(const string &username)
 }
 bool User_Queries::checkUniqueAccountNo(const std::string& accNo)
 {
-
-    //THROW 16
     if (!PG_Guard::ensure_conn(conn, "checkUniqueAccountNo"))
         return false;
 
     const char *sql =
         "SELECT 1 FROM client_personal_info WHERE account_no = $1 LIMIT 1;";
-
+    
     const char *values[1] = {accNo.c_str()};
-
-
-    // THROW 17
 
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
     if (!PG_Guard::expect_tuples(conn, res, "checkUniqueAccountNo SELECT failed"))
@@ -464,40 +422,34 @@ bool User_Queries::checkUniqueAccountNo(const std::string& accNo)
 }
 bool User_Queries::hasEnoughBalance(const string &username, double amount)
 {
-
-    //THROW 18
     if (!PG_Guard::ensure_conn(conn, "hasEnoughBalance"))
     return false;
-
+    
     const char *sql =
     "SELECT cas.balance "
     "FROM client_account_status cas "
     "JOIN client_personal_info cpi "
     "ON cas.client_ID = cpi.client_ID "
     "WHERE cpi.username = $1;";
-
+    
     const char *values[1] = {username.c_str()};
-
+    
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
-    //THROW 19
     if (!PG_Guard::expect_tuples(conn, res, "hasEnoughBalance SELECT failed"))
     return false;
-
+    
     if (PQntuples(res) == 0)
     {
         PQclear(res);
         return false;
     }
-
+    
     double balance = atof(PQgetvalue(res, 0, 0));
     PQclear(res);
     return balance >= amount;
 }
 std::string User_Queries::getUsernameByAccountNo(const std::string& accNo)
 {
-
-    //THROW 20
     if (!PG_Guard::ensure_conn(conn, "getUsernameByAccountNo"))
         return "";
 
@@ -505,7 +457,6 @@ std::string User_Queries::getUsernameByAccountNo(const std::string& accNo)
         "SELECT username FROM client_personal_info WHERE account_no = $1 LIMIT 1;";
     const char *values[1] = {accNo.c_str()};
 
-    // THROW 21
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
     if (!PG_Guard::expect_tuples(conn, res, "getUsernameByAccountNo SELECT failed"))
         return "";
@@ -520,41 +471,30 @@ std::string User_Queries::getUsernameByAccountNo(const std::string& accNo)
     PQclear(res);
     return username;
 }
-
-
 bool DatabaseUpdates::updateBalance(const string &username, double newBalance)
 {
-
-    // OVERLOAD USAGE 3 bool operator == (string , 1000);
-
     if (!PG_Guard::ensure_conn(conn, "updateBalance"))
     return false;
-
+    
     const char *sql =
     "UPDATE client_account_status cas "
     "SET balance = $1 "
     "FROM client_personal_info cpi "
     "WHERE cas.client_ID = cpi.client_ID "
     "AND cpi.username = $2;";
-
+    
     string balStr = to_string(newBalance);
     const char *values[2] = {balStr.c_str(), username.c_str()};
-
+    
     PGresult *res = PQexecParams(conn, sql, 2, nullptr, values, nullptr, nullptr, 0);
-
-    // THROW 22
     if (!PG_Guard::expect_command(conn, res, "updateBalance UPDATE failed"))
     return false;
-
+    
     PQclear(res);
     return true;
 }
-
-
 UserAccount_server User_Queries::getUserAccount_server(const string &username)
 {
-
-
     const char *sql = "SELECT * "
                       "FROM client_personal_info c "
                       "JOIN client_account_status s ON c.client_ID = s.client_ID "
@@ -596,27 +536,26 @@ UserAccount_server User_Queries::getUserAccount_server(const string &username)
 
 double User_Queries::getBalance(const string &username)
 {
-
     const char *sql =
     "SELECT cas.balance "
     "FROM client_account_status cas "
     "JOIN client_personal_info cpi "
     "ON cas.client_ID = cpi.client_ID "
     "WHERE cpi.username = $1;";
-
+    
     const char *values[1] = {username.c_str()};
-
+    
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
+    
     if (PQntuples(res) == 0)
     {
         PQclear(res);
         return -1;
     }
-
+    
     double balance = atof(PQgetvalue(res, 0, 0));
     PQclear(res);
-
+    
     return balance;
 }
 string User_Queries::getSaltByUsername(const string &username)
@@ -629,7 +568,6 @@ string User_Queries::getSaltByUsername(const string &username)
     const char *values[1] = {username.c_str()};
 
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-    //THROW 23
     if (!PG_Guard::expect_tuples(conn, res, "getSaltByUsername SELECT failed"))
         return "";
 
@@ -645,9 +583,6 @@ string User_Queries::getSaltByUsername(const string &username)
 }
 string User_Queries::getPasswordByUsername(const string &username)
 {
-
-    // THROW 24
-
     if (!PG_Guard::ensure_conn(conn, "getPasswordByUsername"))
     {
         cout << "No connection\n";
@@ -661,8 +596,6 @@ string User_Queries::getPasswordByUsername(const string &username)
     cout << "username: " << "'" << values[0] << "'" << endl;
 
     PGresult *res = PQexecParams(conn, sql, 1, nullptr, values, nullptr, nullptr, 0);
-
-    //THROW 25
     if (!PG_Guard::expect_tuples(conn, res, "getPasswordByUsername SELECT failed"))
     {
         cout << "expect_tuples failed\n";
@@ -681,15 +614,9 @@ string User_Queries::getPasswordByUsername(const string &username)
     cout << "db_pass: " << password << endl;
     return password;
 }
-
-
-
 DatabaseUpdates::DatabaseUpdates(PGconn *connection) : conn(connection) {}
 void DatabaseUpdates::addUser(const UserAccount_server &user)
 {
-    // OVERLOAD USAGE 2 ++
-
-
     if (!PG_Guard::ensure_conn(conn, "addUser"))
         return;
 
@@ -726,27 +653,17 @@ void DatabaseUpdates::addUser(const UserAccount_server &user)
     };
 
     res = PQexecParams(conn, sql1, 8, nullptr, values1, nullptr, nullptr, 0);
-
-
-    //THROW 26
     if (!PG_Guard::expect_command(conn, res, "Insert personal info failed", true))
         return;
-
-
     PQclear(res);
 
     const char *sql2 = "INSERT INTO client_account_status (client_ID) VALUES ($1);";
     const char *values2[1] = {user.getClientID().getHexadecimalVal().c_str()};
 
-    //THROW 27
-
     res = PQexecParams(conn, sql2, 1, nullptr, values2, nullptr, nullptr, 0);
     if (!PG_Guard::expect_command(conn, res, "Insert account status failed", true))
         return;
     PQclear(res);
-
-
-    //THROW 28
 
     res = PQexec(conn, "COMMIT;");
     if (!PG_Guard::expect_command(conn, res, "COMMIT failed", true))
@@ -755,15 +672,8 @@ void DatabaseUpdates::addUser(const UserAccount_server &user)
 
     cout << "User successfully added.\n";
 }
-
-
 bool DatabaseUpdates::deleteUserByUsername(const string &username)
 {
-
-    //Overload usage 4 bool --
-
-    // STATIC VARIABLE USAGE 1
-
     if (!PG_Guard::ensure_conn(conn, "deleteUserByUsername"))
         return false;
 
