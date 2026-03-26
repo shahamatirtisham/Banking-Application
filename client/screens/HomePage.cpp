@@ -134,7 +134,7 @@ void HomePage::userOperation(int choice)
             {
             case 0:     notice = "";
                         break;
-            case -1:    notice = "✖ Insufficient balance, withdraw failed";
+            case -1:    notice = "✖ Insufficient balance, deposit failed";
                         break;
             case 1:     notice = "✔ Deposition success!";
                         break;
@@ -157,7 +157,7 @@ void HomePage::userOperation(int choice)
             case 0:     notice = "";
                         break;
 
-            case -1:    notice = "✖ Insufficient balance, transfer failed";
+            case -1:    notice = "✖ Insufficient balance, withdrawal failed";
                         break;
             case 1:     notice = "✔ Withdrawal success!";
                         break;

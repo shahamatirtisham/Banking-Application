@@ -1,7 +1,10 @@
 .vscode/
 *.o
 *.out
+*.log
 build/
+bankData.bin
+*.log
 misc/
 CMakeCache.txt
 CMakeFiles/

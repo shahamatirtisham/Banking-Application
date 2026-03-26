@@ -20,9 +20,20 @@ Date::Date(const string& date_str)
     getline(ss, _month, '-');
     getline(ss, _date, '-');
 
-    date = stoi(_date);
-    month = stoi(_month);
-    year = stoi(_year);
+    try
+    {
+        int d = stoi(_date);
+        int m = stoi(_month);
+        int y = stoi(_year);
+
+        setDate(d);
+        setMonth(m);
+        setYear(y);
+    }
+    catch(const exception &e)
+    {
+        cout <<e.what() <<endl;
+    }
 }
 
 Date::Date()
@@ -128,7 +139,7 @@ int Date::getAge() const
         age = current_year - year;
     }
 
-    return year;    
+    return age;    
 }
 void Date::display() const
 {

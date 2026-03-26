@@ -80,13 +80,13 @@ bool checkValidDOB(const string& dob)
         
         if(dob.size() != 10)
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Invalid format. Size /= 10. Size: " << dob.size() << endl;
             return false;
         }
         if(dob[2] != '-' || dob[5] != '-')
         {
-            clearScreen(); 
+            // clearScreen(); 
 
             cout << "Invalid format.\n";
             return false;
@@ -97,7 +97,7 @@ bool checkValidDOB(const string& dob)
 
             if(dob[i] - '\0' == '\t' || dob[i] - '\0' == '\n' || dob[i] - '\0' == '\0' || dob[i] - '\0' == '\b')
             {
-                clearScreen(); 
+                // clearScreen(); 
                 cout << "Date of birth cannot contain control characters.\n";
                 return false;
             }            
@@ -131,13 +131,18 @@ bool checkValidDOB(const string& dob)
 
         if(check_valid_date(DOB) == false)
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Invalid date/month.\n";
+            return false;
+        }
+        else if(DOB.getAge() < 0)
+        {
+            cout <<"Invalid Date of Birth." <<endl;
             return false;
         }
         else if (DOB.getAge() < 18)
         {
-            clearScreen();
+            // clearScreen();
             cout << "You must be over 18 years old\n";
             return false;
         }
@@ -151,7 +156,7 @@ Date acceptDOB()
     while(1)
     {
         // cout << "Set date of birth (DD-MM-YYYY): ";
-        getline(cin, str_dob);
+        getline(cin >>ws, str_dob);
         //cin.ignore();
 
         if(checkValidDOB(str_dob) == false)
@@ -167,7 +172,7 @@ Date acceptDOB()
     Date DOB = stringToDate(str_dob);
     if (DOB.getAge() < 18)
     {
-        clearScreen();
+        // clearScreen();
         cout << "You must be over 18 years old\n";
         acceptDOB();
     } 
@@ -194,16 +199,35 @@ string acceptFavAni()
     while(1)
     {
         // cout << "Enter favorite animal: ";
-        getline(cin, favAni);
+        getline(cin >>ws, favAni);
         //cin.ignore();
+        if(favAni.empty())
+        {
+            cout <<"Animal name cannot be empty!" <<endl;
+            continue;
+        }
         if(favAni.size() > 30)
         {
             cout << "Animal name cannot be greater than 30 characters\n";
+            continue;
         }
-        if(favAni != "")
+        bool isValid = true;
+        for(char c : favAni)
         {
-            break;
+            if(!isalpha(c))
+            {
+                isValid = false;
+                break;
+            }
         }
+        if(!isValid)
+        {
+            cout <<"Animal name can only contain letters" <<endl;
+            continue;
+        }            
+        
+        break;
+
     }
     return favAni;
 }
@@ -213,14 +237,35 @@ string acceptName()
     while(1)
     {
         // cout << "Enter name: ";
-        getline(cin, name);
+        getline(cin >>ws, name);
         //cin.ignore();
+        if(name.empty())
+        {
+            cout <<"Name cannot be empty!" <<endl;
+            continue;
+        }
         if(name.size() > 30)
         {
             cout << "Name cannot be overe 30 characters long\n";
+            continue;
         }
-        if(name != "")
-            break;
+        
+        bool isValid = true;
+        for(char c : name)
+        {
+            if(!isalpha(c) && !isspace(c))
+            {
+                isValid = false;
+                break;
+            }
+        }
+        if(!isValid)
+        {
+            cout <<"Name can only contain letters and spaces" <<endl;
+            continue;
+        }
+
+        break;
     }
     return name;
 }
@@ -233,7 +278,7 @@ bool checkValidUsername(const string& username)
 
         if(username.find_first_of(" ") != string::npos)
         {
-            clearScreen();
+            // clearScreen();
             cout << "Username cannot contain spaces\n";
             return false;
         }
@@ -242,13 +287,13 @@ bool checkValidUsername(const string& username)
 
         if(isdigit(username[0]))
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Username cannot start with a digit.\n";
             return false;
         }
         else if(username.size() > 20)
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Username cannot be over 20 characters.\n";
             return false;
         }
@@ -257,13 +302,13 @@ bool checkValidUsername(const string& username)
         {
             if(!isdigit(username[i]) && !isalpha(username[i]))
             {
-                clearScreen(); 
+                // clearScreen(); 
                 cout << "Username cannot contain special characters or spaces.\n";
                 return false;
             } 
             else if(isupper(username[i])) 
             {
-                clearScreen(); 
+                // clearScreen(); 
                 cout << "Username cannot contain uppercase characters.\n";
                 return false;
             }       
@@ -295,7 +340,7 @@ bool checkValidPassword(const string& password)
 
         if(password[0] == ' ' || password[password.size() - 1] == ' ')
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Password cannot contain spaces in the beginning or end.\n";
             return false;
         }
@@ -305,10 +350,29 @@ bool checkValidPassword(const string& password)
            password.find_first_of("\b") != string::npos ||
            password.find_first_of("\0") != string::npos)
         {
-            clearScreen(); 
+            // clearScreen(); 
             cout << "Password cannot contain control characters.\n";
             return false;       
         }
+
+        bool hasDigit = false;
+        bool hasLower = false;
+        bool hasUpper = false;
+        bool hasSymbol = false;
+        for(char c : password)
+        {
+            if(isdigit(c)) hasDigit = true;
+            else if(islower(c)) hasLower = true;
+            else if(isupper(c)) hasUpper = true;
+            else hasSymbol = true;
+        }
+        bool strongPass = hasDigit && hasLower && hasUpper && hasSymbol;
+        if(!strongPass)
+        {
+            cout <<"Password must contain a digit, a symbol, a lowercase and a uppercase letter." <<endl;
+            return false;
+        }
+
     
     return true;
 }
